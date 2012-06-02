@@ -30,9 +30,12 @@
             Y.one('body').on('selectionchange', function(e) {
                 console.log('selectionchange - ' + e.selection);
             });
-            Y.one('body p').on('selection', function(e) {
+            
+            Y.all('body p').on('selection', function(e) {
                 console.log('selection - ' + e.selection);
             });
+
+            /* DELEGATE */
         });
         </script>
     </body>

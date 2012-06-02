@@ -66,7 +66,10 @@ Y.Event.define('selectionchange', {
         sub._notifier = notifier;
         sub._handle = new Y.EventHandle([
             node[method]('gesturemovestart', function(e) {
-                sub._selection = '';
+                if (sub._selection) {
+                    sub._notifier.fire({selection: ''});
+                    sub._selection = '';
+                }
             }, filter),
             // Checking asynchronously since previously selected text can be reported as selected.
             node[method]('gesturemoveend', Y.bind(function(e) {
