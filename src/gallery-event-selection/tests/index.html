@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Test Page</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum tincidunt gravida. Maecenas pulvinar rhoncus placerat. Curabitur non justo elit. Mauris neque ante, bibendum ultricies pharetra eget, varius at velit. Curabitur volutpat, arcu vel sollicitudin pulvinar, augue mi pulvinar leo, eget condimentum magna odio in odio. Aenean tortor eros, varius quis luctus ut, luctus quis tortor. Suspendisse eu quam vitae neque fringilla egestas id et lacus. Duis pharetra tempus dolor, tempus pharetra velit tempus vitae. Morbi scelerisque, velit ac eleifend pulvinar, turpis ligula pellentesque nibh, eget ultrices urna mi vitae ante. In ornare sapien elit. Sed vitae massa ipsum. Ut orci enim, posuere a iaculis in, interdum quis orci. Aliquam tortor ipsum, tempus mollis porta sed, sodales sed lacus.</p>
+
+        <p>Ut fringilla mattis nibh ac euismod. Praesent ac nulla non elit cursus hendrerit. Nulla a blandit magna. Pellentesque gravida sem a orci sollicitudin ac auctor lorem vulputate. In condimentum faucibus mollis. Pellentesque vel orci dui, id rutrum quam. Quisque suscipit tempor euismod. In euismod, risus a rhoncus pellentesque, massa nunc sagittis tortor, sodales pretium odio massa non urna. In hac habitasse platea dictumst. Sed sodales accumsan purus. Aliquam erat volutpat. Donec bibendum, orci eget dictum tristique, tortor elit varius nibh, et pellentesque neque nisi ac elit. Etiam sed massa sed velit consectetur consequat id a odio. Morbi nulla neque, pretium eget ornare at, gravida eget magna. Aliquam erat volutpat.</p>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras bibendum nulla vitae risus tincidunt dapibus sit amet quis mi. Mauris purus mauris, elementum vitae vestibulum quis, posuere vitae turpis. Morbi nisi odio, adipiscing eu facilisis eget, pretium sed lorem. Integer gravida facilisis viverra. Quisque quis aliquet nisl. Vestibulum faucibus leo eu magna laoreet aliquam. Vivamus ultricies bibendum nibh, sed dictum leo tristique et. Suspendisse purus arcu, viverra eu dapibus vitae, posuere vel tortor. Etiam id risus non magna tincidunt ultricies. Curabitur euismod lectus nulla. Cras faucibus risus sed mi dictum sit amet tincidunt dui interdum. Nunc et mi ut mi auctor tristique et non purus. Nunc tempus venenatis placerat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque cursus pellentesque lorem.</p>
+
+        <p>Integer ante velit, bibendum at vehicula at, blandit a libero. Proin sit amet metus turpis. Nullam eu dui massa, quis placerat leo. Sed id sagittis odio. Mauris eu varius orci. Maecenas faucibus tempor iaculis. Nunc sed molestie sem. Donec vestibulum libero in odio consequat gravida. Cras mi enim, tincidunt nec egestas quis, aliquam eu felis. Phasellus sit amet nisi sit amet eros fringilla cursus at in massa. Nunc libero quam, ultrices vel dignissim quis, placerat et ipsum.</p>
+
+        <p>In hac habitasse platea dictumst. Proin lacinia dictum dapibus. Maecenas at arcu nunc, eget ultrices mauris. Suspendisse quis convallis nibh. Vivamus fringilla dapibus ante et vulputate. In rutrum semper quam, ut pharetra ipsum auctor et. Vestibulum vehicula ipsum sed sem ultricies a imperdiet mi ultricies. Mauris non justo at nisi ullamcorper luctus. Nulla ut justo magna, sit amet ultricies eros. Pellentesque non sollicitudin justo. Donec id lacus eu magna porta consequat ut nec orci. Etiam ut urna dui. Vestibulum ut nibh risus, quis vestibulum felis. Curabitur sed odio eget eros imperdiet convallis.</p>
+
+        <script type="text/javascript" src="../../../../yui3/build/yui/yui.js"></script>
+        <script type="text/javascript">
+        var Y = YUI({
+            allowRollup: false,
+            filter: (window.location.search.match(/[?&]filter=([^&]+)/) || [])[1] || 'min',
+            modules: {
+                'gallery-uuid': {
+                        fullpath: '../../../build/gallery-uuid/gallery-uuid-min.js',
+                        requires: []
+                },
+                'gallery-uuid-test': {
+                    fullpath: 'uuid-test.js',
+                    requires: ['gallery-uuid', 'test']
+                }
+            }
+        }).use('node', 'gallery-event-selection', function (Y) {
+            Y.one('body').on('selectionchange', function(e) {
+                console.log('selectionchange - ' + e.selection);
+            });
+            Y.one('body p').on('selection', function(e) {
+                console.log('selection - ' + e.selection);
+            });
+        });
+        </script>
+    </body>
+</html>

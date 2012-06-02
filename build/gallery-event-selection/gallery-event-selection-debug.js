@@ -61,15 +61,15 @@ YUI.add('gallery-event-selection', function(Y) {
     });
 
     Y.Event.define('selectionchange', {
-        _sub: undefined,
-
         on: function(node, sub, notifier, filter) {
             var method = filter ? 'delegate' : 'on';
             sub._selection = undefined; // Save last selection
             sub._poll = undefined;
             sub._notifier = notifier;
             sub._handle = new Y.EventHandle([
-                node[method]('gesturemovestart', function(e) {}, filter),
+                node[method]('gesturemovestart', function(e) {
+                    sub._selection = undefined;
+                }, filter),
                 // Checking asynchronously since previously selected text can be reported as selected.
                 node[method]('gesturemoveend', Y.bind(function(e) {
                     Y.later(DELAY, this, this._checkSelection, sub);
@@ -117,4 +117,4 @@ YUI.add('gallery-event-selection', function(Y) {
 }, '@VERSION@', {requires: ['event-move']});
 
 
-}, '@VERSION@' ,{skinnable:false, requires:['node', 'event'], supersedes:['another.custom.module']});
+}, '@VERSION@' ,{supersedes:['another.custom.module'], requires:['node', 'event'], skinnable:false});
