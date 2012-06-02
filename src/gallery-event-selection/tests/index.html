@@ -6,7 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum tincidunt gravida. Maecenas pulvinar rhoncus placerat. Curabitur non justo elit. Mauris neque ante, bibendum ultricies pharetra eget, varius at velit. Curabitur volutpat, arcu vel sollicitudin pulvinar, augue mi pulvinar leo, eget condimentum magna odio in odio. Aenean tortor eros, varius quis luctus ut, luctus quis tortor. Suspendisse eu quam vitae neque fringilla egestas id et lacus. Duis pharetra tempus dolor, tempus pharetra velit tempus vitae. Morbi scelerisque, velit ac eleifend pulvinar, turpis ligula pellentesque nibh, eget ultrices urna mi vitae ante. In ornare sapien elit. Sed vitae massa ipsum. Ut orci enim, posuere a iaculis in, interdum quis orci. Aliquam tortor ipsum, tempus mollis porta sed, sodales sed lacus.</p>
 
         <p>Ut fringilla mattis nibh ac euismod. Praesent ac nulla non elit cursus hendrerit. Nulla a blandit magna. Pellentesque gravida sem a orci sollicitudin ac auctor lorem vulputate. In condimentum faucibus mollis. Pellentesque vel orci dui, id rutrum quam. Quisque suscipit tempor euismod. In euismod, risus a rhoncus pellentesque, massa nunc sagittis tortor, sodales pretium odio massa non urna. In hac habitasse platea dictumst. Sed sodales accumsan purus. Aliquam erat volutpat. Donec bibendum, orci eget dictum tristique, tortor elit varius nibh, et pellentesque neque nisi ac elit. Etiam sed massa sed velit consectetur consequat id a odio. Morbi nulla neque, pretium eget ornare at, gravida eget magna. Aliquam erat volutpat.</p>
@@ -21,15 +20,10 @@
         <script type="text/javascript">
         var Y = YUI({
             allowRollup: false,
-            filter: (window.location.search.match(/[?&]filter=([^&]+)/) || [])[1] || 'min',
             modules: {
-                'gallery-uuid': {
-                        fullpath: '../../../build/gallery-uuid/gallery-uuid-min.js',
+                'gallery-event-selection': {
+                        fullpath: '../../../build/gallery-event-selection/gallery-event-selection.js',
                         requires: []
-                },
-                'gallery-uuid-test': {
-                    fullpath: 'uuid-test.js',
-                    requires: ['gallery-uuid', 'test']
                 }
             }
         }).use('node', 'gallery-event-selection', function (Y) {
