@@ -2,12 +2,12 @@ YUI.add('gallery-event-selection', function(Y) {
 
 /*
  * Cross browser/device text selection events.
- *  - selection - Fired when text has been selected.
- *  - selectionchange - Fired when text has been selected or deselected.
+ *  - selection: Fired when text has been selected.
+ *  - selectionchange: Fired when text has been selected or deselected.
  *
  * Fired events have the following properties:
- *  - selection - Selected text.
- *  - pageX/pageY - Best guess on where selection ends.
+ *  - selection: Selected text.
+ *  - pageX/pageY: Best guess on where selection ends.
  *
  * Limitations:
  *  - There are a few edge cases where selection events don't work well. Namely,
@@ -19,7 +19,7 @@ YUI.add('gallery-event-selection', function(Y) {
  *    keyboard selection.
  *  - iOS requires a slight delay when getting selected text.
  *
- * YUI Bugs:
+ * event-gesture bugs:
  *  - Can't listen to multiple gesturemove events on the same node.
  *  - gesturemoveend doesn't fire without gesturemovestart.
  */
@@ -35,12 +35,22 @@ function getSelection() {
     return '';
 }
 
+var poll; // Keep one poll since there can only ever be one text selection.
+function unpoll() {
+    if (poll) {
+        poll.cancel();
+        poll = null;
+    }
+}
+
 Y.Event.define('selection', {
     on: function(node, sub, notifier, filter) {
         var method = filter ? 'delegate' : 'on';
         sub._notifier = notifier;
         sub._handle = new Y.EventHandle([
-            node[method]('gesturemovestart', function(e) {}, filter),
+            node[method]('gesturemovestart', function(e) {
+                unpoll();
+            }, filter),
             // Checking asynchronously since previously selected text can be reported as selected.
             node[method]('gesturemoveend', Y.bind(function(e) {
                 sub._x = e.pageX;
@@ -71,16 +81,14 @@ Y.Event.define('selection', {
 });
 
 Y.Event.define('selectionchange', {
-    _poll: null, // Keep one poll since there can only ever be one text selection.
-
     on: function(node, sub, notifier, filter) {
         var method = filter ? 'delegate' : 'on';
         sub._selection = ''; // Save last selection
         sub._notifier = notifier;
         sub._handle = new Y.EventHandle([
-            node[method]('gesturemovestart', Y.bind(function(e) {
-                this._unpoll();
-            }, this), filter),
+            node[method]('gesturemovestart', function(e) {
+                unpoll();
+            }, filter),
             // Checking asynchronously since previously selected text can be reported as selected.
             node[method]('gesturemoveend', Y.bind(function(e) {
                 sub._x = e.pageX;
@@ -95,7 +103,7 @@ Y.Event.define('selectionchange', {
     },
 
     detach: function(node, sub, notifier) {
-        this._unpoll();
+        unpoll();
         sub._handle.detach();
     },
 
@@ -104,9 +112,9 @@ Y.Event.define('selectionchange', {
     },
 
     _checkSelection: function(sub) {
-        this._unpoll();
+        unpoll();
         this._checkSelectionChange(sub);
-        this._poll = Y.later(POLL, this, this._checkSelectionChange, sub, true);
+        poll = Y.later(POLL, this, this._checkSelectionChange, sub, true);
     },
 
     _checkSelectionChange: function(sub) {
@@ -114,13 +122,6 @@ Y.Event.define('selectionchange', {
         if (selection !== sub._selection) {
             sub._selection = selection;
             sub._notifier.fire({selection: selection, pageX: sub._x, pageY: sub._y});
-        }
-    },
-
-    _unpoll: function() {
-        if (this._poll) {
-            this._poll.cancel();
-            this._poll = null;
         }
     }
 });
