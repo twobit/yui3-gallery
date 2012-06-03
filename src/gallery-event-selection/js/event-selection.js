@@ -1,11 +1,11 @@
 /*
  * Cross browser/device text selection events.
- *  - selection - Fired when text has been selected.
- *  - selectionchange - Fired when text has been selected or deselected.
+ *  - selection: Fired when text has been selected.
+ *  - selectionchange: Fired when text has been selected or deselected.
  *
  * Fired events have the following properties:
- *  - selection - Selected text.
- *  - pageX/pageY - Best guess on where selection ends.
+ *  - selection: Selected text.
+ *  - pageX/pageY: Best guess on where selection ends.
  *
  * Limitations:
  *  - There are a few edge cases where selection events don't work well. Namely,
@@ -17,7 +17,7 @@
  *    keyboard selection.
  *  - iOS requires a slight delay when getting selected text.
  *
- * YUI Bugs:
+ * event-gesture bugs:
  *  - Can't listen to multiple gesturemove events on the same node.
  *  - gesturemoveend doesn't fire without gesturemovestart.
  */
