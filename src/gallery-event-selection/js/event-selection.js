@@ -9,7 +9,8 @@
  *
  * Limitations:
  *  - There are a few edge cases where selection events don't work well. Namely,
- *    when selecting text that crosses the boundary of a bounded node.
+ *    when selecting text that crosses the boundary of a bounded node or selecting
+ *    text with only keyboard selection.
  *
  * Notes:
  *  - Polling for selection changes is necessary because iOS doesn't tell us
