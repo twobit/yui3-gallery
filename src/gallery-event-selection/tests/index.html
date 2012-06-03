@@ -18,19 +18,18 @@
         body {font: 13px/18px "Helvetica Neue", Helvetica, Arial, sans-serif;}
         h1 {font-size: 24px;}
         div {padding: 10px 0; border-bottom: 1px solid #CCC;}
-        pre {background: #EEE; padding: 10px;}
+        pre {background: #EEE; padding: 2px;}
         </style>
     </head>
     <body>
         <div id="selection">
             <h1>selection event</h1>
             <p>This is a selectable block of text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum tincidunt gravida. Maecenas pulvinar rhoncus placerat. Curabitur non justo elit.</p>
-            <pre></pre>
         </div>
         <script type="text/javascript">
         Y.use('gallery-event-selection', function(Y) {
             Y.one('#selection p').on('selection', function(e) {
-                this.next().set('text', e.selection);
+                this.get('parentNode').append('<pre>' + e.selection + '</pre>');
             });
         });
         </script>
@@ -38,12 +37,11 @@
         <div id="selection-delegate">
             <h1>selection delegate event</h1>
             <p>This is a selectable block of text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum tincidunt gravida. Maecenas pulvinar rhoncus placerat. Curabitur non justo elit.</p>
-            <pre></pre>
         </div>
         <script type="text/javascript">
         Y.use('gallery-event-selection', 'node', 'event-delegate', function(Y) {
             Y.one('#selection-delegate').delegate('selection', function(e) {
-                this.one('pre').set('text', e.selection);
+                this.append('<pre>' + e.selection + '</pre>');
             }, 'p');
         });
         </script>
@@ -51,12 +49,11 @@
         <div id="selectionchange">
             <h1>selectionchange event</h1>
             <p>This is a selectable block of text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum tincidunt gravida. Maecenas pulvinar rhoncus placerat. Curabitur non justo elit.</p>
-            <pre></pre>
         </div>
         <script type="text/javascript">
         Y.use('gallery-event-selection', function(Y) {
             Y.one('#selectionchange p').on('selectionchange', function(e) {
-                this.next().set('text', e.selection);
+                this.get('parentNode').append('<pre>' + e.selection + '</pre>');
             });
         });
         </script>
@@ -64,12 +61,11 @@
         <div id="selectionchange-delegate">
             <h1>selectionchange delegate event</h1>
             <p>This is a selectable block of text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vestibulum tincidunt gravida. Maecenas pulvinar rhoncus placerat. Curabitur non justo elit.</p>
-            <pre></pre>
         </div>
         <script type="text/javascript">
         Y.use('gallery-event-selection', function(Y) {
             Y.one('#selectionchange-delegate').delegate('selectionchange', function(e) {
-                this.one('pre').set('text', e.selection);
+                this.append('<pre>' + e.selection + '</pre>');
             }, 'p');
         });
         </script>

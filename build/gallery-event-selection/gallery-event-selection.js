@@ -10,7 +10,8 @@ YUI.add('gallery-event-selection', function(Y) {
  *  - pageX/pageY - Best guess on where selection ends.
  *
  * Limitations:
- *  - There are a few edge cases where selection events don't work well.
+ *  - There are a few edge cases where selection events don't work well. Namely,
+ *    when selecting text that crosses the boundary of a bounded node.
  *
  * Notes:
  *  - Polling for selection changes is necessary because iOS doesn't tell us
@@ -49,34 +50,37 @@ Y.Event.define('selection', {
         ]);
     },
 
-    _checkSelection: function(sub) {
-        var selection = getSelection();
-        if (selection !== '') {
-            sub._notifier.fire({selection: selection, pageX: sub._x, pageY: sub._y});
-        }
+    delegate: function() {
+        this.on.apply(this, arguments);
     },
 
     detach: function(node, sub, notifier) {
         sub._handle.detach();
     },
 
-    delegate: function() {
-        this.on.apply(this, arguments);
-    },
-
     detachDelegate: function() {
         this.detach.apply(this, arguments);
+    },
+
+    _checkSelection: function(sub) {
+        var selection = getSelection();
+        if (selection !== '') {
+            sub._notifier.fire({selection: selection, pageX: sub._x, pageY: sub._y});
+        }
     }
 });
 
 Y.Event.define('selectionchange', {
+    _poll: null, // Keep one poll since there can only ever be one text selection.
+
     on: function(node, sub, notifier, filter) {
         var method = filter ? 'delegate' : 'on';
         sub._selection = ''; // Save last selection
-        sub._poll = null;
         sub._notifier = notifier;
         sub._handle = new Y.EventHandle([
-            node[method]('gesturemovestart', function(e) {}, filter),
+            node[method]('gesturemovestart', Y.bind(function(e) {
+                this._unpoll();
+            }, this), filter),
             // Checking asynchronously since previously selected text can be reported as selected.
             node[method]('gesturemoveend', Y.bind(function(e) {
                 sub._x = e.pageX;
@@ -86,39 +90,38 @@ Y.Event.define('selectionchange', {
         ]);
     },
 
-    _unpoll: function(sub) {
-        if (sub._poll) {
-            sub._poll.cancel();
-            sub._poll = null;
-        }
+    delegate: function() {
+        this.on.apply(this, arguments);
     },
 
     detach: function(node, sub, notifier) {
-        this._unpoll(sub);
+        this._unpoll();
         sub._handle.detach();
     },
 
+    detachDelegate: function() {
+        this.detach.apply(this, arguments);
+    },
+
     _checkSelection: function(sub) {
-        this._unpoll(sub);
+        this._unpoll();
         this._checkSelectionChange(sub);
-        sub._poll = Y.later(POLL, this, this._checkSelectionChange, sub, true);
+        this._poll = Y.later(POLL, this, this._checkSelectionChange, sub, true);
     },
 
     _checkSelectionChange: function(sub) {
         var selection = getSelection();
         if (selection !== sub._selection) {
-            this._unpoll(sub);
             sub._selection = selection;
             sub._notifier.fire({selection: selection, pageX: sub._x, pageY: sub._y});
         }
     },
 
-    delegate: function() {
-        this.on.apply(this, arguments);
-    },
-
-    detachDelegate: function() {
-        this.detach.apply(this, arguments);
+    _unpoll: function() {
+        if (this._poll) {
+            this._poll.cancel();
+            this._poll = null;
+        }
     }
 });
 
