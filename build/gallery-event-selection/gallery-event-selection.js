@@ -40,7 +40,7 @@ Y.Event.define('selection', {
         var method = filter ? 'delegate' : 'on';
         sub._notifier = notifier;
         sub._handle = new Y.EventHandle([
-            node[method]('gesturemovestart', function(e) {}, filter),
+            node[method]('gesturemovestart', function(e) {}, filter), // event-gesture bug
             // Checking asynchronously since previously selected text can be reported as selected.
             node[method]('gesturemoveend', Y.bind(function(e) {
                 sub._x = e.pageX;
@@ -80,8 +80,12 @@ Y.Event.define('selectionchange', {
         sub._handle = new Y.EventHandle([
             Y.on('gesturemovestart', Y.bind(function(e) {
                 this._unpoll();
+                if (sub._selection) {
+                    sub._selection = '';
+                    sub._notifier.fire({selection: sub._selection, pageX: e.pageX, pageY: e.pageY});
+                }
             }, this)),
-            node[method]('gesturemovestart', function(e) {}, filter),
+            node[method]('gesturemovestart', function(e) {}, filter), // event-gesture bug
             // Checking asynchronously since previously selected text can be reported as selected.
             node[method]('gesturemoveend', Y.bind(function(e) {
                 sub._x = e.pageX;
@@ -114,7 +118,7 @@ Y.Event.define('selectionchange', {
         var selection = getSelection();
         if (selection !== sub._selection) {
             sub._selection = selection;
-            sub._notifier.fire({selection: selection, pageX: sub._x, pageY: sub._y});
+            sub._notifier.fire({selection: sub._selection, pageX: sub._x, pageY: sub._y});
         }
     },
 
