@@ -3,11 +3,17 @@
  *  - selection - Fired when text has been selected.
  *  - selectionchange - Fired when text has been selected or deselected.
  *
- * Fired event has the selection property set to the selected text.
+ * Fired events have the following properties:
+ *  - selection - Selected text.
+ *  - pageX/pageY - Best guess on where selection ends.
+ *
+ * Limitations:
+ *  - There are a few edge cases where selection events don't work well.
  *
  * Notes:
- *  - iOS doesn't tell us when the selection region has been updated. We
- *   have to poll for changes.
+ *  - Polling for selection changes is necessary because iOS doesn't tell us
+ *    when the selection region has been updated and desktop browsers can use
+ *    keyboard selection.
  *  - iOS requires a slight delay when getting selected text.
  *
  * YUI Bugs:
@@ -29,19 +35,22 @@ function getSelection() {
 Y.Event.define('selection', {
     on: function(node, sub, notifier, filter) {
         var method = filter ? 'delegate' : 'on';
+        sub._notifier = notifier;
         sub._handle = new Y.EventHandle([
             node[method]('gesturemovestart', function(e) {}, filter),
             // Checking asynchronously since previously selected text can be reported as selected.
             node[method]('gesturemoveend', Y.bind(function(e) {
-                Y.later(DELAY, this, this._checkSelection, notifier);
+                sub._x = e.pageX;
+                sub._y = e.pageY;
+                Y.later(DELAY, this, this._checkSelection, sub);
             }, this), filter)
         ]);
     },
 
-    _checkSelection: function(notifier) {
+    _checkSelection: function(sub) {
         var selection = getSelection();
         if (selection !== '') {
-            notifier.fire({selection: selection});
+            sub._notifier.fire({selection: selection, pageX: sub._x, pageY: sub._y});
         }
     },
 
@@ -65,14 +74,11 @@ Y.Event.define('selectionchange', {
         sub._poll = null;
         sub._notifier = notifier;
         sub._handle = new Y.EventHandle([
-            node[method]('gesturemovestart', function(e) {
-                if (sub._selection) {
-                    sub._notifier.fire({selection: ''});
-                    sub._selection = '';
-                }
-            }, filter),
+            node[method]('gesturemovestart', function(e) {}, filter),
             // Checking asynchronously since previously selected text can be reported as selected.
             node[method]('gesturemoveend', Y.bind(function(e) {
+                sub._x = e.pageX;
+                sub._y = e.pageY;
                 Y.later(DELAY, this, this._checkSelection, sub);
             }, this), filter)
         ]);
@@ -93,17 +99,15 @@ Y.Event.define('selectionchange', {
     _checkSelection: function(sub) {
         this._unpoll(sub);
         this._checkSelectionChange(sub);
-
-        if (Y.UA.ios) {
-            sub._poll = Y.later(POLL, this, this._checkSelectionChange, sub, true);
-        }
+        sub._poll = Y.later(POLL, this, this._checkSelectionChange, sub, true);
     },
 
     _checkSelectionChange: function(sub) {
         var selection = getSelection();
         if (selection !== sub._selection) {
+            this._unpoll(sub);
             sub._selection = selection;
-            sub._notifier.fire({selection: selection});
+            sub._notifier.fire({selection: selection, pageX: sub._x, pageY: sub._y});
         }
     },
 
