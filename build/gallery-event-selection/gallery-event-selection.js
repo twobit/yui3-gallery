@@ -35,22 +35,12 @@ function getSelection() {
     return '';
 }
 
-var poll; // Keep one poll since there can only ever be one text selection.
-function unpoll() {
-    if (poll) {
-        poll.cancel();
-        poll = null;
-    }
-}
-
 Y.Event.define('selection', {
     on: function(node, sub, notifier, filter) {
         var method = filter ? 'delegate' : 'on';
         sub._notifier = notifier;
         sub._handle = new Y.EventHandle([
-            node[method]('gesturemovestart', function(e) {
-                unpoll();
-            }, filter),
+            node[method]('gesturemovestart', function(e) {}, filter),
             // Checking asynchronously since previously selected text can be reported as selected.
             node[method]('gesturemoveend', Y.bind(function(e) {
                 sub._x = e.pageX;
@@ -81,14 +71,17 @@ Y.Event.define('selection', {
 });
 
 Y.Event.define('selectionchange', {
+    _poll: null, // Keep one poll since there can only ever be one text selection.
+
     on: function(node, sub, notifier, filter) {
         var method = filter ? 'delegate' : 'on';
         sub._selection = ''; // Save last selection
         sub._notifier = notifier;
         sub._handle = new Y.EventHandle([
-            node[method]('gesturemovestart', function(e) {
-                unpoll();
-            }, filter),
+            Y.on('gesturemovestart', Y.bind(function(e) {
+                this._unpoll();
+            }, this)),
+            node[method]('gesturemovestart', function(e) {}, filter),
             // Checking asynchronously since previously selected text can be reported as selected.
             node[method]('gesturemoveend', Y.bind(function(e) {
                 sub._x = e.pageX;
@@ -103,7 +96,7 @@ Y.Event.define('selectionchange', {
     },
 
     detach: function(node, sub, notifier) {
-        unpoll();
+        this._unpoll();
         sub._handle.detach();
     },
 
@@ -112,9 +105,9 @@ Y.Event.define('selectionchange', {
     },
 
     _checkSelection: function(sub) {
-        unpoll();
+        this._unpoll();
         this._checkSelectionChange(sub);
-        poll = Y.later(POLL, this, this._checkSelectionChange, sub, true);
+        this._poll = Y.later(POLL, this, this._checkSelectionChange, sub, true);
     },
 
     _checkSelectionChange: function(sub) {
@@ -122,6 +115,13 @@ Y.Event.define('selectionchange', {
         if (selection !== sub._selection) {
             sub._selection = selection;
             sub._notifier.fire({selection: selection, pageX: sub._x, pageY: sub._y});
+        }
+    },
+
+    _unpoll: function() {
+        if (this._poll) {
+            this._poll.cancel();
+            this._poll = null;
         }
     }
 });
