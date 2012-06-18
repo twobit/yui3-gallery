@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />        
+        <title>Y-Tag - YUI and X-Tag</title>
+        <script type="text/javascript" src="../../../../yui3/build/yui/yui.js"></script>
+        <script type="text/javascript">
+        var Y = YUI({
+            modules: {
+                'gallery-ytag': {
+                    fullpath: '../../../build/gallery-ytag/gallery-ytag.js'
+                }
+            }
+        })
+        </script>
+    </head>
+    <body>
+        <h1>Y-Tag</h1>
+
+        <h2>Button</h2>
+        <y-button data-label="Test" data-disabled="true"></y-button>
+
+        <h2>Dial</h2>
+        <y-dial data-min="-100" data-max="100" data-value="0" data-stepsPerRevolution="10"></y-dial>
+
+        <h2>Suggest</h2>
+        <y-suggest></y-suggest>
+
+        <h2>Suggest States</h2>
+        <y-suggest-states></y-suggest-states>
+
+        <script type="text/javascript">
+        Y.use('gallery-ytag', function(Y) {});
+        </script>
+    </body>
+</html>
