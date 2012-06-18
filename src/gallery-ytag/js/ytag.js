@@ -12,26 +12,10 @@ Y.extend(YTag, Y.Base, {
     },
 
     register: function(name, content, selector, requires, create) {
-        var instance;
-
         xtag.register(name, {
             content: content,
             onInsert: function() {
-                var node = Y.one(this),
-                    config = Y.merge(this.dataset, {
-                        srcNode: node.one(selector ? selector : '*'),
-                        render: true
-                    });
-
-                Y.use.apply(Y, requires.concat(function(Y) {
-                    instance = create(Y, config);
-                    node.plug(YTagPlugin, {instance: instance});
-                }));
-            },
-            getters: {
-                ytag: function() {
-                    return instance;
-                }
+                Y.one(this).plug(YTagPlugin, {selector: selector, requires: requires, create: create});
             }
         });
     }
@@ -49,7 +33,16 @@ YTagPlugin.ATTRS = {
 
 Y.extend(YTagPlugin, Y.Plugin.Base, {
     initializer: function(config) {
-        this.set('instance', config.instance);
+        var node = this.get('host'),
+            dataset = Y.merge(node.getDOMNode().dataset, {
+                srcNode: node.one(config.selector ? config.selector : '*'),
+                render: true
+            }),
+            self = this;
+
+        Y.use.apply(Y, config.requires.concat(function(Y) {
+            self.set('instance', config.create(Y, dataset));
+        }));
     }
 });
 

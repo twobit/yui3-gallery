@@ -21,6 +21,8 @@
         <y-button data-label="TEST"></y-button>
         <y-button data-label="DISABLE" data-disabled="false"></y-button>
 
+        <div id="test"></div>
+
         <script type="text/javascript">
         Y.use('node', 'gallery-ytag', function(Y) {
             new Y.YTag({
@@ -33,7 +35,7 @@
             });
 
             setTimeout(function() {
-                console.log(Y.one('y-button').ytag.get('instance'));
+                //console.log(Y.one('y-button').ytag.get('instance'));
             }, 1000);
         });
         </script>
