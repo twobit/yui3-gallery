@@ -382,13 +382,15 @@ Y.extend(YTag, Y.Base, {
         xtag.register(name, {
             content: content,
             onInsert: function() {
-                var config = Y.merge(this.dataset, {
-                        srcNode: Y.one(this).one(selector ? selector : '*'),
+                var node = Y.one(this),
+                    config = Y.merge(this.dataset, {
+                        srcNode: node.one(selector ? selector : '*'),
                         render: true
                     });
 
                 Y.use.apply(Y, requires.concat(function(Y) {
                     instance = create(Y, config);
+                    node.plug(YTagPlugin, {instance: instance});
                 }));
             },
             getters: {
@@ -400,7 +402,23 @@ Y.extend(YTag, Y.Base, {
     }
 });
 
+function YTagPlugin(config) {
+    YTagPlugin.superclass.constructor.apply(this, arguments);
+}
+
+YTagPlugin.NAME = 'ytagPlugin';
+YTagPlugin.NS = 'ytag';
+YTagPlugin.ATTRS = {
+    instance: {}
+};
+
+Y.extend(YTagPlugin, Y.Plugin.Base, {
+    initializer: function(config) {
+        this.set('instance', config.instance);
+    }
+});
+
 Y.YTag = YTag;
 
 
-}, '@VERSION@' ,{skinnable:false, requires:['node', 'base']});
+}, '@VERSION@' ,{skinnable:false, requires:['node', 'base', 'plugin']});

@@ -22,7 +22,7 @@
         <y-button data-label="DISABLE" data-disabled="false"></y-button>
 
         <script type="text/javascript">
-        Y.use('gallery-ytag', function(Y) {
+        Y.use('node', 'gallery-ytag', function(Y) {
             new Y.YTag({
                 name: 'button',
                 content: '<div></div>',
@@ -31,6 +31,10 @@
                     return new Y.Button(config);
                 }
             });
+
+            setTimeout(function() {
+                console.log(Y.one('y-button').ytag.get('instance'));
+            }, 1000);
         });
         </script>
     </body>
