@@ -9,6 +9,9 @@
             modules: {
                 'gallery-ytag': {
                     fullpath: '../../../build/gallery-ytag/gallery-ytag.js'
+                },
+                'gallery-ytag-registry': {
+                    fullpath: '../../../build/gallery-ytag-registry/gallery-ytag-registry.js'
                 }
             }
         })
@@ -17,21 +20,17 @@
     <body>
         <h1>YTag</h1>
 
-        <h2>Test Tags</h2>
-        <y-button data-label="TEST"></y-button>
-        <y-button data-label="DISABLE" data-disabled="false"></y-button>
+        <h2>Button</h2>
+        <y-button data-label="Test" data-disabled="true"></y-button>
+
+        <h2>Dial</h2>
+        <y-dial data-min="-100" data-max="100" data-value="0" data-stepsPerRevolution="10"></y-dial>
+
+        <h2>Suggest</h2>
+        <y-suggest></y-suggest>
 
         <script type="text/javascript">
-        Y.use('gallery-ytag', function(Y) {
-            new Y.YTag({
-                name: 'button',
-                content: '<div></div>',
-                requires: ['button'],
-                create: function(Y, config) {
-                    return new Y.Button(config);
-                }
-            });
-        });
+        Y.use('gallery-ytag-registry', function(Y) {});
         </script>
     </body>
 </html>
