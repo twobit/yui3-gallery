@@ -1,5 +1,3 @@
-YUI.add('gallery-ytag', function(Y) {
-
 // X-Tag (https://raw.github.com/mozilla/x-tag/master/x-tag.js)
 (function(){
  
@@ -363,66 +361,3 @@ YUI.add('gallery-ytag', function(Y) {
     });
     
 })();
-xtag.namespace = 'y-';
-
-var REGISTRY = {
-    button: {
-        content: '<div></div>',
-        requires: ['button'],
-        create: function(Y, config) {
-            return new Y.Button(config);
-        }
-    },
-    dial: {
-        content: '<div class="yui3-skin-sam"></div>',
-        requires: ['dial'],
-        create: function(Y, config) {
-            return new Y.Dial(config);
-        }
-    },
-    suggest: {
-        content: '<div class="yui3-skin-sam"><input type="text" /></div>',
-        selector: 'input',
-        requires: ['autocomplete', 'autocomplete-highlighters'],
-        create: function(Y, config) {
-            config.srcNode.plug(Y.Plugin.AutoComplete, {
-                resultHighlighter: 'phraseMatch',
-                source: 'select * from search.suggest where query="{query}"',
-                yqlEnv: 'http://pieisgood.org/yql/tables.env'
-            });
-            return config.srcNode;
-        }
-    }
-};
-
-Y.ytag = {
-    register: function(tag, options) {
-        var instance;
-
-        xtag.register(tag, {
-            content: options.content,
-            onInsert: function() {
-                var config = Y.merge(this.dataset, {
-                    srcNode: Y.one(this).one(options.selector ? options.selector : '*'),
-                    render: true
-                });
-
-                Y.use.apply(Y, options.requires.concat(function(Y) {
-                    instance = options.create(Y, config);
-                }));
-            },
-            getters: {
-                ytag: function() {
-                    return instance;
-                }
-            }
-        });
-    }
-};
-
-Y.Object.each(REGISTRY, function(options, tag) {
-    Y.ytag.register(tag, options);
-});
-
-
-}, '@VERSION@' ,{skinnable:false, requires:['node']});

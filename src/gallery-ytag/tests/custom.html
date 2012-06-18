@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />        
-        <title>Y-Tag - YUI and X-Tag</title>
+        <title>YTag - YUI and X-Tag</title>
         <script type="text/javascript" src="../../../../yui3/build/yui/yui.js"></script>
         <script type="text/javascript">
         var Y = YUI({
@@ -22,7 +22,8 @@
 
         <script type="text/javascript">
         Y.use('gallery-ytag', function(Y) {
-            Y.ytag.register('suggest-states', {
+            new Y.YTag({
+                name: 'suggest-states',
                 content: '<input type="text" />',
                 requires: ['autocomplete', 'autocomplete-filters', 'autocomplete-highlighters'],
                 create: function(Y, config) {
