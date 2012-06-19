@@ -2,7 +2,7 @@ YUI.add('gallery-ytag-registry', function(Y) {
 
 var REGISTRY = [
     {
-        name: 'button',
+        name: 'y-button',
         content: '<div></div>',
         requires: ['button'],
         create: function(Y, config) {
@@ -10,7 +10,7 @@ var REGISTRY = [
         }
     },
     {
-        name: 'dial',
+        name: 'y-dial',
         content: '<div class="yui3-skin-sam"></div>',
         requires: ['dial'],
         create: function(Y, config) {
@@ -18,7 +18,7 @@ var REGISTRY = [
         }
     },
     {
-        name: 'suggest',
+        name: 'y-suggest',
         content: '<div class="yui3-skin-sam"><input type="text" /></div>',
         selector: 'input',
         requires: ['autocomplete', 'autocomplete-highlighters'],

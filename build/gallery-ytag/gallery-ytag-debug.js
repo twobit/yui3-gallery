@@ -36,7 +36,7 @@ function register(config) {
         }
 
         node.plug(YTagPlugin, {selector: config.selector, requires: config.requires, create: config.create});
-    }, 'y-' + config.name);
+    }, config.name);
 }
 
 YTag.register = register;

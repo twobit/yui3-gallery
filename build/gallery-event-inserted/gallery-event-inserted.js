@@ -78,7 +78,6 @@ var Fallback = {
         var method = filter ? 'delegate' : 'on';
 
         if (!Fallback.TAGS[sub._extra]) {
-            console.log('TEST');
             Y.all(sub._extra).each(function(item) {
                 notifier.fire({target: item});
             });
@@ -105,7 +104,7 @@ var Fallback = {
 };
 
 // Fallback if CSS3 Animation is not supported
-Y.Event.define('inserted', false ? Inserted : Fallback);
+Y.Event.define('inserted', PREFIX.camel ? Inserted : Fallback);
 
 
 }, '@VERSION@' ,{skinnable:false, requires:['event', 'node']});
