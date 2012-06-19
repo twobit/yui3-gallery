@@ -24,7 +24,7 @@ var ANIMATION_START_VENDORS = {
     },
     ANIMATION_START = ANIMATION_START_VENDORS[PREFIX.lower] || 'animationstart',
     STYLESHEET = Y.Node.create('<style type="text/css">@' + PREFIX.css + 'keyframes INSERTED {' +
-        'from { clip: rect(1px, auto, auto, auto); } to { clip: rect(0px, auto, auto, auto); }' +
+        'from {clip: rect(1px, auto, auto, auto);} to {clip: rect(0px, auto, auto, auto);}' +
     '}</style>');
 
 Y.Node.DOM_EVENTS[ANIMATION_START] = 1;
@@ -39,10 +39,9 @@ Y.Event.define('inserted', {
     on: function(node, sub, notifier, filter) {
         var method = filter ? 'delegate' : 'on',
             rule = sub._extra + '{' + PREFIX.css + 'animation-duration: 0.0001s; ' + PREFIX.css + 'animation-name: INSERTED !important;}';
-            
+
         sub._handle = node[method](ANIMATION_START, Y.bind(function(e) {
             if (e.target.get('tagName').toLowerCase() === sub._extra) {
-                //console.log()
                 notifier.fire({target: e.target});
             }
         }, this), filter);
