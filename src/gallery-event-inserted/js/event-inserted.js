@@ -40,7 +40,6 @@ Y.Event.define('inserted', {
 
         sub._handle = node[method](ANIMATION_START, Y.bind(function(e) {
             if (e.target.get('tagName').toLowerCase() === sub._extra) {
-                //console.log()
                 notifier.fire({target: e.target});
             }
         }, this), filter);
