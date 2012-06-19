@@ -32,5 +32,5 @@ var REGISTRY = [
 ];
 
 Y.Array.each(REGISTRY, function(config) {
-    new Y.YTag(config);
+    Y.YTag.register(config);
 });

@@ -1,25 +1,4 @@
-xtag.namespace = 'y-';
-
-function YTag(config) {
-    YTag.superclass.constructor.apply(this, arguments);
-}
-
-YTag.NAME = 'ytag';
-
-Y.extend(YTag, Y.Base, {
-    initializer: function(config) {
-        this.register(config.name, config.content, config.selector, config.requires, config.create);
-    },
-
-    register: function(name, content, selector, requires, create) {
-        xtag.register(name, {
-            content: content,
-            onInsert: function() {
-                Y.one(this).plug(YTagPlugin, {selector: selector, requires: requires, create: create});
-            }
-        });
-    }
-});
+var YTag = Y.namespace('YTag');
 
 function YTagPlugin(config) {
     YTagPlugin.superclass.constructor.apply(this, arguments);
@@ -46,4 +25,16 @@ Y.extend(YTagPlugin, Y.Plugin.Base, {
     }
 });
 
-Y.YTag = YTag;
+function register(config) {
+    Y.on('inserted', function(e) {
+        var node = e.target;
+
+        if (config.content) {
+            node.append(config.content);
+        }
+
+        node.plug(YTagPlugin, {selector: config.selector, requires: config.requires, create: config.create});
+    }, 'y-' + config.name);
+}
+
+YTag.register = register;

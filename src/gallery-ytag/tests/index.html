@@ -7,6 +7,9 @@
         <script type="text/javascript">
         var Y = YUI({
             modules: {
+                'gallery-event-inserted': {
+                    fullpath: '../../../build/gallery-event-inserted/gallery-event-inserted.js'
+                },
                 'gallery-ytag': {
                     fullpath: '../../../build/gallery-ytag/gallery-ytag.js'
                 }
@@ -20,12 +23,11 @@
         <h2>Test Tags</h2>
         <y-button data-label="TEST"></y-button>
         <y-button data-label="DISABLE" data-disabled="false"></y-button>
-
-        <div id="test"></div>
+        <y-dial></y-dial>
 
         <script type="text/javascript">
         Y.use('node', 'gallery-ytag', function(Y) {
-            new Y.YTag({
+            Y.YTag.register({
                 name: 'button',
                 content: '<div></div>',
                 requires: ['button'],
@@ -34,9 +36,14 @@
                 }
             });
 
-            setTimeout(function() {
-                //console.log(Y.one('y-button').ytag.get('instance'));
-            }, 1000);
+            Y.YTag.register({
+                name: 'dial',
+                content: '<div class="yui3-skin-sam"></div>',
+                requires: ['dial'],
+                create: function(Y, config) {
+                    return new Y.Dial(config);
+                }
+            });
         });
         </script>
     </body>
