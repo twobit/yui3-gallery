@@ -18,7 +18,11 @@
     <body>
         <script type="text/javascript">
         Y.use('gallery-event-inserted', function(Y) {
-            // Y.one();
+            Y.on('inserted', function(e) {
+                console.log('inserted - ', e.target);
+            }, 'myelement');
+         
+            Y.one('body').append('<myelement></myelement>');
         });
         </script>
     </body>

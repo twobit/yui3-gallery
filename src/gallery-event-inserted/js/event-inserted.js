@@ -76,6 +76,7 @@ var Fallback = {
         var method = filter ? 'delegate' : 'on';
 
         if (!Fallback.TAGS[sub._extra]) {
+            Fallback.TAGS[sub._extra] = true;
             Y.all(sub._extra).each(function(item) {
                 notifier.fire({target: item});
             });
