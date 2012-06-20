@@ -10,12 +10,15 @@ var PREFIX = {
         camel: ['', 'WebKit', 'Moz', 'O', 'MS'].filter(function(prefix){
             return window[prefix + 'CSSKeyframesRule'];
         })[0]
-    };
+    },
+    Inserted,
+    DOMInserted;
+
 PREFIX.lower = PREFIX.camel.toLowerCase();
 PREFIX.css = PREFIX.camel ? '-' + PREFIX.lower + '-' : PREFIX.camel;
 
 // CSS3 Animation Support
-var Inserted = {
+Inserted = {
     ANIMATION_START_VENDORS: {
         webkit: 'webkitAnimationStart',
         o: 'oAnimationStart'
@@ -63,7 +66,7 @@ var Inserted = {
 };
 
 // DOMNodeInserted fallback
-var Fallback = {
+DOMInserted = {
     TAGS: {},
 
     _init: function() {
@@ -77,7 +80,8 @@ var Fallback = {
     on: function(node, sub, notifier, filter) {
         var method = filter ? 'delegate' : 'on';
 
-        if (!Fallback.TAGS[sub._extra]) {
+        if (!DOMInserted.TAGS[sub._extra]) {
+            DOMInserted.TAGS[sub._extra] = true;
             Y.all(sub._extra).each(function(item) {
                 notifier.fire({target: item});
             });
@@ -104,7 +108,7 @@ var Fallback = {
 };
 
 // Fallback if CSS3 Animation is not supported
-Y.Event.define('inserted', PREFIX.camel ? Inserted : Fallback);
+Y.Event.define('inserted', PREFIX.camel ? Inserted : DOMInserted);
 
 
 }, '@VERSION@' ,{skinnable:false, requires:['event', 'node']});
