@@ -6,30 +6,27 @@ YUI.add('gallery-event-inserted', function(Y) {
  * Uses efficient CSS3 Animation to fire insertion events otherwise falls back
  * to DOMNodeInserted.
  */
-var PREFIX = {
-        camel: ['', 'WebKit', 'Moz', 'O', 'MS'].filter(function(prefix){
-            return window[prefix + 'CSSKeyframesRule'];
-        })[0]
-    },
+var VENDOR = ['', 'WebKit', 'Moz', 'O', 'MS'].filter(function(prefix) {
+        return Y.config.win[prefix + 'CSSKeyframesRule'];
+    })[0],
     Inserted,
     DOMInserted;
 
-PREFIX.lower = PREFIX.camel.toLowerCase();
-PREFIX.css = PREFIX.camel ? '-' + PREFIX.lower + '-' : PREFIX.camel;
-
 // CSS3 Animation Support
 Inserted = {
+    NAME: 'INSERTED', // Animation name
+    PREFIX: VENDOR ? '-' + VENDOR.toLowerCase() + '-' : VENDOR,
     ANIMATION_START_VENDORS: {
-        webkit: 'webkitAnimationStart',
-        o: 'oAnimationStart'
+        WebKit: 'webkitAnimationStart',
+        O: 'oAnimationStart'
     },
     ANIMATION_START: 'animationstart',
     STYLESHEET: null,
 
     _init: function() {
-        Inserted.ANIMATION_START = Inserted.ANIMATION_START_VENDORS[PREFIX.lower] || Inserted.ANIMATION_START;
+        Inserted.ANIMATION_START = Inserted.ANIMATION_START_VENDORS[VENDOR] || Inserted.ANIMATION_START;
         Y.Node.DOM_EVENTS[Inserted.ANIMATION_START] = 1;
-        Inserted.STYLESHEET = Y.Node.create('<style type="text/css">@' + PREFIX.css + 'keyframes INSERTED {' +
+        Inserted.STYLESHEET = Y.Node.create('<style type="text/css">@' + Inserted.PREFIX + 'keyframes ' + Inserted.NAME + ' {' +
             'from {clip: rect(1px, auto, auto, auto);} to {clip: rect(0px, auto, auto, auto);}' +
         '}</style>');
         Y.one('head').append(Inserted.STYLESHEET);
@@ -41,10 +38,10 @@ Inserted = {
 
     on: function(node, sub, notifier, filter) {
         var method = filter ? 'delegate' : 'on',
-            rule = sub._extra + '{' + PREFIX.css + 'animation-duration: 0.0001s; ' + PREFIX.css + 'animation-name: INSERTED !important;}';
+            rule = sub._extra + '{' + Inserted.PREFIX + 'animation-duration: 0.0001s; ' + Inserted.PREFIX + 'animation-name: ' + Inserted.NAME + ' !important;}';
 
         sub._handle = node[method](Inserted.ANIMATION_START, Y.bind(function(e) {
-            if (e.target.get('tagName').toLowerCase() === sub._extra) {
+            if (e._event.animationName === Inserted.NAME && e.target.get('tagName').toLowerCase() === sub._extra) {
                 notifier.fire({target: e.target});
             }
         }, this), filter);
@@ -108,7 +105,7 @@ DOMInserted = {
 };
 
 // Fallback if CSS3 Animation is not supported
-Y.Event.define('inserted', PREFIX.camel ? Inserted : DOMInserted);
+Y.Event.define('inserted', VENDOR ? Inserted : DOMInserted);
 
 
 }, '@VERSION@' ,{skinnable:false, requires:['event', 'node']});
