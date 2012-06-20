@@ -1,11 +1,11 @@
 YUI.add('gallery-ytag-registry', function(Y) {
 
-YUI.add('ytag-ybutton', function(Y) {
-    Y.namespace('YTag.Tags').ybutton = Y.Base.create('ybutton', Y.YTag.Plugin, [], {
+YUI.add('tag-ybutton', function(Y) {
+    Y.namespace('Tag.Tags').ybutton = Y.Base.create('ybutton', Y.Tag.Plugin, [], {
         initializer: function() {
             var node = this.get('host');
             node.append('<div></div>');
-            this._button = new Y.Button(Y.merge(this.getData(), {
+            this._button = new Y.Button(Y.merge(node.getData(), {
                 srcNode: node.one('div'),
                 render: true
             }));
@@ -13,12 +13,12 @@ YUI.add('ytag-ybutton', function(Y) {
     }, {});
 }, '', {requires: ['button']});
 
-YUI.add('ytag-ydial', function(Y) {
-    Y.namespace('YTag.Tags').ydial = Y.Base.create('ydial', Y.YTag.Plugin, [], {
+YUI.add('tag-ydial', function(Y) {
+    Y.namespace('Tag.Tags').ydial = Y.Base.create('ydial', Y.Tag.Plugin, [], {
         initializer: function() {
             var node = this.get('host');
             node.append('<div class="yui3-skin-sam"></div>');
-            this._button = new Y.Dial(Y.merge(this.getData(), {
+            this._button = new Y.Dial(Y.merge(node.getData(), {
                 srcNode: node.one('div'),
                 render: true
             }));
@@ -26,8 +26,8 @@ YUI.add('ytag-ydial', function(Y) {
     }, {});
 }, '', {requires: ['dial']});
 
-YUI.add('ytag-ysuggest', function(Y) {
-    Y.namespace('YTag.Tags').ysuggest = Y.Base.create('ysuggest', Y.YTag.Plugin, [], {
+YUI.add('tag-ysuggest', function(Y) {
+    Y.namespace('Tag.Tags').ysuggest = Y.Base.create('ysuggest', Y.Tag.Plugin, [], {
         initializer: function() {
             var node = this.get('host');
             node.append('<div class="yui3-skin-sam"><input type="text" /></div>');
@@ -40,9 +40,9 @@ YUI.add('ytag-ysuggest', function(Y) {
     }, {});
 }, '', {requires: ['autocomplete', 'autocomplete-highlighters']});
 
-Y.YTag.register('ybutton');
-Y.YTag.register('ydial');
-Y.YTag.register('ysuggest');
+Y.Tag.register('ybutton');
+Y.Tag.register('ydial');
+Y.Tag.register('ysuggest');
 
 
 }, '@VERSION@' ,{skinnable:false, requires:['gallery-ytag']});

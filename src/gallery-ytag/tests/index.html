@@ -26,12 +26,12 @@
         <ydial></ydial>
 
         <script type="text/javascript">
-        YUI.add('ytag-ybutton', function(Y) {
-            Y.namespace('YTag.Tags').ybutton = Y.Base.create('ybutton', Y.YTag.Plugin, [], {
+        YUI.add('tag-ybutton', function(Y) {
+            Y.namespace('Tag.Tags').ybutton = Y.Base.create('ybutton', Y.Tag.Plugin, [], {
                 initializer: function(config) {
                     var node = this.get('host');
                     node.append('<div></div>');
-                    this._button = new Y.Button(Y.merge(this.getData(), {
+                    this._button = new Y.Button(Y.merge(node.getData(), {
                         srcNode: node.one('div'),
                         render: true
                     }));
@@ -39,12 +39,12 @@
             }, {});
         }, '', {requires: ['button']});
 
-        YUI.add('ytag-ydial', function(Y) {
-            Y.namespace('YTag.Tags').ydial = Y.Base.create('ydial', Y.YTag.Plugin, [], {
+        YUI.add('tag-ydial', function(Y) {
+            Y.namespace('Tag.Tags').ydial = Y.Base.create('ydial', Y.Tag.Plugin, [], {
                 initializer: function(config) {
                     var node = this.get('host');
                     node.append('<div class="yui3-skin-sam"></div>');
-                    this._button = new Y.Dial(Y.merge(this.getData(), {
+                    this._button = new Y.Dial(Y.merge(node.getData(), {
                         srcNode: node.one('div'),
                         render: true
                     }));
@@ -53,8 +53,8 @@
         }, '', {requires: ['dial']});
 
         Y.use('gallery-ytag', function(Y) {
-            Y.YTag.register('ybutton');
-            Y.YTag.register('ydial');
+            Y.Tag.register('ybutton');
+            Y.Tag.register('ydial');
         });
         </script>
     </body>
