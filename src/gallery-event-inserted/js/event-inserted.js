@@ -3,6 +3,9 @@
  *
  * Uses efficient CSS3 Animation to fire insertion events otherwise falls back
  * to DOMNodeInserted.
+ *
+ * Based on technique described here:
+ * http://www.backalleycoder.com/2012/04/25/i-want-a-damnodeinserted/
  */
 var VENDOR = ['', 'WebKit', 'Moz', 'O', 'MS'].filter(function(prefix) {
         return Y.config.win[prefix + 'CSSKeyframesRule'];
