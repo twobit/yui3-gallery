@@ -1,41 +1,48 @@
 YUI.add('gallery-ytag-registry', function(Y) {
 
-var REGISTRY = [
-    {
-        name: 'y-button',
-        content: '<div></div>',
-        requires: ['button'],
-        create: function(Y, config) {
-            return new Y.Button(config);
+YUI.add('ytag-ybutton', function(Y) {
+    Y.namespace('YTag.Tags').ybutton = Y.Base.create('ybutton', Y.YTag.Plugin, [], {
+        initializer: function() {
+            var node = this.get('host');
+            node.append('<div></div>');
+            this._button = new Y.Button(Y.merge(this.getData(), {
+                srcNode: node.one('div'),
+                render: true
+            }));
         }
-    },
-    {
-        name: 'y-dial',
-        content: '<div class="yui3-skin-sam"></div>',
-        requires: ['dial'],
-        create: function(Y, config) {
-            return new Y.Dial(config);
+    }, {});
+}, '', {requires: ['button']});
+
+YUI.add('ytag-ydial', function(Y) {
+    Y.namespace('YTag.Tags').ydial = Y.Base.create('ydial', Y.YTag.Plugin, [], {
+        initializer: function() {
+            var node = this.get('host');
+            node.append('<div class="yui3-skin-sam"></div>');
+            this._button = new Y.Dial(Y.merge(this.getData(), {
+                srcNode: node.one('div'),
+                render: true
+            }));
         }
-    },
-    {
-        name: 'y-suggest',
-        content: '<div class="yui3-skin-sam"><input type="text" /></div>',
-        selector: 'input',
-        requires: ['autocomplete', 'autocomplete-highlighters'],
-        create: function(Y, config) {
-            config.srcNode.plug(Y.Plugin.AutoComplete, {
+    }, {});
+}, '', {requires: ['dial']});
+
+YUI.add('ytag-ysuggest', function(Y) {
+    Y.namespace('YTag.Tags').ysuggest = Y.Base.create('ysuggest', Y.YTag.Plugin, [], {
+        initializer: function() {
+            var node = this.get('host');
+            node.append('<div class="yui3-skin-sam"><input type="text" /></div>');
+            node.one('input').plug(Y.Plugin.AutoComplete, {
                 resultHighlighter: 'phraseMatch',
                 source: 'select * from search.suggest where query="{query}"',
                 yqlEnv: 'http://pieisgood.org/yql/tables.env'
             });
-            return config.srcNode;
         }
-    }
-];
+    }, {});
+}, '', {requires: ['autocomplete', 'autocomplete-highlighters']});
 
-Y.Array.each(REGISTRY, function(config) {
-    Y.YTag.register(config);
-});
+Y.YTag.register('ybutton');
+Y.YTag.register('ydial');
+Y.YTag.register('ysuggest');
 
 
 }, '@VERSION@' ,{skinnable:false, requires:['gallery-ytag']});

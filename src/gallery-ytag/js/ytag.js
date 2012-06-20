@@ -6,35 +6,37 @@ function YTagPlugin(config) {
 
 YTagPlugin.NAME = 'ytagPlugin';
 YTagPlugin.NS = 'ytag';
-YTagPlugin.ATTRS = {
-    instance: {}
+YTagPlugin.ATTRS = {};
+
+YTagPlugin._buildCfg = {
+    custom: {
+        NS: function(prop, receiver, supplier) {
+            receiver.NS = YTagPlugin.NS;
+        }
+    }
 };
 
 Y.extend(YTagPlugin, Y.Plugin.Base, {
-    initializer: function(config) {
-        var node = this.get('host'),
-            dataset = Y.merge(node.getDOMNode().dataset, {
-                srcNode: node.one(config.selector ? config.selector : '*'),
-                render: true
-            }),
-            self = this;
-
-        Y.use.apply(Y, config.requires.concat(function(Y) {
-            self.set('instance', config.create(Y, dataset));
-        }));
+    getData: function() {
+        return Y.merge({}, this.get('host').getDOMNode().dataset); // Merge out string map
     }
 });
 
-function register(config) {
+function listen(name, plugin) {
     Y.on('inserted', function(e) {
-        var node = e.target;
+        e.target.plug(plugin);
+    }, name);
+}
 
-        if (config.content) {
-            node.append(config.content);
-        }
-
-        node.plug(YTagPlugin, {selector: config.selector, requires: config.requires, create: config.create});
-    }, config.name);
+function register(name, plugin) {
+    if (plugin) {
+        listen(name, plugin);
+    } else { // Need to load plugin
+        Y.use('ytag-' + name, function(Y) {
+            listen(name, Y.namespace('YTag.Tags')[name]);
+        });
+    }
 }
 
 YTag.register = register;
+YTag.Plugin = YTagPlugin;

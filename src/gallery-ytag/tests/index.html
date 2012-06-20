@@ -21,29 +21,40 @@
         <h1>YTag</h1>
 
         <h2>Test Tags</h2>
-        <y-button data-label="TEST"></y-button>
-        <y-button data-label="DISABLE" data-disabled="false"></y-button>
-        <y-dial></y-dial>
+        <ybutton data-label="TEST"></ybutton>
+        <ybutton data-label="DISABLE" data-disabled="false"></ybutton>
+        <ydial></ydial>
 
         <script type="text/javascript">
-        Y.use('node', 'gallery-ytag', function(Y) {
-            Y.YTag.register({
-                name: 'y-button',
-                content: '<div></div>',
-                requires: ['button'],
-                create: function(Y, config) {
-                    return new Y.Button(config);
+        YUI.add('ytag-ybutton', function(Y) {
+            Y.namespace('YTag.Tags').ybutton = Y.Base.create('ybutton', Y.YTag.Plugin, [], {
+                initializer: function(config) {
+                    var node = this.get('host');
+                    node.append('<div></div>');
+                    this._button = new Y.Button(Y.merge(this.getData(), {
+                        srcNode: node.one('div'),
+                        render: true
+                    }));
                 }
-            });
+            }, {});
+        }, '', {requires: ['button']});
 
-            Y.YTag.register({
-                name: 'y-dial',
-                content: '<div class="yui3-skin-sam"></div>',
-                requires: ['dial'],
-                create: function(Y, config) {
-                    return new Y.Dial(config);
+        YUI.add('ytag-ydial', function(Y) {
+            Y.namespace('YTag.Tags').ydial = Y.Base.create('ydial', Y.YTag.Plugin, [], {
+                initializer: function(config) {
+                    var node = this.get('host');
+                    node.append('<div class="yui3-skin-sam"></div>');
+                    this._button = new Y.Dial(Y.merge(this.getData(), {
+                        srcNode: node.one('div'),
+                        render: true
+                    }));
                 }
-            });
+            }, {});
+        }, '', {requires: ['dial']});
+
+        Y.use('gallery-ytag', function(Y) {
+            Y.YTag.register('ybutton');
+            Y.YTag.register('ydial');
         });
         </script>
     </body>
