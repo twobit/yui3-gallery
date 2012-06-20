@@ -10,15 +10,15 @@
                 'gallery-event-inserted': {
                     fullpath: '../../../build/gallery-event-inserted/gallery-event-inserted.js'
                 },
-                'gallery-ytag': {
-                    fullpath: '../../../build/gallery-ytag/gallery-ytag.js'
+                'gallery-tag': {
+                    fullpath: '../../../build/gallery-tag/gallery-tag.js'
                 }
             }
         })
         </script>
     </head>
     <body>
-        <h1>YTag</h1>
+        <h1>YUI Tag</h1>
 
         <h2>Test Tags</h2>
         <ybutton data-label="TEST"></ybutton>
@@ -52,7 +52,7 @@
             }, {});
         }, '', {requires: ['dial']});
 
-        Y.use('gallery-ytag', function(Y) {
+        Y.use('gallery-tag', function(Y) {
             Y.Tag.register('ybutton');
             Y.Tag.register('ydial');
         });

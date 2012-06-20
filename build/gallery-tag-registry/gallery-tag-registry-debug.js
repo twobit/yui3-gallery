@@ -1,4 +1,4 @@
-YUI.add('gallery-ytag-registry', function(Y) {
+YUI.add('gallery-tag-registry', function(Y) {
 
 YUI.add('tag-ybutton', function(Y) {
     Y.namespace('Tag.Tags').ybutton = Y.Base.create('ybutton', Y.Tag.Plugin, [], {
@@ -45,4 +45,4 @@ Y.Tag.register('ydial');
 Y.Tag.register('ysuggest');
 
 
-}, '@VERSION@' ,{skinnable:false, requires:['gallery-ytag']});
+}, '@VERSION@' ,{skinnable:false, requires:['gallery-tag']});

@@ -1,4 +1,4 @@
-YUI.add('gallery-ytag', function(Y) {
+YUI.add('gallery-tag', function(Y) {
 
 var Tag = Y.namespace('Tag');
 
