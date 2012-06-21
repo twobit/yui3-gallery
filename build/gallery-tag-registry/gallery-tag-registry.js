@@ -10,7 +10,6 @@ YUI.add('tag-ybutton', function(Y) {
         }
     });
 }, '', {requires: ['button']});
-
 YUI.add('tag-ydial', function(Y) {
     Y.namespace('Tag.Tags').ydial = Y.Base.create('ydial', Y.Base, [], {
         initializer: function() {
@@ -21,9 +20,8 @@ YUI.add('tag-ydial', function(Y) {
         }
     });
 }, '', {requires: ['dial']});
-
-YUI.add('tag-ysuggest', function(Y) {
-    Y.namespace('Tag.Tags').ysuggest = Y.Base.create('ysuggest', Y.Base, [], {
+YUI.add('tag-yautocomplete', function(Y) {
+    Y.namespace('Tag.Tags').yautocomplete = Y.Base.create('yautocomplete', Y.Base, [], {
         initializer: function() {
             var node = this.get('host');
             node.append('<div class="yui3-skin-sam"><input type="text" /></div>');
@@ -35,10 +33,9 @@ YUI.add('tag-ysuggest', function(Y) {
         }
     });
 }, '', {requires: ['autocomplete', 'autocomplete-highlighters']});
-
 Y.Tag.register('ybutton');
 Y.Tag.register('ydial');
-Y.Tag.register('ysuggest');
+Y.Tag.register('yautocomplete');
 
 
 }, '@VERSION@' ,{skinnable:false, requires:['gallery-tag']});
