@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />        
-        <title>Test File</title>
+        <title>YUI Tag</title>
         <script type="text/javascript" src="../../../../yui3/build/yui/yui.js"></script>
         <script type="text/javascript">
         var Y = YUI({
@@ -22,34 +22,30 @@
 
         <h2>Test Tags</h2>
         <ybutton data-label="TEST"></ybutton>
-        <ybutton data-label="DISABLE" data-disabled="false"></ybutton>
         <ydial></ydial>
+        <ybutton data-label="DISABLE" data-disabled="false"></ybutton>
 
         <script type="text/javascript">
         YUI.add('tag-ybutton', function(Y) {
-            Y.namespace('Tag.Tags').ybutton = Y.Base.create('ybutton', Y.Tag.Plugin, [], {
-                initializer: function(config) {
+            Y.namespace('Tag.Tags').ybutton = Y.Base.create('ybutton', Y.Base, [], {
+                initializer: function() {
                     var node = this.get('host');
                     node.append('<div></div>');
-                    this._button = new Y.Button(Y.merge(node.getData(), {
-                        srcNode: node.one('div'),
-                        render: true
-                    }));
+                    this._widget = new Y.Button(Y.merge(node.getData(), {srcNode: node.one('div')}));
+                    this.on('insert', function() {this._widget.render();}, this);
                 }
-            }, {});
+            });
         }, '', {requires: ['button']});
 
         YUI.add('tag-ydial', function(Y) {
-            Y.namespace('Tag.Tags').ydial = Y.Base.create('ydial', Y.Tag.Plugin, [], {
-                initializer: function(config) {
+            Y.namespace('Tag.Tags').ydial = Y.Base.create('ydial', Y.Base, [], {
+                initializer: function() {
                     var node = this.get('host');
                     node.append('<div class="yui3-skin-sam"></div>');
-                    this._button = new Y.Dial(Y.merge(node.getData(), {
-                        srcNode: node.one('div'),
-                        render: true
-                    }));
+                    this._widget = new Y.Dial(Y.merge(node.getData(), {srcNode: node.one('div')}));
+                    this.on('insert', function() {this._widget.render();}, this);
                 }
-            }, {});
+            });
         }, '', {requires: ['dial']});
 
         Y.use('gallery-tag', function(Y) {

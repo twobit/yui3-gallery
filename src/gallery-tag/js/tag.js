@@ -6,35 +6,49 @@ function TagPlugin(config) {
 
 TagPlugin.NAME = 'tagPlugin';
 TagPlugin.NS = 'tag';
-TagPlugin.ATTRS = {};
-
-TagPlugin._buildCfg = {
-    custom: {
-        NS: function(prop, receiver, supplier) {
-            receiver.NS = TagPlugin.NS;
+TagPlugin.TAGS = [];
+TagPlugin.ATTRS = {
+    name: {
+        valueFn: function() {
+            return (this.get('host').get('tagName') || '').toLowerCase();
         }
     }
 };
 
-Y.extend(TagPlugin, Y.Plugin.Base, {});
-
-function listen(name, plugin) {
+TagPlugin.listen = function(name) {
     Y.on('inserted', function(e) {
-        e.target.plug(plugin);
+        e.target.tag.fire('insert');
     }, name);
-}
+};
 
-function register(name, plugin) {
-    if (plugin) {
-        listen(name, plugin);
-    } else { // Need to load plugin
+TagPlugin.register = function(name, mixin) {
+    if (mixin) {
+        TagPlugin.TAGS[name] = mixin;
+        TagPlugin.listen(name);
+    } else { // Need to load mixin
         Y.use('tag-' + name, function(Y) {
             if (Y.namespace('Tag.Tags')[name]) {
-                listen(name, Y.namespace('Tag.Tags')[name]);
+                TagPlugin.TAGS[name] = Y.namespace('Tag.Tags')[name];
+                TagPlugin.listen(name);
             }
         });
     }
-}
+};
 
-Tag.register = register;
-Tag.Plugin = TagPlugin;
+Y.extend(TagPlugin, Y.Plugin.Base, {
+    initializer: function() {
+        var mixin = TagPlugin.TAGS[this.get('name')];
+
+        if (mixin) {
+            Y.augment(this, mixin);
+
+            if (mixin.prototype.initializer) {
+                mixin.prototype.initializer.call(this);
+            }
+        }
+    }
+});
+
+Y.Node.plug(TagPlugin);
+
+Tag.register = TagPlugin.register;
