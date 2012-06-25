@@ -45,7 +45,7 @@ Y.extend(TagPlugin, Y.Plugin.Base, {
             Y.augment(this, mixin);
 
             if (mixin.prototype.initializer) {
-                mixin.prototype.initializer.call(this);
+                mixin.prototype.initializer.call(this, this.get('host').getData());
             }
         }
     }
