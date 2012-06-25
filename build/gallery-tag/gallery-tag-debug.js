@@ -42,10 +42,10 @@ Y.extend(TagPlugin, Y.Plugin.Base, {
         var mixin = TagPlugin.TAGS[this.get('name')];
 
         if (mixin) {
-            Y.augment(this, mixin);
+            Y.mix(this, mixin);
 
-            if (mixin.prototype.initializer) {
-                mixin.prototype.initializer.call(this, this.get('host').getData());
+            if (mixin.initializer) {
+                mixin.initializer.call(this, this.get('host').getData());
             }
         }
     }
