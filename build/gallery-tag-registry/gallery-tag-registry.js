@@ -33,9 +33,9 @@ YUI.add('tag-yautocomplete', function(Y) {
         }
     });
 }, '', {requires: ['autocomplete', 'autocomplete-highlighters']});
-Y.Tag.register('ybutton');
-Y.Tag.register('ydial');
-Y.Tag.register('yautocomplete');
+Y.Array.each(['ybutton', 'ydial', 'yautocomplete'], function(tag) {
+    Y.Tag.register(tag);
+});
 
 
 }, '@VERSION@' ,{skinnable:false, requires:['gallery-tag']});

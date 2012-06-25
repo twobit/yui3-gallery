@@ -1,3 +1,3 @@
-Y.Tag.register('ybutton');
-Y.Tag.register('ydial');
-Y.Tag.register('yautocomplete');
+Y.Array.each(['ybutton', 'ydial', 'yautocomplete'], function(tag) {
+    Y.Tag.register(tag);
+});
