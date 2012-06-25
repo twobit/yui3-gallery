@@ -19,7 +19,7 @@ TagPlugin.ATTRS = {
 
 TagPlugin.listen = function(name) {
     Y.on('inserted', function(e) {
-        e.target.tag.fire('insert');
+        e.target.fire('tag:inserted');
     }, name);
 };
 
