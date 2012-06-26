@@ -16,32 +16,33 @@ TagPlugin.ATTRS = {
     }
 };
 
-TagPlugin.listen = function(name) {
-    TagPlugin.unregister(name);
-
-    handles[name] = Y.on('inserted', function(e) {
-        e.target.fire('tag:inserted');
-    }, name);
-};
-
 TagPlugin.register = function(name, mixin) {
+    TagPlugin.unregister(name);
+    
+    function listen(name) {
+        handles[name] = Y.on('inserted', function(e) {
+            e.target.fire('tag:inserted');
+        }, name);
+    }
+
     if (mixin) {
         TagPlugin.TAGS[name] = mixin;
-        TagPlugin.listen(name);
+        listen(name);
     } else { // Need to load mixin
         Y.use('tag-' + name, function(Y) {
             if (Y.namespace('Tag.Tags')[name]) {
                 TagPlugin.TAGS[name] = Y.namespace('Tag.Tags')[name];
-                TagPlugin.listen(name);
+                listen(name);
             }
         });
     }
 };
 
 TagPlugin.unregister = function(name) {
-    if (handles[name]) {
+    if (handles[name] && TagPlugin.TAGS[name]) {
         handles[name].detach();
         delete handles[name];
+        delete TagPlugin.TAGS[name];
     }
 };
 
