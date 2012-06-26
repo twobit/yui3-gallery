@@ -1,6 +1,7 @@
 YUI.add('gallery-tag', function(Y) {
 
-var Tag = Y.namespace('Tag');
+var Tag = Y.namespace('Tag'),
+    handles = {};
 
 function TagPlugin(config) {
     TagPlugin.superclass.constructor.apply(this, arguments);
@@ -8,7 +9,7 @@ function TagPlugin(config) {
 
 TagPlugin.NAME = 'tagPlugin';
 TagPlugin.NS = 'tag';
-TagPlugin.TAGS = [];
+TagPlugin.TAGS = {};
 TagPlugin.ATTRS = {
     name: {
         valueFn: function() {
@@ -18,7 +19,9 @@ TagPlugin.ATTRS = {
 };
 
 TagPlugin.listen = function(name) {
-    Y.on('inserted', function(e) {
+    TagPlugin.unregister(name);
+
+    handles[name] = Y.on('inserted', function(e) {
         e.target.fire('tag:inserted');
     }, name);
 };
@@ -34,6 +37,13 @@ TagPlugin.register = function(name, mixin) {
                 TagPlugin.listen(name);
             }
         });
+    }
+};
+
+TagPlugin.unregister = function(name) {
+    if (handles[name]) {
+        handles[name].detach();
+        delete handles[name];
     }
 };
 
