@@ -18,32 +18,35 @@ TagPlugin.ATTRS = {
     }
 };
 
-TagPlugin.listen = function(name) {
-    TagPlugin.unregister(name);
-
-    handles[name] = Y.on('inserted', function(e) {
-        e.target.fire('tag:inserted');
-    }, name);
-};
-
 TagPlugin.register = function(name, mixin) {
-    if (mixin) {
+    TagPlugin.unregister(name);
+    
+    // Setup tag inserted listener
+    function registerTag(mixin) {
         TagPlugin.TAGS[name] = mixin;
-        TagPlugin.listen(name);
-    } else { // Need to load mixin
+
+        handles[name] = Y.on('inserted', function(e) {
+            e.target.fire('tag:inserted');
+        }, name);
+    }
+
+    // Check if mixin is directly available otherwise load dynamically
+    if (mixin) {
+        registerTag(mixin);
+    } else {
         Y.use('tag-' + name, function(Y) {
             if (Y.namespace('Tag.Tags')[name]) {
-                TagPlugin.TAGS[name] = Y.namespace('Tag.Tags')[name];
-                TagPlugin.listen(name);
+                registerTag(Y.namespace('Tag.Tags')[name]);
             }
         });
     }
 };
 
 TagPlugin.unregister = function(name) {
-    if (handles[name]) {
+    if (handles[name] && TagPlugin.TAGS[name]) {
         handles[name].detach();
         delete handles[name];
+        delete TagPlugin.TAGS[name];
     }
 };
 

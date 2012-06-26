@@ -19,20 +19,22 @@ TagPlugin.ATTRS = {
 TagPlugin.register = function(name, mixin) {
     TagPlugin.unregister(name);
     
-    function listen(name) {
+    // Setup tag inserted listener
+    function registerTag(mixin) {
+        TagPlugin.TAGS[name] = mixin;
+
         handles[name] = Y.on('inserted', function(e) {
             e.target.fire('tag:inserted');
         }, name);
     }
 
+    // Check if mixin is directly available otherwise load dynamically
     if (mixin) {
-        TagPlugin.TAGS[name] = mixin;
-        listen(name);
-    } else { // Need to load mixin
+        registerTag(mixin);
+    } else {
         Y.use('tag-' + name, function(Y) {
             if (Y.namespace('Tag.Tags')[name]) {
-                TagPlugin.TAGS[name] = Y.namespace('Tag.Tags')[name];
-                listen(name);
+                registerTag(Y.namespace('Tag.Tags')[name]);
             }
         });
     }
