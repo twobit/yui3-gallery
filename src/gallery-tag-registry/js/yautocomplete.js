@@ -1,13 +1,22 @@
 YUI.add('tag-yautocomplete', function(Y) {
     Y.namespace('Tag.Tags').yautocomplete = {
         created: function(config) {
-            this._node = this.get('host');
-            this._node.append('<div class="yui3-skin-sam"><input type="text" /></div>');
-            this._node.one('input').plug(Y.Plugin.AutoComplete, {
+            this.get('host').setHTML('<div class="yui3-skin-sam"><input type="text" /></div>');
+            this._node = this.get('host').one('input');
+            this._node.plug(Y.Plugin.AutoComplete, Y.merge({
                 resultHighlighter: 'phraseMatch',
-                source: 'select * from search.suggest where query="{query}"',
-                yqlEnv: 'http://pieisgood.org/yql/tables.env'
-            });
+                source: 'select k from yahoo.search.suggestions where command="{query}"',
+                yqlEnv: 'store://datatables.org/alltableswithkeys',
+                resultListLocator: 'query.results.s',
+                resultTextLocator: 'k'
+            }, config));
+
+            Y.each(Y.AutoComplete.ATTRS, function(dummy, attr) { // Proxy attrs
+                this.addAttr(attr, {
+                    getter: function() {return this._node.ac.get(attr);},
+                    setter: function(value) {this._node.ac.set(attr, value);}
+                });
+            }, this);
         }
     };
 }, '@VERSION@', {requires: ['autocomplete', 'autocomplete-highlighters']});

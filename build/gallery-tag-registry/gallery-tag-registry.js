@@ -3,47 +3,63 @@ YUI.add('gallery-tag-registry', function(Y) {
 YUI.add('tag-ybutton', function(Y) {
     Y.namespace('Tag.Tags').ybutton = {
         created: function(config) {
-            var self = this;
+            this.get('host').setHTML('<button></button>');
+            this._widget = new Y.Button(Y.merge(config, {
+                srcNode: this.get('host').one('button')
+            }));
 
-            this._node = this.get('host').appendChild('<button></button>');
-            this._widget = new Y.Button(Y.merge(config, {srcNode: this._node}));
-
-            this.addAttr('label', {
-                getter: function() {return self._widget.get('label');},
-                setter: function(value) {self._widget.set('label', value);}
-            });
-
-            this.addAttr('disabled', {
-                getter: function() {return self._widget.get('disabled');},
-                setter: function(value) {self._widget.set('disabled', value);}
-            });
+            Y.each(Y.Button.ATTRS, function(dummy, attr) { // Proxy attrs
+                this.addAttr(attr, {
+                    getter: function() {return this._widget.get(attr);},
+                    setter: function(value) {this._widget.set(attr, value);}
+                });
+            }, this);
 
             this.onHostEvent('tag:inserted', function() {this._widget.render();}, this);
         }
     };
-}, '', {requires: ['button']});
+}, '@VERSION@', {requires: ['button']});
 YUI.add('tag-ydial', function(Y) {
     Y.namespace('Tag.Tags').ydial = {
         created: function(config) {
-            this._node = this.get('host').appendChild('<div class="yui3-skin-sam"></div>');
-            this._widget = new Y.Dial(Y.merge(config, {srcNode: this._node}));
+            this.get('host').setHTML('<div class="yui3-skin-sam"></div>');
+            this._widget = new Y.Dial(Y.merge(config, {
+                srcNode: this.get('host').one('div')
+            }));
+
+            Y.each(Y.Dial.ATTRS, function(dummy, attr) { // Proxy attrs
+                this.addAttr(attr, {
+                    getter: function() {return this._widget.get(attr);},
+                    setter: function(value) {this._widget.set(attr, value);}
+                });
+            }, this);
+
             this.onHostEvent('tag:inserted', function() {this._widget.render();}, this);
         }
     };
-}, '', {requires: ['dial']});
+}, '@VERSION@', {requires: ['dial']});
 YUI.add('tag-yautocomplete', function(Y) {
     Y.namespace('Tag.Tags').yautocomplete = {
         created: function(config) {
-            this._node = this.get('host');
-            this._node.append('<div class="yui3-skin-sam"><input type="text" /></div>');
-            this._node.one('input').plug(Y.Plugin.AutoComplete, {
+            this.get('host').setHTML('<div class="yui3-skin-sam"><input type="text" /></div>');
+            this._node = this.get('host').one('input');
+            this._node.plug(Y.Plugin.AutoComplete, Y.merge({
                 resultHighlighter: 'phraseMatch',
-                source: 'select * from search.suggest where query="{query}"',
-                yqlEnv: 'http://pieisgood.org/yql/tables.env'
-            });
+                source: 'select k from yahoo.search.suggestions where command="{query}"',
+                yqlEnv: 'store://datatables.org/alltableswithkeys',
+                resultListLocator: 'query.results.s',
+                resultTextLocator: 'k'
+            }, config));
+
+            Y.each(Y.AutoComplete.ATTRS, function(dummy, attr) { // Proxy attrs
+                this.addAttr(attr, {
+                    getter: function() {return this._node.ac.get(attr);},
+                    setter: function(value) {this._node.ac.set(attr, value);}
+                });
+            }, this);
         }
     };
-}, '', {requires: ['autocomplete', 'autocomplete-highlighters']});
+}, '@VERSION@', {requires: ['autocomplete', 'autocomplete-highlighters']});
 Y.Array.each(['ybutton', 'ydial', 'yautocomplete'], function(tag) {
     Y.Tag.register(tag);
 });
