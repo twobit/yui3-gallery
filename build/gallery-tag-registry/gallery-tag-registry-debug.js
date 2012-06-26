@@ -2,16 +2,29 @@ YUI.add('gallery-tag-registry', function(Y) {
 
 YUI.add('tag-ybutton', function(Y) {
     Y.namespace('Tag.Tags').ybutton = {
-        initializer: function(config) {
+        created: function(config) {
+            var self = this;
+
             this._node = this.get('host').appendChild('<button></button>');
             this._widget = new Y.Button(Y.merge(config, {srcNode: this._node}));
+
+            this.addAttr('label', {
+                getter: function() {return self._widget.get('label');},
+                setter: function(value) {self._widget.set('label', value);}
+            });
+
+            this.addAttr('disabled', {
+                getter: function() {return self._widget.get('disabled');},
+                setter: function(value) {self._widget.set('disabled', value);}
+            });
+
             this.onHostEvent('tag:inserted', function() {this._widget.render();}, this);
         }
     };
 }, '', {requires: ['button']});
 YUI.add('tag-ydial', function(Y) {
     Y.namespace('Tag.Tags').ydial = {
-        initializer: function(config) {
+        created: function(config) {
             this._node = this.get('host').appendChild('<div class="yui3-skin-sam"></div>');
             this._widget = new Y.Dial(Y.merge(config, {srcNode: this._node}));
             this.onHostEvent('tag:inserted', function() {this._widget.render();}, this);
@@ -20,7 +33,7 @@ YUI.add('tag-ydial', function(Y) {
 }, '', {requires: ['dial']});
 YUI.add('tag-yautocomplete', function(Y) {
     Y.namespace('Tag.Tags').yautocomplete = {
-        initializer: function(config) {
+        created: function(config) {
             this._node = this.get('host');
             this._node.append('<div class="yui3-skin-sam"><input type="text" /></div>');
             this._node.one('input').plug(Y.Plugin.AutoComplete, {

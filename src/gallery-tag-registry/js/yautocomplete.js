@@ -1,6 +1,6 @@
 YUI.add('tag-yautocomplete', function(Y) {
     Y.namespace('Tag.Tags').yautocomplete = {
-        initializer: function(config) {
+        created: function(config) {
             this._node = this.get('host');
             this._node.append('<div class="yui3-skin-sam"><input type="text" /></div>');
             this._node.one('input').plug(Y.Plugin.AutoComplete, {
@@ -10,4 +10,4 @@ YUI.add('tag-yautocomplete', function(Y) {
             });
         }
     };
-}, '', {requires: ['autocomplete', 'autocomplete-highlighters']});
+}, '@VERSION@', {requires: ['autocomplete', 'autocomplete-highlighters']});

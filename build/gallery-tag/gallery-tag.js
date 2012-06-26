@@ -44,8 +44,8 @@ Y.extend(TagPlugin, Y.Plugin.Base, {
         if (mixin) {
             Y.mix(this, mixin);
 
-            if (mixin.initializer) {
-                mixin.initializer.call(this, this.get('host').getData());
+            if (mixin.created) {
+                mixin.created.call(this, this.get('host').getData());
             }
         }
     }
