@@ -7,13 +7,19 @@
         <script type="text/javascript">
         var Y = YUI({
             modules: {
-                'gallery-event-inserted': {fullpath: '../../../build/gallery-event-inserted/gallery-event-inserted.js'},
-                'gallery-tag': {fullpath: '../../../build/gallery-tag/gallery-tag.js'},
-                'tag-ybutton': {fullpath: '../../../build/gallery-tag-registry/tag-ybutton.js'},
-                'tag-yautocomplete': {fullpath: '../../../build/gallery-tag-registry/tag-yautocomplete.js'},
-                'tag-ycalendar': {fullpath: '../../../build/gallery-tag-registry/tag-ycalendar.js'},
-                'tag-ydial': {fullpath: '../../../build/gallery-tag-registry/tag-ydial.js'},
-                'tag-yoverlay': {fullpath: '../../../build/gallery-tag-registry/tag-yoverlay.js'}
+                'gallery-event-inserted': '../../../build/gallery-event-inserted/gallery-event-inserted.js',
+                'gallery-tag': '../../../build/gallery-tag/gallery-tag.js'
+            },
+            groups: {
+                tag: {
+                    modules: {
+                        'tag-ybutton': '../../../build/gallery-tag-registry/tag-ybutton.js',
+                        'tag-yautocomplete': '../../../build/gallery-tag-registry/tag-yautocomplete.js',
+                        'tag-ycalendar': '../../../build/gallery-tag-registry/tag-ycalendar.js',
+                        'tag-ydial': '../../../build/gallery-tag-registry/tag-ydial.js',
+                        'tag-yoverlay': '../../../build/gallery-tag-registry/tag-yoverlay.js'
+                    }
+                }
             }
         })
         </script>

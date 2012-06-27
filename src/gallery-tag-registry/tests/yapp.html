@@ -7,10 +7,16 @@
         <script type="text/javascript">
         var Y = YUI({
             modules: {
-                'gallery-event-inserted': {fullpath: '../../../build/gallery-event-inserted/gallery-event-inserted.js'},
-                'gallery-tag': {fullpath: '../../../build/gallery-tag/gallery-tag.js'},
-                'tag-yapp': {fullpath: '../../../build/gallery-tag-registry/tag-yapp.js'},
-                'tag-ytemplate': {fullpath: '../../../build/gallery-tag-registry/tag-ytemplate.js'}
+                'gallery-event-inserted': '../../../build/gallery-event-inserted/gallery-event-inserted.js',
+                'gallery-tag': '../../../build/gallery-tag/gallery-tag.js'
+            },
+            groups: {
+                tag: {
+                    modules: {
+                        'tag-yapp': '../../../build/gallery-tag-registry/tag-yapp.js',
+                        'tag-ytemplate': '../../../build/gallery-tag-registry/tag-ytemplate.js'
+                    }
+                }
             }
         })
         </script>
