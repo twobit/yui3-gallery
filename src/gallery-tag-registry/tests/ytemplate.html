@@ -17,10 +17,21 @@
         </script>
     </head>
     <body>
-        <yapp></yapp>
+        <ytemplate><div>Hello, <span>{adjective}</span> world!</div></ytemplate>
+
+        <h2>Template</h2>
+        <div id="raw"></div>
+
+        <h2>Compiled</h2>
+        <div id="compiled"></div>
 
         <script type="text/javascript">
-        Y.use('tag-yapp');
+        Y.use('tag-ytemplate', function(Y) {
+            var tmpl = Y.one('ytemplate');
+
+            Y.one('#raw').setHTML(tmpl.tag.get('html'));
+            Y.one('#compiled').setHTML(tmpl.tag.compile({adjective: 'YUI Tag'}));
+        });
         </script>
     </body>
 </html>
