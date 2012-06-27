@@ -39,6 +39,24 @@ TagPlugin.ATTRS = {
     }
 };
 
+// Fixes a bug in YUI (#2532464) and parses ints
+function camelize(attrs) {
+    var camelized = {};
+
+    Y.each(attrs, function(value, key) {
+        var match = /i:([0-9]+)/.exec(value);
+        
+        if (match) {
+            value = parseInt(match[1], 10);
+        }
+
+        key = key.replace(/-([a-z])/g, function(s, l) {return l.toUpperCase();});
+        camelized[key] = value;
+    });
+
+    return camelized;
+}
+
 Y.extend(TagPlugin, Y.Plugin.Base, {
     initializer: function() {
         var tag = tags[this.get('name')];
@@ -48,7 +66,7 @@ Y.extend(TagPlugin, Y.Plugin.Base, {
         Y.mix(this, tag.mixin);
 
         if (tag.mixin.created) {
-            tag.mixin.created.call(this, this.get('host').getData());
+            tag.mixin.created.call(this, camelize(this.get('host').getData()));
         }
     }
 });

@@ -11,7 +11,7 @@
                 'gallery-tag': '../../../build/gallery-tag/gallery-tag.js'
             },
             groups: {tag: {patterns: {'tag-': {configFn: function(cfg) {
-                cfg.path = '../../yui3-gallery/build/gallery-tag-registry/' + cfg.name + '-min.js'
+                cfg.path = '../../yui3-gallery/build/gallery-tag-registry/' + cfg.name + '.js'
             }}}}}
         })
         </script>
@@ -52,8 +52,7 @@
     </head>
     <body>
         <h2>Overlay</h2>
-
-        <yoverlay data-x="100" data-y="100">
+        <yoverlay data-x="i:100" data-y="i:100">
             <div class="yui3-widget-hd">Overlay Header</div>
             <div class="yui3-widget-bd">Overlay Body</div>
             <div class="yui3-widget-ft">Overlay Footer</div>

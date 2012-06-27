@@ -2,17 +2,12 @@ YUI.add('tag-yoverlay', function(Y) {
 
 Y.Tag.register('yoverlay', {
     created: function(config) {
-        var html = this.get('host').getHTML(),
-            cfg = Y.merge(config);
-
+        var html = this.get('host').getHTML();
         this.get('host').setHTML('<div class="yui3-overlay-loading">' + html + '</div>');
-        
-        cfg.srcNode = this.get('host').one('div');
 
-        if (cfg.x) {cfg.x = parseInt(cfg.x, 10);}
-        if (cfg.y) {cfg.y = parseInt(cfg.y, 10);}
-
-        this._widget = new Y.Overlay(cfg);
+        this._widget = new Y.Overlay(Y.merge(config, {
+            srcNode: this.get('host').one('div')
+        }));
 
         Y.each(Y.Overlay.ATTRS, function(dummy, attr) { // Proxy attrs
             this.addAttr(attr, {
