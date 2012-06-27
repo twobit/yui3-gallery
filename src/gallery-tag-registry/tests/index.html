@@ -12,13 +12,11 @@
             },
             groups: {
                 tag: {
-                    modules: {
-                        'tag-ybutton': '../../../build/gallery-tag-registry/tag-ybutton.js',
-                        'tag-yautocomplete': '../../../build/gallery-tag-registry/tag-yautocomplete.js',
-                        'tag-ycalendar': '../../../build/gallery-tag-registry/tag-ycalendar.js',
-                        'tag-ydial': '../../../build/gallery-tag-registry/tag-ydial.js',
-                        'tag-yoverlay': '../../../build/gallery-tag-registry/tag-yoverlay.js'
-                    }
+                    patterns: {'tag-': {
+                        configFn: function(cfg) {
+                            cfg.path = '../../yui3-gallery/build/gallery-tag-registry/' + cfg.name + '-min.js'
+                        }
+                    }}
                 }
             }
         })

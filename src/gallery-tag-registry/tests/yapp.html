@@ -12,10 +12,11 @@
             },
             groups: {
                 tag: {
-                    modules: {
-                        'tag-yapp': '../../../build/gallery-tag-registry/tag-yapp.js',
-                        'tag-ytemplate': '../../../build/gallery-tag-registry/tag-ytemplate.js'
-                    }
+                    patterns: {'tag-': {
+                        configFn: function(cfg) {
+                            cfg.path = '../../yui3-gallery/build/gallery-tag-registry/' + cfg.name + '-min.js'
+                        }
+                    }}
                 }
             }
         })
