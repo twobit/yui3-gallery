@@ -1,5 +1,27 @@
 var Tag = Y.namespace('Tag'),
-    handles = {};
+    tags = {};
+
+Tag.register = function(name, mixin) {
+    Tag.unregister(name);
+
+    tags[name] = {
+        mixin: mixin,
+        handle: Y.on('inserted', function(e) {
+            e.target.fire('tag:inserted');
+        }, name)
+    };
+};
+
+Tag.unregister = function(name) {
+    if (tags[name]) {
+        tags[name].handle.detach();
+        delete tags[name];
+    }
+};
+
+Tag.registered = function(name) {
+    return name ? tags[name] : Object.keys(tags);
+};
 
 function TagPlugin(config) {
     TagPlugin.superclass.constructor.apply(this, arguments);
@@ -7,7 +29,6 @@ function TagPlugin(config) {
 
 TagPlugin.NAME = 'tagPlugin';
 TagPlugin.NS = 'tag';
-TagPlugin.TAGS = {};
 TagPlugin.ATTRS = {
     name: {
         valueFn: function() {
@@ -16,43 +37,18 @@ TagPlugin.ATTRS = {
     }
 };
 
-TagPlugin.register = function(name, mixin) {
-    TagPlugin.unregister(name);
-
-    // Check if mixin is directly available otherwise load dynamically
-    if (mixin) {
-        TagPlugin.TAGS[name] = mixin;
-
-        handles[name] = Y.on('inserted', function(e) {
-            e.target.fire('tag:inserted');
-        }, name);
-    } else {
-        Y.use('tag-' + name, function(Y) {});
-    }
-};
-
-TagPlugin.unregister = function(name) {
-    if (handles[name] && TagPlugin.TAGS[name]) {
-        handles[name].detach();
-        delete handles[name];
-        delete TagPlugin.TAGS[name];
-    }
-};
-
 Y.extend(TagPlugin, Y.Plugin.Base, {
     initializer: function() {
-        var mixin = TagPlugin.TAGS[this.get('name')];
+        var tag = tags[this.get('name')];
+        
+        if (!tag) {return;}
 
-        if (mixin) {
-            Y.mix(this, mixin);
+        Y.mix(this, tag.mixin);
 
-            if (mixin.created) {
-                mixin.created.call(this, this.get('host').getData());
-            }
+        if (tag.mixin.created) {
+            tag.mixin.created.call(this, this.get('host').getData());
         }
     }
 });
 
 Y.Node.plug(TagPlugin);
-
-Tag.register = TagPlugin.register;
