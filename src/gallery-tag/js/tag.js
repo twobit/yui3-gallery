@@ -20,7 +20,7 @@ Tag.unregister = function(name) {
 };
 
 Tag.registered = function(name) {
-    return name ? tags[name] : Object.keys(tags);
+    return name ? name in tags : Object.keys(tags);
 };
 
 function TagPlugin(config) {
