@@ -26,18 +26,14 @@
         <ybutton data-label="DISABLE" data-disabled="false"></ybutton>
 
         <script type="text/javascript">
-        YUI.add('tag-ybutton', function(Y) {
-            Y.namespace('Tag.Tags').ybutton = {
+        Y.use('gallery-tag', 'button', function(Y) {
+            Y.Tag.register('ybutton', {
                 created: function(config) {
-                    this._node = this.get('host').appendChild('<button></button>');
-                    this._widget = new Y.Button(Y.merge(config, {srcNode: this._node}));
+                    var node = this.get('host').appendChild('<button></button>');
+                    this._widget = new Y.Button(Y.merge(config, {srcNode: node}));
                     this.onHostEvent('tag:inserted', function() {this._widget.render();}, this);
                 }
-            };
-        }, '', {requires: ['button']});
-
-        Y.use('gallery-tag', function(Y) {
-            Y.Tag.register('ybutton');
+            });
         });
         </script>
     </body>

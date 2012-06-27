@@ -1,3 +1,5 @@
+YUI.add('tag-yapp', function(Y) {
+
 Y.Tag.register('yapp', {
     created: function(config) {
         this.get('host').setHTML('<div class="view-container">' + this.get('host').getHTML() + '</div><div class="container"></div>');
@@ -18,3 +20,6 @@ Y.Tag.register('yapp', {
         }, this);
     }
 });
+
+
+}, '@VERSION@' ,{requires:['gallery-tag', 'app-base']});

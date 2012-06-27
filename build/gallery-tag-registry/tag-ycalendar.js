@@ -1,3 +1,5 @@
+YUI.add('tag-ycalendar', function(Y) {
+
 Y.Tag.register('ycalendar', {
     created: function(config) {
         this.get('host').setHTML('<div class="yui3-skin-sam"></div>');
@@ -15,3 +17,6 @@ Y.Tag.register('ycalendar', {
         this.onHostEvent('tag:inserted', function() {this._widget.render();}, this);
     }
 });
+
+
+}, '@VERSION@' ,{requires:['gallery-tag', 'calendar']});

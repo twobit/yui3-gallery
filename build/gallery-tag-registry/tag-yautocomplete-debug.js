@@ -1,3 +1,5 @@
+YUI.add('tag-yautocomplete', function(Y) {
+
 Y.Tag.register('yautocomplete', {
     created: function(config) {
         this.get('host').setHTML('<div class="yui3-skin-sam"><input type="text" /></div>');
@@ -18,3 +20,6 @@ Y.Tag.register('yautocomplete', {
         }, this);
     }
 });
+
+
+}, '@VERSION@' ,{requires:['gallery-tag', 'autocomplete', 'autocomplete-highlighters']});

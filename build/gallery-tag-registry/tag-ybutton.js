@@ -1,3 +1,5 @@
+YUI.add('tag-ybutton', function(Y) {
+
 Y.Tag.register('ybutton', {
     created: function(config) {
         this.get('host').setHTML('<button></button>');
@@ -15,3 +17,6 @@ Y.Tag.register('ybutton', {
         this.onHostEvent('tag:inserted', function() {this._widget.render();}, this);
     }
 });
+
+
+}, '@VERSION@' ,{requires:['gallery-tag', 'button']});

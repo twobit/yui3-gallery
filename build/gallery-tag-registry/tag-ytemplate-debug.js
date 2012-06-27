@@ -1,3 +1,5 @@
+YUI.add('tag-ytemplate', function(Y) {
+
 Y.Tag.register('ytemplate', {
     created: function(config) {
         var host = this.get('host');
@@ -15,3 +17,6 @@ Y.Tag.register('ytemplate', {
         return Y.Lang.sub(this.get('html'), params);
     }
 });
+
+
+}, '@VERSION@' ,{requires:['gallery-tag']});

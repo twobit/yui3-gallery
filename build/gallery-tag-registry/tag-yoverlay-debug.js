@@ -1,3 +1,5 @@
+YUI.add('tag-yoverlay', function(Y) {
+
 Y.Tag.register('yoverlay', {
     created: function(config) {
         var html = this.get('host').getHTML(),
@@ -22,3 +24,6 @@ Y.Tag.register('yoverlay', {
         this.onHostEvent('tag:inserted', function() {this._widget.render();}, this);
     }
 });
+
+
+}, '@VERSION@' ,{requires:['gallery-tag', 'overlay']});

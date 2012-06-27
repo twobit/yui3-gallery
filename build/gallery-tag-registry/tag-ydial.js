@@ -1,11 +1,13 @@
-Y.Tag.register('ycalendar', {
+YUI.add('tag-ydial', function(Y) {
+
+Y.Tag.register('ydial', {
     created: function(config) {
         this.get('host').setHTML('<div class="yui3-skin-sam"></div>');
-        this._widget = new Y.Calendar(Y.merge(config, {
-            contentBox: this.get('host').one('div')
+        this._widget = new Y.Dial(Y.merge(config, {
+            srcNode: this.get('host').one('div')
         }));
 
-        Y.each(Y.Calendar.ATTRS, function(dummy, attr) { // Proxy attrs
+        Y.each(Y.Dial.ATTRS, function(dummy, attr) { // Proxy attrs
             this.addAttr(attr, {
                 getter: function() {return this._widget.get(attr);},
                 setter: function(value) {this._widget.set(attr, value);}
@@ -15,3 +17,6 @@ Y.Tag.register('ycalendar', {
         this.onHostEvent('tag:inserted', function() {this._widget.render();}, this);
     }
 });
+
+
+}, '@VERSION@' ,{requires:['gallery-tag', 'dial']});

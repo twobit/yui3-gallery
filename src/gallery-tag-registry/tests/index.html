@@ -7,15 +7,13 @@
         <script type="text/javascript">
         var Y = YUI({
             modules: {
-                'gallery-event-inserted': {
-                    fullpath: '../../../build/gallery-event-inserted/gallery-event-inserted.js'
-                },
-                'gallery-tag': {
-                    fullpath: '../../../build/gallery-tag/gallery-tag.js'
-                },
-                'gallery-tag-registry': {
-                    fullpath: '../../../build/gallery-tag-registry/gallery-tag-registry.js'
-                }
+                'gallery-event-inserted': {fullpath: '../../../build/gallery-event-inserted/gallery-event-inserted.js'},
+                'gallery-tag': {fullpath: '../../../build/gallery-tag/gallery-tag.js'},
+                'tag-ybutton': {fullpath: '../../../build/gallery-tag-registry/tag-ybutton.js'},
+                'tag-yautocomplete': {fullpath: '../../../build/gallery-tag-registry/tag-yautocomplete.js'},
+                'tag-ycalendar': {fullpath: '../../../build/gallery-tag-registry/tag-ycalendar.js'},
+                'tag-ydial': {fullpath: '../../../build/gallery-tag-registry/tag-ydial.js'},
+                'tag-yoverlay': {fullpath: '../../../build/gallery-tag-registry/tag-yoverlay.js'}
             }
         })
         </script>
@@ -77,7 +75,13 @@
         </yoverlay>
 
         <script type="text/javascript">
-        Y.use('gallery-tag-registry', function(Y) {});
+        Y.use(
+            'tag-yautocomplete',
+            'tag-ybutton',
+            'tag-ycalendar',
+            'tag-ydial',
+            'tag-yoverlay'
+        );
         </script>
     </body>
 </html>
