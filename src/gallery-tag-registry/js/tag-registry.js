@@ -1,10 +1,12 @@
 var REGISTRY = [
+    'ytemplate',
     'ybutton',
     'ydial',
     'yautocomplete',
     'ycalendar',
     'ychart',
-    'yoverlay'
+    'yoverlay',
+    'yapp'
 ];
 
 Y.Array.each(REGISTRY, function(tag) {
