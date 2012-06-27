@@ -44,8 +44,8 @@ function camelize(attrs) {
     var camelized = {};
 
     Y.each(attrs, function(value, key) {
-        var match = /i:([0-9]+)/.exec(value);
-        
+        var match = /^i:(-?[0-9]+)$/.exec(value);
+
         if (match) {
             value = parseInt(match[1], 10);
         }
