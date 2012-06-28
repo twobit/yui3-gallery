@@ -78,11 +78,14 @@ DOMInserted = {
     on: function(node, sub, notifier, filter) {
         var method = filter ? 'delegate' : 'on';
 
+        // Initialize elements on page already
         if (!DOMInserted.TAGS[sub._extra]) {
             DOMInserted.TAGS[sub._extra] = true;
-            Y.all(sub._extra).each(function(item) {
-                notifier.fire({target: item});
-            });
+            setTimeout(function() {
+                Y.all(sub._extra).each(function(item) {
+                    notifier.fire({target: item});
+                });
+            }, 0);
         }
 
         sub._handle = node[method]('DOMNodeInserted', Y.bind(function(e) {
