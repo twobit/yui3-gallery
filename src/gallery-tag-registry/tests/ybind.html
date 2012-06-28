@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />        
+        <title>YUI Tag</title>
+        <script type="text/javascript" src="../../../../yui3/build/yui/yui.js"></script>
+        <script type="text/javascript">
+        var Y = YUI({
+            modules: {
+                'gallery-event-inserted': '../../../build/gallery-event-inserted/gallery-event-inserted.js',
+                'gallery-tag': '../../../build/gallery-tag/gallery-tag.js'
+            },
+            groups: {tag: {patterns: {'tag-': {configFn: function(cfg) {
+                cfg.path = '../../yui3-gallery/build/gallery-tag-registry/' + cfg.name + '.js'
+            }}}}}
+        })
+        </script>
+    </head>
+    <body>
+        <h2>Bind</h2>
+
+        <h3>Valuechange Binding</h3>
+        <ybind data-name="foo" data-on="valuechange" data-init="[name]"><input type="text" placeholder="Enter your name" /></ybind>
+
+        <p>Hello, <ytarget data-name="foo"></ytarget>! Have a good day, <ytarget data-name="foo"></ytarget>.</p>
+
+        <h3>Change Binding</h3>
+        <ybind data-name="test" data-on="change" data-init="5"><input type="range" /></ybind>
+        <p>Age: <ytarget data-name="test"></ytarget></p>
+
+        <script type="text/javascript">
+        Y.use('tag-ybind');
+        </script>
+    </body>
+</html>
