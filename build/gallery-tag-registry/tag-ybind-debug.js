@@ -12,11 +12,11 @@ Y.Tag.register('ybind, [ybind]', {
         });
 
         Y.Array.each(events, function(name) {
-            node.on(name, this.update, this);
+            node.on(name, this[config['on' + name]] || this.ybindUpdate, this);
         }, this);
     },
 
-    update: function(e) {
+    ybindUpdate: function(e) {
         this.get('host').setHTML(e.target.get('value'));
     }
 });
