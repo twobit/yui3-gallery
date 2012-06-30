@@ -7,47 +7,55 @@ var Tag = Y.namespace('Tag'),
     registered = {},
     has_attrs = false; // Attribute support is a slower code path
 
+function getParts(name) {
+    return name.replace(' ', '').toLowerCase().split(',');
+}
+
 /**
  * @method register
- * @description N/A
+ * @description Registers a new tag mixin.
  * @param {string} name N/A
  * @param {object} mixin N/A
  */
 Tag.register = function(name, mixin) {
-    name = name.toLowerCase();
+    var parts = getParts(name);
 
-    if (name.indexOf('[')) {
-        has_attrs = true;
-    }
+    Y.Array.each(parts, function(part) {
+        if (part.indexOf('[') >= 0) {
+            has_attrs = true;
+        }
 
-    registered[name] = {
-        mixin: mixin,
-        handle: Y.on('inserted', function(e) {
-            e.target.fire('tag:inserted');
-        }, name)
-    };
+        registered[part] = {
+            mixin: mixin,
+            handle: Y.on('inserted', function(e) {
+                e.target.fire('tag:inserted');
+            }, part)
+        };
+    });
 };
 
 /**
  * @method unregister
- * @description N/A
+ * @description Unregister a tag mixin.
  * @param {string} name N/A
  */
 Tag.unregister = function(name) {
-    name = name.toLowerCase();
-    if (registered[name]) {
-        registered[name].handle.detach();
-        delete registered[name];
-    }
+    var parts = getParts(name);
+
+    Y.Array.each(parts, function(part) {
+        if (registered[part]) {
+            registered[part].handle.detach();
+            delete registered[part];
+        }
+    });
 };
 
 /**
  * @method registered
- * @description N/A
+ * @description Gets all currently registered tag mixins.
  * @param {string} name N/A
  */
 Tag.registered = function(name) {
-    name = name.toLowerCase();
     return name ? name in registered : Object.keys(registered);
 };
 

@@ -19,40 +19,27 @@
     <body>
         <h2>Data Binding</h2>
 
-            <h3>Keyup Binding</h3>
-            <input id="name" ybind ybind:onkeyup="" type="text" placeholder="Enter your name" />
-            <p>Hello, <span ybind="ybind.name"></span>! Have a good day, <span ybind="ybind.name"></span>.</p>
+        <input id="name" type="text" placeholder="Enter your name" />
+        <p>Hello, <span ybind="#name" ybind:onkeyup=""></span>! Have a good day, <ybind data-ybind="#name" data-onkeyup=""></ybind>.</p>
 
-            <h3>Change Binding</h3>
-            <input id="age" ybind ybind:onchange="" type="range" />
-            <p>Age: <span ybind="ybind.age"></span></p>
+        <hr />
 
-            <h3>Advanced</h3>
-            <click-counter>
-                <span ybind="ClickCounter.getCount()"></span> of <span ybind="ClickCounter.count"></span>
+        <input id="age" type="range" />
+        <p>Age: <span ybind="#age" ybind:onchange=""></span></p>
 
-                <form ybind ybind-onsubmit="ClickCounter.submit()">
-                    <input type="submit" value="Click" />
-                </form>
-            </click-counter>
+        <!--
+        <h3>Advanced</h3>
+        <click-counter>
+            <span ybind="ClickCounter.getCount()"></span> of <span ybind="ClickCounter.count"></span>
+
+            <form ybind ybind-onsubmit="ClickCounter.submit()">
+                <input type="submit" value="Click" />
+            </form>
+        </click-counter>
+        -->
 
         <script type="text/javascript">
-        Y.use('gallery-tag', function(Y) {
-
-            /*
-            Y.Tag.register('[ybind]', {
-                created: function(config) {
-                    this.get('host').all('[ybind]').each(function(n) {
-                        Y.Array.each(n.getDOMNode().attributes, function(attr) {
-                            console.log(attr.name, attr.value);
-                        });
-                    });
-                },
-
-                subscribe: function() {
-                }
-            });
-            */
+        Y.use('tag-ybind', function(Y) {
 
             /*
             Y.Tag.register('ClickCounter', {
@@ -82,8 +69,6 @@
             });
             */
         });
-
-        //Y.use('tag-ybind');
         </script>
     </body>
 </html>

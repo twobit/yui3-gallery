@@ -1,30 +1,23 @@
 YUI.add('tag-ybind', function(Y) {
 
-Y.Tag.register('ybind', {
+Y.Tag.register('ybind, [ybind]', {
     created: function(config) {
-        var node = this.get('host');
+        var node = Y.one(config.ybind || this.get('host').getAttribute('ybind')) || Y,
+            events = [];
 
-        if (config.on === 'valuechange') {
-            node = node.one('input, textarea');
-        }
-
-        node.on(config.on, function(e) {
-            Y.fire('target:' + config.name, e.target.get('value'));
+        Y.each(config, function(dummy, name) {
+            if (name.indexOf('on') === 0) {
+                events.push(name.substr(2));
+            }
         });
 
-        if (config.init) {
-            setTimeout(function() {
-                Y.fire('target:' + config.name, config.init);
-            }, 0);
-        }
-    }
-});
-
-Y.Tag.register('ytarget', {
-    created: function(config) {
-        Y.on('target:' + config.name, function(value) {
-            this.get('host').setHTML(value);
+        Y.Array.each(events, function(name) {
+            node.on(name, this.update, this);
         }, this);
+    },
+
+    update: function(e) {
+        this.get('host').setHTML(e.target.get('value'));
     }
 });
 
