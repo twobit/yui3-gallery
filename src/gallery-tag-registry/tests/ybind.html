@@ -8,7 +8,7 @@
         var Y = YUI({
             modules: {
                 'gallery-event-inserted': '../../../build/gallery-event-inserted/gallery-event-inserted.js',
-                'gallery-tag': '../../../build/gallery-tag/gallery-tag.js'
+                'gallery-tag': '../../../build/gallery-tag/gallery-tag.js?zz'
             },
             groups: {tag: {patterns: {'tag-': {configFn: function(cfg) {
                 cfg.path = '../../yui3-gallery/build/gallery-tag-registry/' + cfg.name + '.js'
@@ -19,17 +19,71 @@
     <body>
         <h2>Data Binding</h2>
 
-        <h3>Valuechange Binding</h3>
-        <ybind data-name="foo" data-on="valuechange" data-init="[name]"><input type="text" placeholder="Enter your name" /></ybind>
+            <h3>Keyup Binding</h3>
+            <input id="name" ybind ybind:onkeyup="" type="text" placeholder="Enter your name" />
+            <p>Hello, <span ybind="ybind.name"></span>! Have a good day, <span ybind="ybind.name"></span>.</p>
 
-        <p>Hello, <ytarget data-name="foo"></ytarget>! Have a good day, <ytarget data-name="foo"></ytarget>.</p>
+            <h3>Change Binding</h3>
+            <input id="age" ybind ybind:onchange="" type="range" />
+            <p>Age: <span ybind="ybind.age"></span></p>
 
-        <h3>Change Binding</h3>
-        <ybind data-name="test" data-on="change" data-init="5"><input type="range" /></ybind>
-        <p>Age: <ytarget data-name="test"></ytarget></p>
+            <h3>Advanced</h3>
+            <click-counter>
+                <span ybind="ClickCounter.getCount()"></span> of <span ybind="ClickCounter.count"></span>
+
+                <form ybind ybind-onsubmit="ClickCounter.submit()">
+                    <input type="submit" value="Click" />
+                </form>
+            </click-counter>
 
         <script type="text/javascript">
-        Y.use('tag-ybind');
+        Y.use('gallery-tag', function(Y) {
+
+            /*
+            Y.Tag.register('[ybind]', {
+                created: function(config) {
+                    this.get('host').all('[ybind]').each(function(n) {
+                        Y.Array.each(n.getDOMNode().attributes, function(attr) {
+                            console.log(attr.name, attr.value);
+                        });
+                    });
+                },
+
+                subscribe: function() {
+                }
+            });
+            */
+
+            /*
+            Y.Tag.register('ClickCounter', {
+                created: function(config) {
+                    this.addAttr('count', {value: 0, testing: 1});
+
+                    console.log(this._getAttrs(['count']));
+                },
+
+                getCount: function() {
+                    return this.get('count');
+                }
+            });
+
+            Y.Tag.register('yvalue', {
+                created: function(config) {
+                    var match = /^([_a-zA-Z]+)\.([_a-zA-Z]+)(\(\))?;?$/g.exec(config.prop),
+                        tag = match[1],
+                        property = match[2],
+                        method = match[3],
+                        obj = this.get('host').ancestor(tag).tag;
+
+                    obj.on('attrsChanged', function(e) {
+                        this.get('host').setHTML(method ? obj[property]() : obj.get(property));
+                    }, this);
+                }
+            });
+            */
+        });
+
+        //Y.use('tag-ybind');
         </script>
     </body>
 </html>
