@@ -19,20 +19,20 @@
     <body>
         <h2>Data Binding</h2>
 
-        <input id="name" type="text" placeholder="Enter your name" />
-        <p>Hello, <span ybind="#name" ybind:onkeyup=""></span>! Have a good day, <ybind data-ybind="#name" data-onkeyup=""></ybind>.</p>
+        <input id="name" type="text" placeholder="Enter your name" ybind ybind:onkeyup />
+        <p>Hello, <span ybind="#name" ybind:ref="value"></span>! Have a good day, <ybind data-ybind="#name" data-ref="value"></ybind>.</p>
 
         <hr />
 
-        <input id="age" type="range" />
-        <p>Age: <span ybind="#age" ybind:onchange=""></span></p>
+        <input id="age" type="range" ybind ybind:onchange />
+        <p>Age: <span ybind="#age" ybind:ref="value"></span></p>
 
         <hr />
 
-        <click-counter ybind="form" ybind:onsubmit="clicked">
-            <p>Total clicks: <span ybind="click-counter" ybind:oncountchange=""></span></p>
+        <click-counter>
+            <p>Total clicks: <span ybind="click-counter" ybind:ref="count"></span></p>
 
-            <form>
+            <form ybind="click-counter" ybind:onsubmit="clicked">
                 <input type="submit" value="Click" />
             </form>
         </click-counter>
