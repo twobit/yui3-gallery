@@ -49,22 +49,6 @@
                     this.set('count', this.get('count') + 1);
                 }
             });
-
-            /*
-            Y.Tag.register('yvalue', {
-                created: function(config) {
-                    var match = /^([_a-zA-Z]+)\.([_a-zA-Z]+)(\(\))?;?$/g.exec(config.prop),
-                        tag = match[1],
-                        property = match[2],
-                        method = match[3],
-                        obj = this.get('host').ancestor(tag).tag;
-
-                    obj.on('attrsChanged', function(e) {
-                        this.get('host').setHTML(method ? obj[property]() : obj.get(property));
-                    }, this);
-                }
-            });
-            */
         });
         </script>
     </body>
