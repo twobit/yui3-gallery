@@ -20,20 +20,20 @@ Y.Tag.register('ybind, [ybind]', {
         }
 
         Y.Array.each(events, function(name) {
-            this.onHostEvent(name, obj[config['on' + name]] || this.ybindUpdate, obj);
+            this.onHostEvent(name, obj[config['on' + name]] || this._ybindUpdate, obj);
         }, this);
 
         if (config.ref) {
-            obj.on(config.ref + 'Change', this.ybindChange, this);
+            obj.on(config.ref + 'Change', this._ybindChange, this);
             this.get('host').setHTML(obj.get(config.ref));
         }
     },
 
-    ybindUpdate: function(e) {
+    _ybindUpdate: function(e) {
         this.set('value', e.target.get('value'));
     },
 
-    ybindChange: function(e) {
+    _ybindChange: function(e) {
         this.get('host').setHTML(e.newVal);
     }
 });

@@ -143,6 +143,10 @@ Y.extend(TagPlugin, Y.Plugin.Base, {
             });
         }
 
+        // Need to add to cached instances to prevent errors when mixins refer
+        // other nodes with mixins.
+        Y.Node._instances[host._yuid] = host;
+
         if (mixins.length) {
             Y.Array.each(mixins, function(mixin) {
                 Y.mix(this, mixin.obj);
