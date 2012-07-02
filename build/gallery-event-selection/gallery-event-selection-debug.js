@@ -11,12 +11,8 @@ YUI.add('gallery-event-selection', function(Y) {
  *
  * Limitations:
  *  - There are a few edge cases where selection events don't work well. Namely,
-<<<<<<< HEAD
- *    when selecting text that crosses the boundary of a bounded node.
-=======
  *    when selecting text that crosses the boundary of a bounded node or selecting
  *    text with only keyboard selection.
->>>>>>> c121fbf59eb91de37bf9d5f8be6dab98c98e7e6d
  *
  * Notes:
  *  - Polling for selection changes is necessary because iOS doesn't tell us
@@ -136,8 +132,4 @@ Y.Event.define('selectionchange', {
 });
 
 
-<<<<<<< HEAD
 }, '@VERSION@' ,{skinnable:false, requires:['event-move']});
-=======
-}, 'gallery-2012.06.06-19-59' ,{requires:['event-move'], skinnable:false});
->>>>>>> c121fbf59eb91de37bf9d5f8be6dab98c98e7e6d

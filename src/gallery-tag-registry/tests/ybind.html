@@ -8,7 +8,7 @@
         var Y = YUI({
             modules: {
                 'gallery-event-inserted': '../../../build/gallery-event-inserted/gallery-event-inserted.js',
-                'gallery-tag': '../../../build/gallery-tag/gallery-tag.js?zz'
+                'gallery-tag': '../../../build/gallery-tag/gallery-tag.js'
             },
             groups: {tag: {patterns: {'tag-': {configFn: function(cfg) {
                 cfg.path = '../../yui3-gallery/build/gallery-tag-registry/' + cfg.name + '.js'
@@ -19,24 +19,24 @@
     <body>
         <h2>Data Binding</h2>
 
-        <input id="name" type="text" placeholder="Enter your name" ybind ybind:onkeyup />
-        <p>Hello, <span ybind="#name" ybind:ref="value"></span>! Have a good day, <ybind data-ybind="#name" data-ref="value"></ybind>.</p>
+        <input id="name" type="text" placeholder="Enter your name" />
+        <p>Hello, <span ybind="#name" ybind:refchange></span>! Have a good day, <ybind data-ybind="#name" data-refchange></ybind>.</p>
 
         <hr />
 
-        <input id="age" type="range" ybind ybind:onchange />
-        <p>Age: <span ybind="#age" ybind:ref="value"></span></p>
+        <input id="age" type="range" />
+        <p>Age: <span ybind="#age" ybind:refchange></span></p>
 
         <hr />
 
-        <input id="age2" type="range" ybind="#age3" />
-        <input id="age3" type="range" ybind="#age2" />
+        <input id="age2" type="range" ybind="#age3" ybind:refchange />
+        <input id="age3" type="range" ybind="#age2" ybind:refchange />
         <p id="test">Age: <span></span></p>
 
         <hr />
 
         <click-counter>
-            <p>Total clicks: <span ybind="click-counter" ybind:ref="count"></span></p>
+            <p>Total clicks: <span ybind="click-counter" ybind:refcount-change></span></p>
 
             <form ybind="click-counter" ybind:onsubmit="clicked">
                 <input type="submit" value="Click" />

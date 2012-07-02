@@ -144,8 +144,8 @@ Y.extend(TagPlugin, Y.Plugin.Base, {
         }
 
         if (mixins.length) {
-            // Need to cache this instance since it hasn't fully initialized. Otherwise it's possible
-            // to get into an infinite loop of tags referring to tags which haven't been cached yet.
+            // Need to cache host instance since it hasn't fully initialized. Otherwise it's possible
+            // to get into an infinite loop of mixins referring to nodes which haven't been cached yet.
             Y.Node._instances[host._yuid] = host;
 
             Y.Array.each(mixins, function(mixin) {

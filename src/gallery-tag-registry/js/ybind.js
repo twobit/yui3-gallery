@@ -1,29 +1,41 @@
 Y.Tag.register('ybind, [ybind]', {
     created: function(config) {
-        var obj = config.ybind || this.get('host').getAttribute('ybind'),
+        var selector = config.ybind || this.get('host').getAttribute('ybind'),
+            target = this,
             events = [];
 
-        obj = obj ? Y.one(obj).tag : this;
+        console.log(config);
 
-        Y.each(config, function(dummy, name) {
-            if (name.indexOf('on') === 0) {
-                events.push(name.substr(2));
+        function createdHelper() {
+            var setFn = config.set ? this.setValue : this.setHTML;
+            target = selector ? Y.one(selector).tag : this;
+
+            Y.each(config, function(dummy, name) {
+                if (name.indexOf('on') === 0) {
+                    events.push(name.substr(2));
+                }
+            });
+
+            if (this === target) {
+                this.addAttr('value', {getter: function() {
+                    return this.get('host').get('value');
+                }});
             }
-        });
 
-        if (this === obj) {
-            this.addAttr('value', {getter: function() {
-                return this.get('host').get('value');
-            }});
+            Y.Array.each(events, function(name) {
+                this.onHostEvent(name, target[config['on' + name]] || this._ybindUpdate, target);
+            }, this);
+
+            if (config.ref) {
+                target.on(config.ref + 'Change', setFn, this);
+                setFn.call(this, {newVal: target.get(config.ref)});
+            }
         }
 
-        Y.Array.each(events, function(name) {
-            this.onHostEvent(name, obj[config['on' + name]] || this._ybindUpdate, obj);
-        }, this);
-
-        if (config.ref) {
-            obj.on(config.ref + 'Change', this._ybindChange, this);
-            this.get('host').setHTML(obj.get(config.ref));
+        if (selector ? Y.one(selector).tag : this) {
+            createdHelper.call(this);
+        } else {
+            setTimeout(Y.bind(createdHelper, this), 0);
         }
     },
 
@@ -31,7 +43,15 @@ Y.Tag.register('ybind, [ybind]', {
         this.set('value', e.target.get('value'));
     },
 
-    _ybindChange: function(e) {
+    setHTML: function(e) {
         this.get('host').setHTML(e.newVal);
+    },
+
+    setValue: function(e) {
+        this.get('host').set('value', e.newVal);
+    },
+
+    test: function() {
+
     }
 });
