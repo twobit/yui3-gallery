@@ -79,7 +79,7 @@ Y.Event.define('selectionchange', {
         sub._handle = new Y.EventHandle([
             Y.on('gesturemovestart', Y.bind(function(e) {
                 this._unpoll();
-                if (sub._selection) {
+                if (getSelection() !== sub._selection) {
                     sub._selection = '';
                     sub._notifier.fire({selection: sub._selection, pageX: e.pageX, pageY: e.pageY});
                 }
