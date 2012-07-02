@@ -79,9 +79,8 @@ Y.Event.define('selectionchange', {
         sub._handle = new Y.EventHandle([
             Y.on('gesturemovestart', Y.bind(function(e) {
                 this._unpoll();
-                if (getSelection() !== sub._selection) {
-                    sub._selection = '';
-                    sub._notifier.fire({selection: sub._selection, pageX: e.pageX, pageY: e.pageY});
+                if (sub._selection) {
+                    Y.later(0, this, this._checkSelectionChange, sub);
                 }
             }, this)),
             node[method]('gesturemovestart', function(e) {}, filter), // event-gesture bug
