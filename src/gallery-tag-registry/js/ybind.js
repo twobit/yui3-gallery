@@ -4,8 +4,6 @@ Y.Tag.register('ybind, [ybind]', {
             target = this,
             events = [];
 
-        console.log(config);
-
         function createdHelper() {
             var setFn = config.set ? this.setValue : this.setHTML;
             target = selector ? Y.one(selector).tag : this;
