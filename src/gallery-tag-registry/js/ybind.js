@@ -1,55 +1,47 @@
 Y.Tag.register('ybind, [ybind]', {
     created: function(config) {
+        if (!this._created(config)) { // Node may not be available yet, try again
+            Y.later(0, this, this._created, config);
+        }
+    },
+
+    _created: function(config) {
         var selector = config.ybind || this.get('host').getAttribute('ybind'),
-            target = this,
-            events = [];
+            ref = selector ? Y.one(selector).tag : this;
 
-        function createdHelper() {
-            var setFn = config.set ? this.setValue : this.setHTML;
-            target = selector ? Y.one(selector).tag : this;
-
-            Y.each(config, function(dummy, name) {
-                if (name.indexOf('on') === 0) {
-                    events.push(name.substr(2));
-                }
-            });
-
-            if (this === target) {
-                this.addAttr('value', {getter: function() {
-                    return this.get('host').get('value');
-                }});
-            }
-
-            Y.Array.each(events, function(name) {
-                this.onHostEvent(name, target[config['on' + name]] || this._ybindUpdate, target);
-            }, this);
-
-            if (config.ref) {
-                target.on(config.ref + 'Change', setFn, this);
-                setFn.call(this, {newVal: target.get(config.ref)});
-            }
+        if (!ref) {
+            return false;
         }
 
-        if (selector ? Y.one(selector).tag : this) {
-            createdHelper.call(this);
-        } else {
-            setTimeout(Y.bind(createdHelper, this), 0);
+        Y.each(config, function(fn, type) {
+            var e = {};
+
+            if (type.indexOf('on') === 0) {
+                e.type = type.substr(2);
+                e.target = Y.Node.DOM_EVENTS[e.type] ? this.get('host') : this;
+            }
+            else if (type.indexOf('ref') === 0) {
+                e.type = type.substr(3);
+                e.target = Y.Node.DOM_EVENTS[e.type] ? ref.get('host') : ref;
+            }
+
+            if (e.type) {
+                e.target.on(e.type, ref[fn] ? Y.rbind(ref[fn], ref, this) : Y.bind(this._defaultFn, this));
+            }
+        }, this);
+
+        return true;
+    },
+
+    _defaultFn: function(e, ref) {
+        var host = this.get('host'),
+            value = e.newVal ? e.newVal : e.target.get('value');
+
+        if (host.get('tagName') === 'INPUT') {
+            host.set('value', value);
         }
-    },
-
-    _ybindUpdate: function(e) {
-        this.set('value', e.target.get('value'));
-    },
-
-    setHTML: function(e) {
-        this.get('host').setHTML(e.newVal);
-    },
-
-    setValue: function(e) {
-        this.get('host').set('value', e.newVal);
-    },
-
-    test: function() {
-
+        else {
+            host.setHTML(value);
+        }
     }
 });
