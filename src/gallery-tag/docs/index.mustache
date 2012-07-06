@@ -57,12 +57,35 @@ Y.Tag.register('example, [example]', {});
 <p highlight highlight:word="elit">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> 
 ```
 
+<h3>Inserted Event</h3>
+
+<p>`tag:inserted`</p>
+
 <h2>How It Works</h2>
 
-<p>gallery-event-inserted</p>
+<p>`gallery-event-inserted` provides the magic behind the `tag:inserted` event. It uses CSS3 Animation to create efficient inserted events. If CSS3 Animation is unsupported it falls back to using the slower DOMNodeInserted mutation event.</p>
 
 <h2>Registry</h2>
 
+<table class="yui-table">
+<thead>
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Module</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <td>`ybind`</td>
+        <td>Allows a node to respond to events.</td>
+        <td>tag-ybind</td>
+    </tr>
+</tbody>
+</table>
+
 <h2>About</h2>
 
-<p>X-Tag was the initial inspiration, however the Tag module goes beyond the current implementation and allows you to register attributes in addition to tags.</p>
+<p><a href="http://mozilla.github.com/x-tag/">X-Tag</a> was the initial inspiration, however the Tag module goes beyond the current implementation and allows you to register attributes in addition to tags.</p>
+
+<p>Compatibility: IE9+, FF5+, Chrome 4+, Safari/iOS 4+, Android 2.1+</p>

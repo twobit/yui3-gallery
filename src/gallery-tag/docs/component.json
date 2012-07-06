@@ -4,7 +4,7 @@
     "description": "Provides a way to write 'smart' HTML tags backed by YUI modules.",
     "author"     : "twobit",
 
-    "tags": ["tag"],
+    "tags": ["gallery-tag"],
     "use" : ["gallery-tag"],
 
     "examples": []
