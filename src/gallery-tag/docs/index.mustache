@@ -38,6 +38,31 @@ Y.one('copyright').tag.get('name'); // Foo Inc.
 
 ```
 // Attribute selector matches all highlight attributes
+Y.Tag.register('[highdpi]', {
+    created: function(config) {
+        if (Y.config.win.devicePixelRatio <= 1) {return;}
+
+        var host = config.get('host'),
+            src = host.get('src').replace(/(\.[a-zA-Z]+)$/, function(m) {return '@2x' + m;});
+
+        if (src) {
+            Y.io(src, {
+                method: 'HEAD',
+                onsuccess: function(e) {
+                    host.set('src', src);
+                }
+            });
+        }
+    }
+});
+
+Y.Tag.register('example, [example]', {});
+```
+
+<p>When registering an attribute, the attribute name becomes a namespace for config parameters.</p>
+
+```
+// Attribute selector matches all highlight attributes
 Y.Tag.register('[highlight]', {
     created: function(config) {
         var host = config.get('host'),
@@ -46,11 +71,7 @@ Y.Tag.register('[highlight]', {
         host.setHTML(text);
     }
 });
-
-Y.Tag.register('example, [example]', {});
 ```
-
-<p>When registering an attribute, the attribute name becomes a namespace for config parameters.</p>
 
 ```
 <!-- Bolds "elit" -->
