@@ -19,8 +19,4 @@ Y.Tag.register('ydial', {
 });
 
 
-<<<<<<< HEAD
 }, '@VERSION@' ,{requires:['gallery-tag', 'dial']});
-=======
-}, 'gallery-2012.07.05-20-01' ,{requires:['gallery-tag', 'dial']});
->>>>>>> upstream/master

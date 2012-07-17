@@ -49,8 +49,4 @@ Y.Tag.register('ybind, [ybind]', {
 });
 
 
-<<<<<<< HEAD
 }, '@VERSION@' ,{requires:['gallery-tag', 'event']});
-=======
-}, 'gallery-2012.07.05-20-01' ,{requires:['gallery-tag', 'event']});
->>>>>>> upstream/master
