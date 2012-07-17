@@ -19,4 +19,8 @@ Y.Tag.register('ycalendar', {
 });
 
 
+<<<<<<< HEAD
 }, '@VERSION@' ,{requires:['gallery-tag', 'calendar']});
+=======
+}, 'gallery-2012.07.05-20-01' ,{requires:['gallery-tag', 'calendar']});
+>>>>>>> upstream/master

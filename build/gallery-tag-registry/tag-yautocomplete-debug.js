@@ -22,4 +22,8 @@ Y.Tag.register('yautocomplete', {
 });
 
 
+<<<<<<< HEAD
 }, '@VERSION@' ,{requires:['gallery-tag', 'autocomplete', 'autocomplete-highlighters']});
+=======
+}, 'gallery-2012.07.05-20-01' ,{requires:['gallery-tag', 'autocomplete', 'autocomplete-highlighters']});
+>>>>>>> upstream/master

@@ -116,4 +116,8 @@ DOMInserted = {
 Y.Event.define('inserted', VENDOR ? Inserted : DOMInserted);
 
 
+<<<<<<< HEAD
 }, '@VERSION@' ,{skinnable:false, requires:['event', 'node']});
+=======
+}, 'gallery-2012.07.05-20-01' ,{requires:['event', 'node'], skinnable:false});
+>>>>>>> upstream/master

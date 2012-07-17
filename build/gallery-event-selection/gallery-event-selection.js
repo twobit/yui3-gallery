@@ -131,4 +131,8 @@ Y.Event.define('selectionchange', {
 });
 
 
+<<<<<<< HEAD
 }, '@VERSION@' ,{skinnable:false, requires:['event-move']});
+=======
+}, 'gallery-2012.07.05-20-01' ,{requires:['event-move'], skinnable:false});
+>>>>>>> upstream/master

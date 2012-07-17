@@ -19,4 +19,8 @@ Y.Tag.register('ybutton', {
 });
 
 
+<<<<<<< HEAD
 }, '@VERSION@' ,{requires:['gallery-tag', 'button']});
+=======
+}, 'gallery-2012.07.05-20-01' ,{requires:['gallery-tag', 'button']});
+>>>>>>> upstream/master

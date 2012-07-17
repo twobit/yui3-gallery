@@ -162,4 +162,8 @@ Y.extend(TagPlugin, Y.Plugin.Base, {
 Y.Node.plug(TagPlugin);
 
 
+<<<<<<< HEAD
 }, '@VERSION@' ,{skinnable:false, requires:['node', 'base', 'plugin', 'gallery-event-inserted']});
+=======
+}, 'gallery-2012.07.05-20-01' ,{requires:['node', 'base', 'plugin', 'gallery-event-inserted'], skinnable:false});
+>>>>>>> upstream/master

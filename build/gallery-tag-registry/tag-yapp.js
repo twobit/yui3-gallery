@@ -22,4 +22,8 @@ Y.Tag.register('yapp', {
 });
 
 
+<<<<<<< HEAD
 }, '@VERSION@' ,{requires:['gallery-tag', 'app-base']});
+=======
+}, 'gallery-2012.07.05-20-01' ,{requires:['gallery-tag', 'app-base']});
+>>>>>>> upstream/master

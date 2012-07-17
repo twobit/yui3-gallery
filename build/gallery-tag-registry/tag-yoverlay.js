@@ -21,4 +21,8 @@ Y.Tag.register('yoverlay', {
 });
 
 
+<<<<<<< HEAD
 }, '@VERSION@' ,{requires:['gallery-tag', 'overlay']});
+=======
+}, 'gallery-2012.07.05-20-01' ,{requires:['gallery-tag', 'overlay']});
+>>>>>>> upstream/master
