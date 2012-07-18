@@ -6,6 +6,14 @@
 
 <h2>Using Tag</h2>
 
+<p>To hook into Node creation you must first specify what kind of node to hook into and what should be done on creation. You do that by registering a CSS selector and a mixin. If a node is found to match the selector, the mixin is applied and its `initializer` method is called.</p>
+
+
+
+When using Tag, every Node has a `tag` plugin. A CSS selector can be registered so that when any Node is found to match it has a mixin applied
+
+When a node is first created using Y.Node, the Tag plugin
+
 <p>CSS Selectors are used to attach additional functionality (mixins) to Nodes. Nodes will be matched whether they are present on page load or created dynamically.</p>
 
 <h4>Registering Tags</h4>
