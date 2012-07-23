@@ -93,7 +93,7 @@ Copyright &amp;copy; &lt;ydate data-format=&quot;%Y&quot;&gt;&lt;&#x2F;ydate&gt;
 
 <p>Registering attributes is a way to provide more graceful degredation to your elements. You could also register both an attribute and a tag to provide more flexible usage.</p>
 
-<pre class="code prettyprint">&#x2F;&#x2F; Attribute selector matches all highlight attributes
+<pre class="code prettyprint">&#x2F;&#x2F; Attribute selector matches all highdpi attributes
 Y.Tag.register(&#x27;[highdpi]&#x27;, {
     created: function(config) {
         if (Y.config.win.devicePixelRatio &lt;= 1) {return;}
