@@ -1,15 +1,38 @@
-<div class="intro">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tag</title>
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Maven+Pro:400,700">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.4.1/build/cssgrids/grids-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <script src="../build/yui/yui-min.js"></script>
+</head>
+<body>
+
+<div id="doc">
+    <h1>Tag</h1>
+
+    
+        <a href="#toc" class="jump">Jump to Table of Contents</a>
+    
+
+    <div class="yui3-g">
+        <div class="yui3-u-3-4">
+            <div id="main">
+                <div class="content"><div class="intro">
     <p>The Tag module provides a way to hook into Node creation and insertion. This allows you to build simple to use and powerful components that behave more like standard DOM nodes.</p>
 </div>
 
-<h2>Getting Started</h2>
+<h2 id="getting-started">Getting Started</h2>
 
 <p>
 To include the source files for Tag and its dependencies, first load
 the YUI seed file if you haven't already loaded it.
 </p>
 
-<pre class="code prettyprint">&lt;script src=&quot;http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;&#x2F;build&#x2F;yui&#x2F;yui-min.js&quot;&gt;&lt;&#x2F;script&gt;</pre>
+<pre class="code prettyprint">&lt;script src=&quot;http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.4.1&#x2F;build&#x2F;yui&#x2F;yui-min.js&quot;&gt;&lt;&#x2F;script&gt;</pre>
 
 
 <p>
@@ -30,16 +53,16 @@ YUI().use(&#x27;gallery-tag&#x27;, function (Y) {
 
 <p>
 For more information on creating YUI instances and on the
-<a href="/classes/YUI.html#method_use"><code>use()</code> method</a>, see the
+<a href="http://yuilibrary.com/yui/docs/api/classes/YUI.html#method_use"><code>use()</code> method</a>, see the
 documentation for the <a href="../yui/index.html">YUI Global Object</a>.
 </p>
 
 
-<h2>Using Tag</h2>
+<h2 id="using-tag">Using Tag</h2>
 
 <p>To hook into Node creation you must first specify what kind of node to hook into and what should be done on creation. You do that by registering a simple CSS selector and a mixin. If a node is found to match the selector, the mixin is applied and its <code>created</code> method is called.</p>
 
-<h4>Registering Tags</h4>
+<h4 id="registering-tags">Registering Tags</h4>
 
 <pre class="code prettyprint">&#x2F;&#x2F; Tag selector matches all ydate tags
 Y.Tag.register(&#x27;ydate&#x27;, {
@@ -66,7 +89,7 @@ Copyright &amp;copy; &lt;ydate data-format=&quot;%Y&quot;&gt;&lt;&#x2F;ydate&gt;
 <pre class="code prettyprint">Y.one(&#x27;body&#x27;).append(&#x27;&lt;ydate data-format=&quot;%T&quot;&gt;&lt;&#x2F;ydate&gt;&#x27;);</pre>
 
 
-<h4>Registering Attributes</h4>
+<h4 id="registering-attributes">Registering Attributes</h4>
 
 <p>Registering attributes is a way to provide more graceful degredation to your elements. You could also register both an attribute and a tag to provide more flexible usage.</p>
 
@@ -98,15 +121,15 @@ Y.Tag.register(&#x27;example, [example]&#x27;, {});</pre>
 <pre class="code prettyprint">&lt;img highdpi highdpi:alt=&quot;@4x&quot; src=&quot;large_photo.jpg&quot; &#x2F;&gt;</pre>
 
 
-<h3>Inserted Event</h3>
+<h3 id="inserted-event">Inserted Event</h3>
 
 <p>When a registered tag has been created it can listen for the <code>tag:inserted</code> event. This event is fired when the tag is added to the document. Most tags will do their work in the created method however more complicated tags like widgets can do things like bind to click events or render once they are part of the document.</p>
 
-<h2>How It Works</h2>
+<h2 id="how-it-works">How It Works</h2>
 
 <p><code>gallery-event-inserted</code> provides the magic behind the <code>tag:inserted</code> event. It uses CSS3 Animation to create efficient inserted events. If CSS3 Animation is unsupported it falls back to using the slower DOMNodeInserted mutation event.</p>
 
-<h2>Registry</h2>
+<h2 id="registry">Registry</h2>
 
 <p>There are many predefined tags available in the Tag Registry. To use, include the following in your YUI config:</p>
 
@@ -166,8 +189,66 @@ Y.Tag.register(&#x27;example, [example]&#x27;, {});</pre>
 </tbody>
 </table>
 
-<h2>About</h2>
+<h2 id="about">About</h2>
 
 <p><a href="http://mozilla.github.com/x-tag/">X-Tag</a> was the initial inspiration, however the Tag module goes beyond the current implementation and allows you to register attributes in addition to tags.</p>
 
 <p>Compatibility: IE9+, FF5+, Chrome 4+, Safari/iOS 4+, Android 2.1+</p>
+</div>
+            </div>
+        </div>
+
+        <div class="yui3-u-1-4">
+            <div class="sidebar">
+                
+                    <div id="toc" class="sidebox">
+                        <div class="hd">
+                            <h2 class="no-toc">Table of Contents</h2>
+                        </div>
+
+                        <div class="bd">
+                            <ul class="toc">
+<li>
+<a href="#getting-started">Getting Started</a>
+</li>
+<li>
+<a href="#using-tag">Using Tag</a>
+<ul class="toc">
+<li>
+<a href="#registering-tags">Registering Tags</a>
+</li>
+<li>
+<a href="#registering-attributes">Registering Attributes</a>
+</li>
+<li>
+<a href="#inserted-event">Inserted Event</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#how-it-works">How It Works</a>
+</li>
+<li>
+<a href="#registry">Registry</a>
+</li>
+<li>
+<a href="#about">About</a>
+</li>
+</ul>
+                        </div>
+                    </div>
+                
+
+                
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+
+</body>
+</html>
