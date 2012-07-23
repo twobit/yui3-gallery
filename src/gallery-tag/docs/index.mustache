@@ -44,7 +44,7 @@ Y.one('body').append('<ydate data-format="%T"></ydate>');
 <p>Registering attributes is a way to provide more graceful degredation to your elements. You could also register both an attribute and a tag to provide more flexible usage.</p>
 
 ```
-// Attribute selector matches all highlight attributes
+// Attribute selector matches all highdpi attributes
 Y.Tag.register('[highdpi]', {
     created: function(config) {
         if (Y.config.win.devicePixelRatio <= 1) {return;}
