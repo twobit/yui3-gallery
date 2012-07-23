@@ -14,8 +14,12 @@
         <ybutton data-label="TEST"></ybutton>
         <ybutton data-label="DISABLE" data-disabled="false"></ybutton>
 
+        <p>Copyright &copy; <ydate data-format="%Y"></ydate> Yahoo! Inc.</p>
+
+        <img highdpi highdpi:alt="@4x" src="large_photo.jpg" />
+
         <script type="text/javascript">
-        YUI().use('gallery-tag', 'button', function(Y) {
+        YUI().use('gallery-tag', 'button', 'datatype', 'io', function(Y) {
             Y.Tag.register('ybutton', {
                 created: function(config) {
                     var node = this.get('host').appendChild('<button></button>');
@@ -23,6 +27,34 @@
                     this.onHostEvent('tag:inserted', function() {this._widget.render();}, this);
                 }
             });
+
+            Y.Tag.register('ydate', {
+                created: function(config) {
+                    this.addAttr('date', {value: new Date()});
+                    this.get('host').setHTML(Y.DataType.Date.format(this.get('date'), {format: config.format}));
+                }
+            });
+
+            Y.Tag.register('[highdpi]', {
+                created: function(config) {
+                    if (Y.config.win.devicePixelRatio <= 1) {return;}
+
+                    var host = this.get('host'),
+                        alt = config.alt || '@2x',
+                        src = host.get('src').replace(/(\.[a-zA-Z]+)$/, function(m) {return alt + m;});
+
+                    if (src) {
+                        Y.io(src, {
+                            method: 'HEAD',
+                            onsuccess: function(e) {
+                                host.set('src', src);
+                            }
+                        });
+                    }
+                }
+            });
+
+            Y.one('body').append('<ydate data-format="%T"></ydate>');
         });
         </script>
     </body>
