@@ -39,6 +39,8 @@ Y.one('ydate').tag.get('date');
 Y.one('body').append('<ydate data-format="%T"></ydate>');
 ```
 
+<iframe style="width: 500px; height: 300px" src="http://jsfiddle.net/hqRtV/2/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
 <h4>Registering Attributes</h4>
 
 <p>Registering attributes is a way to provide more graceful degredation to your elements. You could also register both an attribute and a tag to provide more flexible usage.</p>
@@ -100,10 +102,10 @@ YUI({
             cfg.path = '/build/gallery-tag-registry/' + cfg.name + '-min.js'
         }}}
     }}
-}).use(/* 'tag-yautocomplete', 'tag-ybind', '...etc' */ function(Y) {
-    
-});
+}).use(/* 'tag-yautocomplete', 'tag-ybind', '...etc' */);
 ```
+
+<iframe style="width: 500px; height: 300px" src="http://jsfiddle.net/hqRtV/4/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 <table class="yui-table">
 <thead>
