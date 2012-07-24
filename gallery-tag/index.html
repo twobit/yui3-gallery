@@ -32,7 +32,7 @@ To include the source files for Tag and its dependencies, first load
 the YUI seed file if you haven't already loaded it.
 </p>
 
-<pre class="code prettyprint">&lt;script src=&quot;http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.4.1&#x2F;build&#x2F;yui&#x2F;yui-min.js&quot;&gt;&lt;&#x2F;script&gt;</pre>
+<pre class="code prettyprint">&lt;script src=&quot;http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.5.0&#x2F;build&#x2F;yui&#x2F;yui-min.js&quot;&gt;&lt;&#x2F;script&gt;</pre>
 
 
 <p>
@@ -44,7 +44,10 @@ specify.
 
 <pre class="code prettyprint">&lt;script&gt;
 &#x2F;&#x2F; Create a new YUI instance and populate it with the required modules.
-YUI().use(&#x27;gallery-tag&#x27;, function (Y) {
+YUI({
+    &#x2F;&#x2F;Last Gallery Build of this module
+    gallery: &#x27;gallery-2012.07.18-13-22&#x27;,
+}).use(&#x27;gallery-tag&#x27;, function (Y) {
     &#x2F;&#x2F; Tag is available and ready for use. Add implementation
     &#x2F;&#x2F; code here.
 });
@@ -54,7 +57,7 @@ YUI().use(&#x27;gallery-tag&#x27;, function (Y) {
 <p>
 For more information on creating YUI instances and on the
 <a href="http://yuilibrary.com/yui/docs/api/classes/YUI.html#method_use"><code>use()</code> method</a>, see the
-documentation for the <a href="../yui/index.html">YUI Global Object</a>.
+documentation for the <a href="http://yuilibrary.com/yui/docs/yui/">YUI Global Object</a>.
 </p>
 
 
@@ -134,9 +137,15 @@ Y.Tag.register(&#x27;example, [example]&#x27;, {});</pre>
 <p>There are many predefined tags available in the Tag Registry. To use, include the following in your YUI config:</p>
 
 <pre class="code prettyprint">YUI({
-    groups: {tag: {patterns: {&#x27;tag-&#x27;: {configFn: function(cfg) {
-        cfg.path = &#x27;..&#x2F;..&#x2F;yui3-gallery&#x2F;build&#x2F;gallery-tag-registry&#x2F;&#x27; + cfg.name + &#x27;.js&#x27;
-    }}}}}
+    &#x2F;&#x2F;Last Gallery Build of this module
+    gallery: &#x27;gallery-2012.07.18-13-22&#x27;,
+    groups: {tag: {
+        combine: true,
+        root: &#x27;gallery-2012.07.18-13-22&#x27;,
+        patterns: {&#x27;tag-&#x27;: {configFn: function(cfg) {
+            cfg.path = &#x27;&#x2F;build&#x2F;gallery-tag-registry&#x2F;&#x27; + cfg.name + &#x27;-min.js&#x27;
+        }}}
+    }}
 }).use(&#x2F;* &#x27;tag-yautocomplete&#x27;, &#x27;tag-ybind&#x27;, &#x27;...etc&#x27; *&#x2F; function(Y) {
     
 });</pre>
