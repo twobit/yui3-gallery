@@ -79,7 +79,7 @@ Y.Tag.register('example, [example]', {});
 <foo data-name="Foo Inc." bar bar:name="Bar Inc." baz baz:name="Baz Inc."></foo>
 ```
 
-<h3>Inserted Event</h3>
+<h4>Inserted Event</h4>
 
 <p>When a registered tag has been created it can listen for the `tag:inserted` event. This event is fired when the tag is added to the document. Most tags will do their work in the created method however more complicated tags like widgets can do things like bind to click events or render once they are part of the document.</p>
 
@@ -87,9 +87,13 @@ Y.Tag.register('example, [example]', {});
 
 <p>`gallery-event-inserted` provides the magic behind the `tag:inserted` event. It uses CSS3 Animation to create efficient inserted events. If CSS3 Animation is unsupported it falls back to using the slower DOMNodeInserted mutation event.</p>
 
+<h2>Why Tag</h2>
+
+<p>The main benefit to using Tag is to reduce the amount of boilerplate instantiation code most large web apps accumulate. When dynamically creating components nothing could be simpler than creating a tag with attributes. It also becomes very simple for those less familiar with Javascript to make use of widgets. They don't need to know valid Javascript syntax, HTML has a far lower barrier to entry.</p>
+
 <h2>Registry</h2>
 
-<p>There are many predefined tags available in the Tag Registry. To use, include the following in your YUI config:</p>
+<p>There are many predefined tags available in the Tag Registry. `tag-ybind` is one of the most useful, it provides data binding using HTML. To use, include the following in your YUI config:</p>
 
 ```
 YUI({
