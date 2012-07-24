@@ -87,9 +87,15 @@ Y.Tag.register('example, [example]', {});
 
 ```
 YUI({
-    groups: {tag: {patterns: {'tag-': {configFn: function(cfg) {
-        cfg.path = '../../yui3-gallery/build/gallery-tag-registry/' + cfg.name + '.js'
-    }}}}}
+    //Last Gallery Build of this module
+    gallery: 'gallery-2012.07.18-13-22',
+    groups: {tag: {
+        combine: true,
+        root: 'gallery-2012.07.18-13-22',
+        patterns: {'tag-': {configFn: function(cfg) {
+            cfg.path = '/build/gallery-tag-registry/' + cfg.name + '-min.js'
+        }}}
+    }}
 }).use(/* 'tag-yautocomplete', 'tag-ybind', '...etc' */ function(Y) {
     
 });
