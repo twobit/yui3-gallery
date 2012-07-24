@@ -119,10 +119,13 @@ Y.Tag.register(&#x27;[highdpi]&#x27;, {
 Y.Tag.register(&#x27;example, [example]&#x27;, {});</pre>
 
 
-<p>When registering an attribute, the attribute name becomes a namespace for config parameters.</p>
+<p>When registering an attribute, the attribute name becomes a namespace for config parameters. It's possible to have a tag and many different attributes all with separate configs.</p>
 
 <pre class="code prettyprint">&lt;!-- Updates image with higher resolution if large_photo@4x.jpg exists --&gt;
-&lt;img highdpi highdpi:alt=&quot;@4x&quot; src=&quot;large_photo.jpg&quot; &#x2F;&gt;</pre>
+&lt;img highdpi highdpi:alt=&quot;@4x&quot; src=&quot;large_photo.jpg&quot; &#x2F;&gt;
+
+&lt;!-- Registered tag and multiple attributes with configs --&gt;
+&lt;foo data-name=&quot;Foo Inc.&quot; bar bar:name=&quot;Bar Inc.&quot; baz baz:name=&quot;Baz Inc.&quot;&gt;&lt;&#x2F;foo&gt;</pre>
 
 
 <h3 id="inserted-event">Inserted Event</h3>
