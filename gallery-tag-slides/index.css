@@ -1,0 +1,39 @@
+* {margin: 0; padding: 0; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+
+body {background: #333 url(img/bg.png) top left repeat; font: 25px/1.4 Helvetica, 'DejaVu Sans', 'Bitstream Vera Sans', Arial, sans-serif; color: #515151;}
+a {text-decoration: none; color: #592c71;}
+a:hover {color: #000;}
+li {list-style-type: none;}
+
+slide {
+    display: block;
+    border-radius: 5px;
+    background: #FFF;
+    max-width: 1100px;
+    height: 700px;
+    margin: 100px auto 100px auto;
+    padding: 30px 50px;
+    -moz-box-shadow: 0 4px 4px rgba(0,0,0,0.2);
+    -webkit-box-shadow: 0 4px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 4px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+hgroup {text-shadow: #FFF 0px 1px 0px, rgba(0,0,0,0.2) 0 2px 5px; margin-bottom: 40px;}
+hgroup h1 {font-size: 55px; margin: 0;}
+hgroup h2 {font-size: 45px; margin: 0;}
+hgroup h3 {font-size: 30px; margin: 0; font-weight: normal; color: darkGray;}
+
+article p, article ul {line-height: 50px; margin-bottom: 30px;}
+article pre {overflow: auto; margin-bottom: 30px;}
+
+.paginator {position: absolute; bottom: 30px; right: 50px; font-size: 15px; color: darkGray;}
+
+#slide-1 hgroup {margin-top: 200px;}
+#slide-1 img {position: absolute; bottom: 30px; right: 50px;}
+#slide-1 .paginator {display: none;}
+
+#slide-2 ul {margin-top: 60px;}
+#slide-2 img {position: absolute; top: 30px; right: 50px;}
+
+#slide-3 article {text-align: center;}

@@ -2,95 +2,165 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Creating Custom HTML Tags Using YUI</title>
+    <title>Creating Custom HTML Tags With YUI</title>
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Maven+Pro:400,700" />
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css" />
     <link rel="stylesheet" href="index.css" />
     <script src="http://yui.yahooapis.com/3.5.0/build/yui/yui-min.js"></script>
 </head>
 <body>
-    <slide>
-        <hgroup>
-            <h1>Creating Smart HTML Tags Using YUI</h1>
-            <h3>How to Use the Tag Module</h3>
-        </hgroup>
-        <article>
-            <p>Stephen Murphy</p>
-            <p>Yahoo! Search Team</p>
-        </article>
+    <slides>
+        <slide>
+            <hgroup>
+                <h1>Creating Custom HTML Tags With YUI</h1>
+                <h3>How to Use the Tag Module</h3>
+            </hgroup>
+            <article>
+                <ul>
+                    <li>Stephen Murphy</li>
+                    <li>Yahoo! Search Team</li>
+                </ul>
+            </article>
 
-        <img src="yahoo.gif" />
-    </slide>
+            <img src="img/yahoo.gif" />
+        </slide>
 
-    <slide>
-        <hgroup>
-            <h2>About Me</h2>
-        </hgroup>
-        <article>
-            <h3>Senior Software Engineer</h3>
-            <h3>Yahoo! Search Team</h3>
-            <ul>
-                <li><a href="http://twitter.com/hypernaut">@hypernaut</a></li>
-                <li><a href="http://hypernaut.com">Personal Site</a></li>
-            </ul>
-            <img src="me.jpg" />
-        </article>
-    </slide>
+        <slide>
+            <hgroup>
+                <h2>About Me</h2>
+            </hgroup>
+            <article>
+                <ul>
+                    <li>Senior Software Engineer</li>
+                    <li>Yahoo! Search Team</li>
+                </ul>
+                <ul>
+                    <li><a href="http://twitter.com/hypernaut">@hypernaut</a></li>
+                    <li><a href="http://hypernaut.com">Personal Site</a></li>
+                </ul>
+                <img src="img/me.jpg" />
+            </article>
+        </slide>
 
-    <slide>
-        <hgroup>
-            <h2>The Problem</h2>
-        </hgroup>
-        <article>
-            <h3>When creating components dynamically we must typically add boilerplate markup generation and object instantiation.</h3>
+        <slide>
+            <hgroup>
+                <h2>What's a Custom HTML Tag?</h2>
+            </hgroup>
+            <article>
+                <img src="img/custom.jpg" />
+            </article>
+        </slide>
 
-            <pre class="code prettyprint">Y.one('body').append('&lt;div class="foo"&gt;&lt;/div&gt;');
-    new Y.Foo({
-        srcNode: '.foo'
-    });</pre>
-        </article>
-    </slide>
+        <slide>
+            <hgroup>
+                <h2>The Problem</h2>
+            </hgroup>
+            <article>
+                <p>When creating components dynamically we must typically add boilerplate markup generation and object instantiation.</p>
 
-    <slide>
-        <hgroup>
-            <h2>Simplify Using the Tag Module</h2>
-        </hgroup>
-        <article>
-            <h3>Register a component using a CSS selector. Anytime the node exists, instantiate an object automatically.</h3>
+                <pre class="code prettyprint">Y.one('body').append('&lt;div class="foo"&gt;&lt;/div&gt;');
+new Y.Foo({
+    srcNode: '.foo'
+});</pre>
+            </article>
+        </slide>
 
-            <p>Write it once. Let the DOM do the work for us.</p>
+        <slide>
+            <hgroup>
+                <h2>Simplify Using the Tag Module</h2>
+            </hgroup>
+            <article>
+                <p>Register a component using a CSS selector. Anytime the node exists, instantiate an object automatically.</p>
 
-            <pre class="code prettyprint">Y.Tag.register('foo', {
-                created: function() {
-                    this.get('host').setHTML('Foo Inc.');
-                }
-            });</pre>
+                <p>Write it once. Let the DOM do the work for us.</p>
 
-            <pre class="code prettyprint">Y.one('body').append('&lt;foo /&gt;');</pre>
-        </article>
-    </slide>
+                <pre class="code prettyprint">Y.Tag.register('foo', {
+    created: function() {
+        this.get('host').setHTML('Foo Inc.');
+    }
+});</pre>
 
-    <slide>
-        <h2>Isn't This the Same As Before?</h2>
+                <pre class="code prettyprint">Y.one('body').append('&lt;foo /&gt;');</pre>
+            </article>
+        </slide>
 
-        <h3>It's really easy to create many components.</h3>
+        <slide>
+            <hgroup>
+                <h2>Isn't This the Same As Before?</h2>
+            </hgroup>
+            <article>
+                <p>It's really easy to create many components.</p>
 
-        <pre class="code prettyprint">Y.one('body').append('&lt;foo /&gt;');
+                <pre class="code prettyprint">Y.one('body').append('&lt;foo /&gt;');
         Y.one('body').append('&lt;foo /&gt;');</pre>
-        
-        <h3>Custom tags behave more like built-in elements.</h3>
-        <h3>Reduces code bloat. Less code, less bugs.</h3>
-    </slide>
+                
+                <p>Custom tags behave more like built-in elements.</p>
+                <p>Reduces code bloat. Less code, less bugs.</p>
+            </article>
+        </slide>
 
-    <slide>
-        <h2>Config parameters are passed in as data params</h2>
-    </slide>
+        <slide>
+            <h2>Config parameters are passed in as data params</h2>
+        </slide>
 
-    <slide>
-        <h2>Attributes</h2>
-    </slide>
+        <slide>
+            <hgroup>
+                <h2>Attributes</h2>
+            </hgroup>
+            <article>
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Registry</h2>
+            </hgroup>
+            <article>
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Data Binding</h2>
+            </hgroup>
+            <article>
+            </article>
+        </slide>
+    </slides>
 
     <script src="../assets/vendor/prettify/prettify-min.js"></script>
     <script>prettyPrint();</script>
+
+    <script type="text/javascript">
+    YUI({gallery: 'gallery-2012.07.18-13-22'}).use('gallery-tag', function(Y) {
+        Y.Tag.register('slide', {
+            created: function(config) {
+                this.get('host').append('<div class="paginator"><span class="number"></span>/<span class="total"></span></div>');
+
+                this.addAttr('number', {
+                    setter: function(value) {
+                        this.get('host').set('id', 'slide-' + value);
+                        this.get('host').one('.number').setHTML(value);
+                    }
+                });
+
+                this.addAttr('total', {
+                    setter: function(value) {
+                        this.get('host').one('.total').setHTML(value);
+                    }
+                });
+            }
+        });
+
+        Y.Tag.register('slides', {
+            created: function(config) {
+                this.get('host').all('slide').each(function(slide, index, slides) {
+                    slide.tag.set('number', index + 1);
+                    slide.tag.set('total', slides.size());
+                }, this);
+            }
+        });
+    });
+    </script>
 </body>
 </html>
