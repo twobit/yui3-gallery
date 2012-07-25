@@ -1,57 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Creating Custom HTML Tags Using YUI</title>
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Maven+Pro:400,700">
-    <link rel="stylesheet" href="http://yui.yahooapis.com/3.5.0/build/cssgrids/grids-min.css">
-    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Maven+Pro:400,700" />
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css" />
+    <link rel="stylesheet" href="index.css" />
     <script src="http://yui.yahooapis.com/3.5.0/build/yui/yui-min.js"></script>
 </head>
 <body>
     <slide>
-        <h1>Creating Smart HTML Tags Using YUI</h1>
-        <h2>How to Use the Tag Module</h2>
-        <p>Stephen Murphy</p>
-        <p>Yahoo Search Team</p>
+        <hgroup>
+            <h1>Creating Smart HTML Tags Using YUI</h1>
+            <h3>How to Use the Tag Module</h3>
+        </hgroup>
+        <article>
+            <p>Stephen Murphy</p>
+            <p>Yahoo! Search Team</p>
+        </article>
+
+        <img src="yahoo.gif" />
     </slide>
 
     <slide>
-        <h2>About Me</h2>
-        <h3>Senior Software Engineer</h3>
-        <h3>Yahoo Search Team</h3>
-        <ul>
-            <li><a href="http://twitter.com/hypernaut">@hypernaut</a></li>
-            <li><a href="http://hypernaut.com">Personal Site</a></li>
-        </ul>
-        <img src="me.jpg" />
+        <hgroup>
+            <h2>About Me</h2>
+        </hgroup>
+        <article>
+            <h3>Senior Software Engineer</h3>
+            <h3>Yahoo! Search Team</h3>
+            <ul>
+                <li><a href="http://twitter.com/hypernaut">@hypernaut</a></li>
+                <li><a href="http://hypernaut.com">Personal Site</a></li>
+            </ul>
+            <img src="me.jpg" />
+        </article>
     </slide>
 
     <slide>
-        <h2>The Problem</h2>
+        <hgroup>
+            <h2>The Problem</h2>
+        </hgroup>
+        <article>
+            <h3>When creating components dynamically we must typically add boilerplate markup generation and object instantiation.</h3>
 
-        <h3>When creating components dynamically we must typically add boilerplate markup generation and object instantiation.</h3>
+            <pre class="code prettyprint">Y.one('body').append('&lt;div class="foo"&gt;&lt;/div&gt;');
+    new Y.Foo({
+        srcNode: '.foo'
+    });</pre>
+        </article>
+    </slide>
 
-        <pre>Y.one('body').append('&lt;div class="foo"&gt;&lt;/div&gt;');
-            new Y.Foo({
-                srcNode: '.foo'
+    <slide>
+        <hgroup>
+            <h2>Simplify Using the Tag Module</h2>
+        </hgroup>
+        <article>
+            <h3>Register a component using a CSS selector. Anytime the node exists, instantiate an object automatically.</h3>
+
+            <p>Write it once. Let the DOM do the work for us.</p>
+
+            <pre class="code prettyprint">Y.Tag.register('foo', {
+                created: function() {
+                    this.get('host').setHTML('Foo Inc.');
+                }
             });</pre>
-    </slide>
 
-    <slide>
-        <h2>Simplify Using the Tag Module</h2>
-
-        <h3>Register a component using a CSS selector. Anytime the node exists, instantiate an object automatically.</h3>
-
-        <p>Write it once. Let the DOM do the work for us.</p>
-
-        <pre>Y.Tag.register('foo', {
-            created: function() {
-                this.get('host').setHTML('Foo Inc.');
-            }
-        });</pre>
-
-        <pre>Y.one('body').append('&gt;foo /&lt;');</pre>
+            <pre class="code prettyprint">Y.one('body').append('&lt;foo /&gt;');</pre>
+        </article>
     </slide>
 
     <slide>
@@ -59,8 +75,8 @@
 
         <h3>It's really easy to create many components.</h3>
 
-        <pre>Y.one('body').append('&gt;foo /&lt;');
-        Y.one('body').append('&gt;foo /&lt;');</pre>
+        <pre class="code prettyprint">Y.one('body').append('&lt;foo /&gt;');
+        Y.one('body').append('&lt;foo /&gt;');</pre>
         
         <h3>Custom tags behave more like built-in elements.</h3>
         <h3>Reduces code bloat. Less code, less bugs.</h3>
