@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Creating Custom HTML Tags Using YUI</title>
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Maven+Pro:400,700">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.5.0/build/cssgrids/grids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <script src="http://yui.yahooapis.com/3.5.0/build/yui/yui-min.js"></script>
+</head>
+<body>
+    <slide>
+        <h1>Creating Smart HTML Tags Using YUI</h1>
+        <h2>How to Use the Tag Module</h2>
+        <p>Stephen Murphy</p>
+        <p>Yahoo Search Team</p>
+    </slide>
+
+    <slide>
+        <h2>About Me</h2>
+        <h3>Senior Software Engineer</h3>
+        <h3>Yahoo Search Team</h3>
+        <ul>
+            <li><a href="http://twitter.com/hypernaut">@hypernaut</a></li>
+            <li><a href="http://hypernaut.com">Personal Site</a></li>
+        </ul>
+        <img src="me.jpg" />
+    </slide>
+
+    <slide>
+        <h2>The Problem</h2>
+
+        <h3>When creating components dynamically we must typically add boilerplate markup generation and object instantiation.</h3>
+
+        <pre>Y.one('body').append('&lt;div class="foo"&gt;&lt;/div&gt;');
+            new Y.Foo({
+                srcNode: '.foo'
+            });</pre>
+    </slide>
+
+    <slide>
+        <h2>Simplify Using the Tag Module</h2>
+
+        <h3>Register a component using a CSS selector. Anytime the node exists, instantiate an object automatically.</h3>
+
+        <p>Write it once. Let the DOM do the work for us.</p>
+
+        <pre>Y.Tag.register('foo', {
+            created: function() {
+                this.get('host').setHTML('Foo Inc.');
+            }
+        });</pre>
+
+        <pre>Y.one('body').append('&gt;foo /&lt;');</pre>
+    </slide>
+
+    <slide>
+        <h2>Isn't This the Same As Before?</h2>
+
+        <h3>It's really easy to create many components.</h3>
+
+        <pre>Y.one('body').append('&gt;foo /&lt;');
+        Y.one('body').append('&gt;foo /&lt;');</pre>
+        
+        <h3>Custom tags behave more like built-in elements.</h3>
+        <h3>Reduces code bloat. Less code, less bugs.</h3>
+    </slide>
+
+    <slide>
+        <h2>Config parameters are passed in as data params</h2>
+    </slide>
+
+    <slide>
+        <h2>Attributes</h2>
+    </slide>
+
+    <script src="../assets/vendor/prettify/prettify-min.js"></script>
+    <script>prettyPrint();</script>
+</body>
+</html>
