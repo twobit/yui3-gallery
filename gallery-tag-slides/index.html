@@ -8,9 +8,17 @@
     <link rel="stylesheet" href="index.css" />
     <script src="http://yui.yahooapis.com/3.5.0/build/yui/yui-min.js"></script>
 
-    <script type="text/javascript">    
+    <script type="text/javascript">
     var Y = YUI({
-        gallery: 'gallery-2012.07.25-21-36'
+        //Last Gallery Build of this module
+        gallery: 'gallery-2012.07.25-21-36',
+        groups: {tag: {
+            combine: true,
+            root: 'gallery-2012.07.25-21-36',
+            patterns: {'tag-': {configFn: function(cfg) {
+                cfg.path = '/build/gallery-tag-registry/' + cfg.name + '-min.js'
+            }}}
+        }}
     }).use('gallery-tag', 'datatype', function(Y) {
         Y.Tag.register('slide', {
             created: function(config) {
@@ -47,7 +55,7 @@
         <slide>
             <hgroup>
                 <h1>Custom HTML Tags with YUI</h1>
-                <h3>How to Use the Tag Module</h3>
+                <h3>How to Use the <a href="http://yuilibrary.com/gallery/show/tag">Tag Module</a></h3>
             </hgroup>
             <article>
                 <ul>
@@ -70,7 +78,8 @@
                 </ul>
                 <ul>
                     <li><a href="http://twitter.com/hypernaut">@hypernaut</a></li>
-                    <li><a href="http://hypernaut.com">Personal Site</a></li>
+                    <li><a href="http://github.com/twobit">GitHub</a></li>
+                    <li><a href="http://hypernaut.com">Portfolio</a></li>
                 </ul>
                 <img src="img/me.jpg" />
             </article>
@@ -189,117 +198,161 @@
 
         <slide>
             <hgroup>
-                <h2>Goals for Custom Tags</h2>
+                <h2>Benefits</h2>
+            </hgroup>
+            <article>
+                <p>Get rid of boilerplate markup generation and object instantiation.</p>
+                <p>Old and Busted</p>
+                <pre class="code prettyprint">Y.one('body').append('&lt;div id="foo"&gt;&lt;/div&gt;');
+new Y.Foo({
+    srcNode: '#foo'
+});</pre>
+                <p>New Hotness</p>
+                <pre class="code prettyprint">Y.one('body').append('&lt;foo&gt;&lt;/foo&gt;');</pre>
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Benefits (cont)</h2>
             </hgroup>
             <article>
                 <ul>
-                    <li>Behaves like a standard HTML tag as much as possible.</li>
-                    <li>Simply created using only HTML.</li>
+                    <li>Easier for non-programmers to use your component &ndash; it's just HTML.</li>
+                    <li>Large projects will benefit from not needing to explicitly require modules.</li>
+                    <li>Simply append a tag and let the DOM do the work.</li>
                 </ul>
-
-
             </article>
         </slide>
 
         <slide>
             <hgroup>
-                <h2>What's Next?</h2>
+                <h2>Other Features</h2>
             </hgroup>
             <article>
-                <img src="img/custom.jpg" />
+                <p>It's also possible to register attributes. Provides more graceful degredation.</p>
+                <pre class="code prettyprint">&lt;img highdpi highdpi:alt="@2x" src="img.jpg" /&gt;</pre>
+                <p>Next release will support registering of classes.</p>
             </article>
         </slide>
 
         <slide>
             <hgroup>
-                <h2>Questions/Comments</h2>
+                <h2>Tag Registry</h2>
+                <h3>A Collection of Predefined Tags</h3>
             </hgroup>
             <article>
-                <img src="img/custom.jpg" />
+                <p><em>yautocomplete</em></p>
+                <div class="output">
+                    <yautocomplete data-max-results="i:5"></yautocomplete>
+                </div>
+
+                <p><em>ybutton</em></p>
+                <div class="output">
+                    <ybutton data-label="TEST BUTTON"></ybutton>
+                    <ybutton data-label="SAMPLE BUTTON" data-disabled="true"></ybutton>
+                </div>
             </article>
-        </slide>
 
-
-
-        <slide>
-            <hgroup>
-                <h2>The Problem</h2>
-            </hgroup>
-            <article>
-                <p>When creating components dynamically we must typically add boilerplate markup generation and object instantiation.</p>
-
-                <pre class="code prettyprint">Y.one('body').append('&lt;div class="foo"&gt;&lt;/div&gt;');
-new Y.Foo({
-    srcNode: '.foo'
-});</pre>
-            </article>
-        </slide>
-
-        <slide>
-            <hgroup>
-                <h2>Simplify Using the Tag Module</h2>
-            </hgroup>
-            <article>
-                <p>Register a component using a CSS selector. Anytime the node exists, instantiate an object automatically.</p>
-
-                <p>Write it once. Let the DOM do the work for us.</p>
-
-                <pre class="code prettyprint">Y.Tag.register('foo', {
-    created: function() {
-        this.get('host').setHTML('Foo Inc.');
-    }
-});</pre>
-
-                <pre class="code prettyprint">Y.one('body').append('&lt;foo /&gt;');</pre>
-            </article>
+            <script type="text/javascript">
+            Y.use('tag-yautocomplete', 'tag-ybutton');
+            </script>
         </slide>
 
         <slide>
             <hgroup>
-                <h2>Isn't This the Same As Before?</h2>
+                <h2>Tag Registry (cont)</h2>
+                <h3><em>ydial</em> Tag</h3>
             </hgroup>
             <article>
-                <p>It's really easy to create many components.</p>
-
-                <pre class="code prettyprint">Y.one('body').append('&lt;foo /&gt;');
-        Y.one('body').append('&lt;foo /&gt;');</pre>
-                
-                <p>Custom tags behave more like built-in elements.</p>
-                <p>Reduces code bloat. Less code, less bugs.</p>
+                <ydial data-min="-100" data-max="100" data-value="0"></ydial>
             </article>
+
+            <script type="text/javascript">
+            Y.use('tag-ydial');
+            </script>
         </slide>
 
         <slide>
             <hgroup>
-                <h2>Config</h2>
+                <h2>Tag Registry (cont)</h2>
+                <h3><em>ycalendar</em> Tag</h3>
             </hgroup>
             <article>
-                <p>Config parameters are passed in as data params</p>
+                <ycalendar></ycalendar>
             </article>
-        </slide>
 
-        <slide>
-            <hgroup>
-                <h2>Attributes</h2>
-            </hgroup>
-            <article>
-            </article>
-        </slide>
-
-        <slide>
-            <hgroup>
-                <h2>Registry</h2>
-            </hgroup>
-            <article>
-            </article>
+            <script type="text/javascript">
+            Y.use('tag-ycalendar');
+            </script>
         </slide>
 
         <slide>
             <hgroup>
                 <h2>Data Binding</h2>
+                <h3>Using the <em>ybind</em> Tag</h3>
             </hgroup>
             <article>
+                <input id="name" type="text" placeholder="Enter your name" />
+                <p>Hello, <span ybind="#name" ybind:refkeyup></span>! Have a good day, <ybind data-ybind="#name" data-refkeyup></ybind>.</p>
+
+                <hr />
+
+                <input id="age" type="range" />
+                <p>Age: <span ybind="#age" ybind:refchange></span></p>
+
+                <hr />
+
+                <input id="age2" type="range" ybind="#age3" ybind:refchange />
+                <input id="age3" type="range" ybind="#age2" ybind:refchange />
+                <p id="test">Age: <span ybind="#age2" ybind:refchange></span></p>
+
+                <hr />
+
+                <click-counter>
+                    <p>Total clicks: <span ybind="click-counter" ybind:refcount-change></span></p>
+
+                    <form ybind="click-counter" ybind:onsubmit="clicked">
+                        <input type="submit" value="Click" />
+                    </form>
+                </click-counter>
             </article>
+
+            <script type="text/javascript">
+            Y.use('tag-ybind', function(Y) { 
+                Y.Tag.register('click-counter', {
+                    created: function(config) {
+                        this.addAttr('count', {value: 0});
+                    },
+
+                    clicked: function(e) {
+                        e.preventDefault();
+                        this.set('count', this.get('count') + 1);
+                    }
+                });
+            });
+            </script>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Learn More</h2>
+            </hgroup>
+            <article>
+                <ul>
+                    <li><a href="http://twobit.github.com/yui3-gallery/gallery-tag/">Documentation</a></li>
+                    <li><a href="http://yuilibrary.com/gallery/show/tag">Gallery Module</a></li>
+                    <li><a href="http://yuilibrary.com/gallery/show/tag-registry">Tag Registry</a></li>
+                    <li><a href="http://yuilibrary.com/gallery/show/event-inserted">Inserted Event</a> - Event fires whenever a selector matches a node. Tag uses this for inserted node events.</li>
+                    <li><a href="http://mozilla.github.com/x-tag/">X-Tag</a> - Initial inspiration for Tag Module.</li>
+                </ul>
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Questions/Comments?</h2>
+            </hgroup>
         </slide>
     </slides>
 
