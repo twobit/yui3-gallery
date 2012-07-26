@@ -24,8 +24,9 @@ hgroup h1 {font-size: 55px; margin: 0;}
 hgroup h2 {font-size: 45px; margin: 0;}
 hgroup h3 {font-size: 30px; margin: 0; font-weight: normal; color: darkGray;}
 
-article p, article ul {line-height: 50px; margin-bottom: 30px;}
-article pre {overflow: auto; margin-bottom: 30px;}
+article p, article ul {line-height: 40px; margin-bottom: 20px;}
+article pre.prettyprint {overflow: auto; margin-bottom: 20px; padding: 10px;}
+article .output {overflow: auto; border: 1px solid #888; margin-bottom: 30px; padding: 10px;}
 
 .paginator {position: absolute; bottom: 30px; right: 50px; font-size: 15px; color: darkGray;}
 

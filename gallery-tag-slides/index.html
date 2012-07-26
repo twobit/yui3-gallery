@@ -2,17 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Creating Custom HTML Tags With YUI</title>
+    <title>Custom HTML Tags with YUI</title>
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Maven+Pro:400,700" />
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css" />
     <link rel="stylesheet" href="index.css" />
     <script src="http://yui.yahooapis.com/3.5.0/build/yui/yui-min.js"></script>
+
+    <script type="text/javascript">    
+    var Y = YUI({
+        gallery: 'gallery-2012.07.25-21-36'
+    }).use('gallery-tag', 'datatype', function(Y) {
+        Y.Tag.register('ydate', {
+            created: function(config) {
+                this.addAttr('date', {
+                    value: new Date(),
+                    setter: function(value) {
+                        this.get('host').setHTML(Y.DataType.Date.format(value, {format: config.format}));
+                        return value;
+                    }
+                });
+            }
+        });
+
+        Y.Tag.register('slide', {
+            created: function(config) {
+                this.get('host').append('<div class="paginator"><span class="number"></span>/<span class="total"></span></div>');
+
+                this.addAttr('number', {
+                    setter: function(value) {
+                        this.get('host').set('id', 'slide-' + value);
+                        this.get('host').one('.number').setHTML(value);
+                    }
+                });
+
+                this.addAttr('total', {
+                    setter: function(value) {
+                        this.get('host').one('.total').setHTML(value);
+                    }
+                });
+            }
+        });
+
+        Y.Tag.register('slides', {
+            created: function(config) {
+                this.get('host').all('slide').each(function(slide, index, slides) {
+                    slide.tag.set('number', index + 1);
+                    slide.tag.set('total', slides.size());
+                }, this);
+            }
+        });
+    });
+    </script>
 </head>
 <body>
     <slides>
         <slide>
             <hgroup>
-                <h1>Creating Custom HTML Tags With YUI</h1>
+                <h1>Custom HTML Tags with YUI</h1>
                 <h3>How to Use the Tag Module</h3>
             </hgroup>
             <article>
@@ -27,7 +73,7 @@
 
         <slide>
             <hgroup>
-                <h2>About Me</h2>
+                <h2>Who Am I?</h2>
             </hgroup>
             <article>
                 <ul>
@@ -50,6 +96,104 @@
                 <img src="img/custom.jpg" />
             </article>
         </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Example</h2>
+                <h3>Simple HTML</h3>
+            </hgroup>
+            <article>
+                <p>HTML</p>
+                <pre class="code prettyprint">Copyright &copy; &lt;ydate data-format="%Y"&gt;&lt;/ydate&gt; Yahoo! Inc.</pre>
+
+                <p>Output</p>
+                <div class="output">Copyright &copy; <ydate data-format="%Y"></ydate> Yahoo! Inc.</div>
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Example (cont)</h2>
+                <h3>Dynamically Create More Tags</h3>
+            </hgroup>
+            <article>
+                <p>JavaScript</p>
+                <pre class="code prettyprint">btn.on('click', function(e) {
+    container.append('&lt;ydate data-format="%T"&gt;&lt;/ydate&gt;,&nbsp;');
+});</pre>
+
+                <p>Output <input id="append_tag_btn" type="submit" value="New Tag" /></p>
+                <div id="append_tag_container" class="output"></div>
+                <script type="text/javascript">
+                Y.use('node', function(Y) {
+                    Y.one('#append_tag_btn').on('click', function(e) {
+                        Y.one('#append_tag_container').append('<ydate data-format="%T"></ydate>,&nbsp;');
+                    });
+                });
+                </script>
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Example (cont)</h2>
+                <h3>Update Existing Tag</h3>
+            </hgroup>
+            <article>
+                <p>HTML</p>
+                <pre class="code prettyprint">&lt;ydate data-format="%T"&gt;&lt;/ydate&gt;</pre>
+
+                <p>JavaScript</p>
+                <pre class="code prettyprint">btn.on('click', function(e) {
+    container.one('ydate').tag.set('date', new Date());
+});</pre>
+
+                <p>Output <input id="update_tag_btn" type="submit" value="Update Tag" /></p>
+                <div id="update_tag_container" class="output"><ydate data-format="%T"></ydate></div>
+
+                <script type="text/javascript">
+                Y.use('node', function(Y) {
+                    Y.one('#update_tag_btn').on('click', function(e) {
+                        Y.one('#update_tag_container ydate').tag.set('date', new Date());
+                    });
+                });
+                </script>
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Goals for Custom Tags</h2>
+            </hgroup>
+            <article>
+                <ul>
+                    <li>Behaves like a standard HTML tag as much as possible.</li>
+                    <li>Simply created using only HTML.</li>
+                </ul>
+
+
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>What's Next?</h2>
+            </hgroup>
+            <article>
+                <img src="img/custom.jpg" />
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Questions/Comments</h2>
+            </hgroup>
+            <article>
+                <img src="img/custom.jpg" />
+            </article>
+        </slide>
+
+
 
         <slide>
             <hgroup>
@@ -100,7 +244,12 @@ new Y.Foo({
         </slide>
 
         <slide>
-            <h2>Config parameters are passed in as data params</h2>
+            <hgroup>
+                <h2>Config</h2>
+            </hgroup>
+            <article>
+                <p>Config parameters are passed in as data params</p>
+            </article>
         </slide>
 
         <slide>
@@ -130,37 +279,5 @@ new Y.Foo({
 
     <script src="../assets/vendor/prettify/prettify-min.js"></script>
     <script>prettyPrint();</script>
-
-    <script type="text/javascript">
-    YUI({gallery: 'gallery-2012.07.18-13-22'}).use('gallery-tag', function(Y) {
-        Y.Tag.register('slide', {
-            created: function(config) {
-                this.get('host').append('<div class="paginator"><span class="number"></span>/<span class="total"></span></div>');
-
-                this.addAttr('number', {
-                    setter: function(value) {
-                        this.get('host').set('id', 'slide-' + value);
-                        this.get('host').one('.number').setHTML(value);
-                    }
-                });
-
-                this.addAttr('total', {
-                    setter: function(value) {
-                        this.get('host').one('.total').setHTML(value);
-                    }
-                });
-            }
-        });
-
-        Y.Tag.register('slides', {
-            created: function(config) {
-                this.get('host').all('slide').each(function(slide, index, slides) {
-                    slide.tag.set('number', index + 1);
-                    slide.tag.set('total', slides.size());
-                }, this);
-            }
-        });
-    });
-    </script>
 </body>
 </html>
