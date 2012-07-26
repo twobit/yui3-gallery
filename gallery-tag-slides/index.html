@@ -12,18 +12,6 @@
     var Y = YUI({
         gallery: 'gallery-2012.07.25-21-36'
     }).use('gallery-tag', 'datatype', function(Y) {
-        Y.Tag.register('ydate', {
-            created: function(config) {
-                this.addAttr('date', {
-                    value: new Date(),
-                    setter: function(value) {
-                        this.get('host').setHTML(Y.DataType.Date.format(value, {format: config.format}));
-                        return value;
-                    }
-                });
-            }
-        });
-
         Y.Tag.register('slide', {
             created: function(config) {
                 this.get('host').append('<div class="paginator"><span class="number"></span>/<span class="total"></span></div>');
@@ -155,6 +143,44 @@
                 Y.use('node', function(Y) {
                     Y.one('#update_tag_btn').on('click', function(e) {
                         Y.one('#update_tag_container ydate').tag.set('date', new Date());
+                    });
+                });
+                </script>
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Example (cont)</h2>
+                <h3><em>ydate</em> Definition</h3>
+            </hgroup>
+            <article>
+                <pre class="code prettyprint">Y.Tag.register('ydate', {
+    created: function(config) {
+        this.addAttr('date', {
+            value: new Date(),
+            setter: function(value) {
+                var date = Y.DataType.Date.format(value, {format: config.format});
+                this.get('host').setHTML(date);
+                return value;
+            }
+        });
+    }
+});</pre>
+
+                <script type="text/javascript">
+                Y.use('gallery-tag', function(Y) {
+                    Y.Tag.register('ydate', {
+                        created: function(config) {
+                            this.addAttr('date', {
+                                value: new Date(),
+                                setter: function(value) {
+                                    var date = Y.DataType.Date.format(value, {format: config.format});
+                                    this.get('host').setHTML(date);
+                                    return value;
+                                }
+                            });
+                        }
                     });
                 });
                 </script>
