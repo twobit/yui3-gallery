@@ -1,0 +1,13 @@
+[{
+    "name": "gallery-tag",
+    "js": [
+        "tag.js"
+    ],
+    "dest": "../../build/gallery-tag",
+    "config": {
+        "skinnable": false,
+        "requires": [
+            "node", "base", "plugin", "gallery-event-inserted"
+        ]
+    }    
+}]
