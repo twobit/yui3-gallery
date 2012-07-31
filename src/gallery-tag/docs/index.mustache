@@ -14,8 +14,13 @@
 // Tag selector matches all ydate tags
 Y.Tag.register('ydate', {
     created: function(config) {
-        this.addAttr('date', {value: new Date()});
-        this.get('host').setHTML(Y.DataType.Date.format(this.get('date'), {format: config.format}));
+        this.addAttr('date', {
+            value: new Date(),
+            setter: function(value) {
+                this.get('host').setHTML(Y.DataType.Date.format(value, {format: config.format}));
+                return value;
+            }
+        });
     }
 });
 ```
