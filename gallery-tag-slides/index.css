@@ -4,6 +4,7 @@ body {background: #333 url(img/bg.png) top left repeat; font: 25px/1.4 Helvetica
 a {text-decoration: none; color: #592c71;}
 a:hover {color: #000;}
 li {list-style-type: none;}
+hr {margin-bottom: 10px; border: 2px solid #CCC;}
 
 slide {
     display: block;

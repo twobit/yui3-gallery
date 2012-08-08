@@ -227,12 +227,86 @@ new Y.Foo({
 
         <slide>
             <hgroup>
-                <h2>Other Features</h2>
+                <h2>How Does It Work?</h2>
+                <h3>Inserted Event</h3>
             </hgroup>
             <article>
-                <p>It's also possible to register attributes. Provides more graceful degredation.</p>
+                <p>Event fires whenever a selector matches a node. Tag uses this for inserted node events.</p>
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>How Does It Work? (cont)</h2>
+                <h3>Node Class Plugin</h3>
+            </hgroup>
+            <article>
+                <p>Tag plugin available on all Nodes.</p>
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Registering Attributes</h2>
+            </hgroup>
+            <article>
+                <p>Load higher resolution image if available.</p>
                 <pre class="code prettyprint">&lt;img highdpi highdpi:alt="@2x" src="img.jpg" /&gt;</pre>
-                <p>Next release will support registering of classes.</p>
+
+                <p>Tag can have multiple attributes with configs.</p>
+                <pre class="code prettyprint">
+&lt;foo data-name=&quot;Foo Inc.&quot;
+    bar bar:name=&quot;Bar Inc.&quot;
+    baz baz:name=&quot;Baz Inc.&quot;&gt;&lt;&#x2F;foo&gt;</pre>
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Registering Attributes (cont)</h2>
+                <h3><em>highdpi</em> Definition</h3>
+            </hgroup>
+            <article>
+                <pre class="code prettyprint" style="font-size: 17px;">
+Y.Tag.register(&#x27;[highdpi]&#x27;, {
+    created: function(config) {
+        if (Y.config.win.devicePixelRatio &lt;= 1) {return;}
+
+        var host = this.get(&#x27;host&#x27;),
+            alt = config.alt || &#x27;@2x&#x27;,
+            src = host.get(&#x27;src&#x27;).replace(&#x2F;(\.[a-zA-Z]+)$&#x2F;, function(m) {return alt + m;});
+        
+        if (src) {
+            Y.io(src, {
+                method: &#x27;HEAD&#x27;,
+                onsuccess: function(e) {
+                    host.set(&#x27;src&#x27;, src);
+                }
+            });
+        }
+    }
+});</pre>
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Registering Attributes (cont)</h2>
+                <h3>Flexible Registration</h3>
+            </hgroup>
+            <article>
+                <pre class="code prettyprint">
+Y.Tag.register(&#x27;example, [example]&#x27;, {});</pre>
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
+                <h2>Attribute Benefits</h2>
+            </hgroup>
+            <article>
+                <p>Provides more graceful degredation by enhancing existing elements.</p>
+                <p>Attributes can support multiple registered components.</p>
             </article>
         </slide>
 
@@ -243,11 +317,14 @@ new Y.Foo({
             </hgroup>
             <article>
                 <p><em>yautocomplete</em></p>
+                <pre class="code prettyprint">&lt;yautocomplete data-max-results="i:5"&gt;&lt;/yautocomplete&gt;</pre>
+
                 <div class="output">
                     <yautocomplete data-max-results="i:5"></yautocomplete>
                 </div>
 
                 <p><em>ybutton</em></p>
+                <pre class="code prettyprint">&lt;ybutton data-label="TEST BUTTON"&gt;&lt;/ybutton&gt;</pre>
                 <div class="output">
                     <ybutton data-label="TEST BUTTON"></ybutton>
                     <ybutton data-label="SAMPLE BUTTON" data-disabled="true"></ybutton>
@@ -265,6 +342,7 @@ new Y.Foo({
                 <h3><em>ydial</em> Tag</h3>
             </hgroup>
             <article>
+                <pre class="code prettyprint">&lt;ydial data-min="-100" data-max="100" data-value="0"&gt;&lt;/ydial&gt;</pre>
                 <ydial data-min="-100" data-max="100" data-value="0"></ydial>
             </article>
 
@@ -279,6 +357,7 @@ new Y.Foo({
                 <h3><em>ycalendar</em> Tag</h3>
             </hgroup>
             <article>
+                <pre class="code prettyprint">&lt;ycalendar&gt;&lt;/ycalendar&gt;</pre>
                 <ycalendar></ycalendar>
             </article>
 
@@ -296,6 +375,12 @@ new Y.Foo({
                 <input id="name" type="text" placeholder="Enter your name" />
                 <p>Hello, <span ybind="#name" ybind:refkeyup></span>! Have a good day, <ybind data-ybind="#name" data-refkeyup></ybind>.</p>
 
+                <pre class="code prettyprint" style="font-size: 15px;">
+&lt;input id=&quot;name&quot; type=&quot;text&quot; placeholder=&quot;Enter your name&quot; /&gt;<br/>&lt;p&gt;
+&nbsp;&nbsp;Hello, &lt;span ybind=&quot;#name&quot; ybind:refkeyup&gt;&lt;/span&gt;! Have a good day,
+&nbsp;&nbsp;&lt;ybind data-ybind=&quot;#name&quot; data-refkeyup&gt;&lt;/ybind&gt;.
+&lt;/p&gt;</pre>
+
                 <hr />
 
                 <input id="age" type="range" />
@@ -306,16 +391,27 @@ new Y.Foo({
                 <input id="age2" type="range" ybind="#age3" ybind:refchange />
                 <input id="age3" type="range" ybind="#age2" ybind:refchange />
                 <p id="test">Age: <span ybind="#age2" ybind:refchange></span></p>
+            </article>
+        </slide>
 
-                <hr />
-
+        <slide>
+            <hgroup>
+                <h2>Data Binding (cont)</h2>
+                <h3>Using the <em>ybind</em> Tag</h3>
+            </hgroup>
+            <article>
                 <click-counter>
-                    <p>Total clicks: <span ybind="click-counter" ybind:refcount-change></span></p>
-
                     <form ybind="click-counter" ybind:onsubmit="clicked">
                         <input type="submit" value="Click" />
                     </form>
+                    <p>Total clicks: <span ybind="click-counter" ybind:refcount-change></span></p>
                 </click-counter>
+                <pre class="code prettyprint" style="font-size: 15px;">
+&lt;click-counter&gt;<br/>    &lt;form ybind=&quot;click-counter&quot; ybind:onsubmit=&quot;clicked&quot;&gt;<br/>        &lt;input type=&quot;submit&quot; value=&quot;Click&quot; /&gt;<br/>    &lt;/form&gt;<br/>    &lt;p&gt;Total clicks: &lt;span ybind=&quot;click-counter&quot; ybind:refcount-change&gt;&lt;/span&gt;&lt;/p&gt;<br/>&lt;/click-counter&gt;</pre>
+
+                <pre class="code prettyprint" style="font-size: 15px;">
+Y.Tag.register('click-counter', {<br/>    created: function(config) {<br/>        this.addAttr('count', {value: 0});<br/>    },<br/>    clicked: function(e) {<br/>        e.preventDefault();<br/>        this.set('count', this.get('count') + 1);<br/>    }<br/>});</pre>
+
             </article>
 
             <script type="text/javascript">
@@ -324,7 +420,6 @@ new Y.Foo({
                     created: function(config) {
                         this.addAttr('count', {value: 0});
                     },
-
                     clicked: function(e) {
                         e.preventDefault();
                         this.set('count', this.get('count') + 1);
@@ -336,6 +431,16 @@ new Y.Foo({
 
         <slide>
             <hgroup>
+                <h2>What's Next?</h2>
+            </hgroup>
+            <article>
+                <p>Next release will support registering of classes.</p>
+                <p>Experiment with server-side support using Node.js and JSDOM.</p>
+            </article>
+        </slide>
+
+        <slide>
+            <hgroup>
                 <h2>Learn More</h2>
             </hgroup>
             <article>
@@ -343,7 +448,9 @@ new Y.Foo({
                     <li><a href="http://twobit.github.com/yui3-gallery/gallery-tag/">Documentation</a></li>
                     <li><a href="http://yuilibrary.com/gallery/show/tag">Gallery Module</a></li>
                     <li><a href="http://yuilibrary.com/gallery/show/tag-registry">Tag Registry</a></li>
-                    <li><a href="http://yuilibrary.com/gallery/show/event-inserted">Inserted Event</a> - Event fires whenever a selector matches a node. Tag uses this for inserted node events.</li>
+                    <li><a href="http://yuilibrary.com/gallery/show/event-inserted">Inserted Event</a></li>
+                    <li><a href="http://www.yuiblog.com/blog/2012/07/24/yui-open-hours-thurs-july-26th/">YUI Open Hours Talk</a></li>
+                    <li><a href="http://www.w3.org/TR/2012/WD-components-intro-20120522/#custom-element-section">W3C Web Components Spec</a></li>
                     <li><a href="http://mozilla.github.com/x-tag/">X-Tag</a> - Initial inspiration for Tag Module.</li>
                 </ul>
             </article>
