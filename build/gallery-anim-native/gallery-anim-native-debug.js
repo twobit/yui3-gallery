@@ -9,6 +9,9 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
 * Easing method values from AliceJS:
 * http://blackberry.github.com/Alice/
 *
+* TODO:
+* Add default units
+*
 * @module anim-native
 */
 
@@ -22,6 +25,12 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
         return prefix + 'Animation' in Y.config.doc.body.style;
     })[0],
     PREFIX = VENDOR ? '-' + VENDOR.toLowerCase() + '-' : VENDOR,
+    ANIMATION_END_VENDORS = {
+        webkit: 'webkitAnimationEnd',
+        O: 'oAnimationEnd'
+    },
+    ANIMATION_END_EVENT = 'animationend',
+    ANIMATION_END = ANIMATION_END_VENDORS[VENDOR] || ANIMATION_END_EVENT;
 
     /**
      * A class for constructing animation instances.
@@ -33,6 +42,8 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
     Anim = function () {
         Anim.superclass.constructor.apply(this, arguments);
     };
+
+    Y.Node.DOM_EVENTS[ANIMATION_END] = 1;
 
     Anim.NAME = 'animNative';
     Anim.DIRECTIONS = {
@@ -97,6 +108,19 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
             var style = doc.createElement("style");
             style.innerHTML = rule;
             doc.head.appendChild(style);
+        }
+    };
+
+    Anim._delete = function (ruleName) {
+        var doc = Y.config.doc,
+            cssrules = doc.all ? "rules" : "cssRules",
+            i;
+
+        for (i = 0; i < doc.styleSheets[0][cssrules].length; i += 1) {
+            if (doc.styleSheets[0][cssrules][i].name === ruleName) {
+                doc.styleSheets[0].deleteRule(i);
+                break;
+            }
         }
     };
 
@@ -367,14 +391,27 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
 
             node.setStyle(VENDOR + "AnimationName", name);
             node.setStyle(VENDOR + "AnimationDuration", this.get('duration') + 's');
+            node.setStyle(VENDOR + "AnimationTimingFunction", this.get('easing'));
             node.setStyle(VENDOR + "AnimationDelay", this.get('delay') + 's');
             node.setStyle(VENDOR + "AnimationIterationCount", this.get('iterations'));
             node.setStyle(VENDOR + "AnimationDirection", direction);
-            node.setStyle(VENDOR + "AnimationTimingFunction", this.get('easing'));
-            node.setStyle(VENDOR + "BackfaceVisibility", this.get('backfaceVisibility'));
             node.setStyle(VENDOR + "AnimationPlayState", 'running');
+            node.setStyle(VENDOR + "BackfaceVisibility", this.get('backfaceVisibility'));
 
-            this.set('running', true);
+            node.on(ANIMATION_END, function(e) {
+                node.setStyle(VENDOR + "AnimationName", "none");
+                node.setStyle(VENDOR + "AnimationDuration", "0s");
+                node.setStyle(VENDOR + "AnimationTimingFunction", "ease");
+                node.setStyle(VENDOR + "AnimationDelay", "0s");
+                node.setStyle(VENDOR + "AnimationIterationCount", "1");
+                node.setStyle(VENDOR + "AnimationDirection", "normal");
+                node.setStyle(VENDOR + "AnimationPlayState", "running");
+                node.setStyle(VENDOR + "BackfaceVisibility", 'visible');
+
+                //this.set('iterationCount', this.get('iterations'));
+
+                Anim._delete(name);
+            }, this);
         },
 
         _render: function (node, name, keyframes) {
@@ -408,11 +445,6 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
             css += '}\n';
 
             return css;
-        },
-
-        destructor: function() {
-            // Not implemented
-            // Remove stylesheets
         }
     });
 

@@ -14,8 +14,10 @@
     </head>
     <body>
         <div id="test1"></div>
+        <button id="start" type="button">Start</button>
         <button id="pause" type="button">Pause</button>
         <button id="resume" type="button">Resume</button>
+        <button id="stop" type="button">Stop</button>
 
         <script type="text/javascript">
         YUI({
@@ -39,6 +41,10 @@
                 }
             });
 
+            Y.one('#start').on('click', function() {
+                anim.run();
+            });
+
             Y.one('#pause').on('click', function() {
                 anim.pause();
             });
@@ -47,7 +53,9 @@
                 anim.run();
             });
 
-            anim.run();
+            Y.one('#stop').on('click', function() {
+                anim.stop();
+            });
         });
         </script>
     </body>
