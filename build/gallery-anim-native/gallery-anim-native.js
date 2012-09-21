@@ -9,6 +9,10 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
 * Easing method values from AliceJS:
 * http://blackberry.github.com/Alice/
 *
+* Browser support:
+* http://caniuse.com/#feat=css-animation
+* IE10+, FF5+, Chrome 4+, Safari/iOS 4+, Android 2.1+
+*
 * @module anim-native
 */
 
@@ -18,27 +22,30 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
 * @module anim
 * @submodule anim-native
 */
-var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
-        return prefix + 'Animation' in Y.config.doc.body.style;
-    })[0],
-    PREFIX = VENDOR ? '-' + VENDOR.toLowerCase() + '-' : VENDOR,
-    ANIMATION_END_VENDORS = {
-        webkit: 'webkitAnimationEnd',
-        O: 'oAnimationEnd'
-    },
-    ANIMATION_END_EVENT = 'animationend',
-    ANIMATION_END = ANIMATION_END_VENDORS[VENDOR] || ANIMATION_END_EVENT;
+    "use strict";
+    /*global Y:true */
+    /*jslint regexp: true*/
+    var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function (prefix) {
+            return Y.config.doc.body.style.hasOwnProperty(prefix + 'Animation');
+        })[0],
+        PREFIX = VENDOR ? '-' + VENDOR.toLowerCase() + '-' : VENDOR,
+        ANIMATION_END_VENDORS = {
+            webkit: 'webkitAnimationEnd',
+            O: 'oAnimationEnd'
+        },
+        ANIMATION_END_EVENT = 'animationend',
+        ANIMATION_END = ANIMATION_END_VENDORS[VENDOR] || ANIMATION_END_EVENT,
 
-    /**
-     * A class for constructing animation instances.
-     * @class Anim
-     * @for Anim
-     * @constructor
-     * @extends Base
-     */
-    Anim = function () {
-        Anim.superclass.constructor.apply(this, arguments);
-    };
+        /**
+         * A class for constructing animation instances.
+         * @class Anim
+         * @for Anim
+         * @constructor
+         * @extends Base
+         */
+        Anim = function () {
+            Anim.superclass.constructor.apply(this, arguments);
+        };
 
     Y.Node.DOM_EVENTS[ANIMATION_END] = 1;
 
@@ -68,7 +75,6 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
         bounceBoth: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750}
     };
 
-
     Anim.RE_UNITS = /^(-?\d*\.?\d*){1}(em|ex|px|in|cm|mm|pt|pc|%)*$/;
 
     /**
@@ -88,14 +94,14 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
     Anim.DEFAULT_UNIT = 'px';
 
     Anim._easing = function (name) {
-        e = Anim.EASINGS[name];
+        var e = Anim.EASINGS[name];
         return 'cubic-bezier(' + e.p1 + ', ' + e.p2 + ', ' + e.p3 + ', ' + e.p4 + ')';
-    },
-    
+    };
+
     Anim._toHyphen = function (property) {
-        property = property.replace(/([A-Z]?)([a-z]+)([A-Z]?)/g, function(m0, m1, m2, m3) {
+        property = property.replace(/([A-Z]?)([a-z]+)([A-Z]?)/g, function (m0, m1, m2, m3) {
             var str = ((m1) ? '-' + m1.toLowerCase() : '') + m2;
-            
+
             if (m3) {
                 str += '-' + m3.toLowerCase();
             }
@@ -107,19 +113,21 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
     };
 
     Anim._insert = function (rule) {
-        var doc = Y.config.doc;
+        var doc = Y.config.doc,
+            ruleNum,
+            style;
 
         if (doc.styleSheets && doc.styleSheets.length) {
-            var ruleNum = 0;
+            ruleNum = 0;
             try {
-                if (doc.styleSheets[0].cssRules.length > 0){
+                if (doc.styleSheets[0].cssRules.length > 0) {
                     ruleNum = doc.styleSheets[0].cssRules.length;
                 }
                 doc.styleSheets[0].insertRule(rule, ruleNum);
             } catch (e) {
             }
         } else {
-            var style = doc.createElement("style");
+            style = doc.createElement("style");
             style.innerHTML = rule;
             doc.head.appendChild(style);
         }
@@ -197,7 +205,9 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
          * @attribute from
          * @type Object
          */
-        from: {},
+        from: {
+            value: {}
+        },
 
         /**
          * The ending values for the animated properties.
@@ -213,7 +223,9 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
          * @attribute to
          * @type Object
          */
-        to: {},
+        to: {
+            value: {}
+        },
 
         /**
          * Date stamp for the first frame of the animation.
@@ -247,7 +259,7 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
          * @readOnly
          */
         running: {
-            getter: function() {
+            getter: function () {
                 return this.get('node').getStyle(VENDOR + "AnimationName") !== 'none';
             },
             value: false,
@@ -308,7 +320,7 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
          * @readOnly
          */
         paused: {
-            getter: function() {
+            getter: function () {
                 return this.get('node').getStyle(VENDOR + "AnimationPlayState") === 'paused';
             },
             readOnly: true,
@@ -339,8 +351,8 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
 
     Y.extend(Anim, Y.Base, {
         initializer: function (config) {
-            var from = config.from || {},
-                to = config.to || {},
+            var from = this.get('from'),
+                to = this.get('to'),
                 key;
 
             this._frames = {'0%': from};
@@ -377,7 +389,7 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
          * @method pause
          * @chainable
          */
-        pause: function() {
+        pause: function () {
             if (this.get('running')) {
                 this.get('node').setStyle(VENDOR + "AnimationPlayState", 'paused');
             }
@@ -390,12 +402,12 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
          * @param {Boolean} finish If true, the animation will move to the last frame
          * @chainable
          */
-        stop: function(finish) {
+        stop: function (finish) {
             this.get('node').setStyle(VENDOR + "AnimationName", '');
             return this;
         },
 
-        _start: function() {
+        _start: function () {
             var node = this.get('node'),
                 name = 'anim-' + Y.guid(),
                 direction = Anim.DIRECTIONS[this.get('direction')][+this.get('reverse')];
@@ -411,7 +423,7 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
             node.setStyle(VENDOR + "AnimationPlayState", 'running');
             node.setStyle(VENDOR + "BackfaceVisibility", this.get('backfaceVisibility'));
 
-            node.on(ANIMATION_END, function(e) {
+            node.on(ANIMATION_END, function (e) {
                 node.setStyle(VENDOR + "AnimationName", "none");
                 node.setStyle(VENDOR + "AnimationDuration", "0s");
                 node.setStyle(VENDOR + "AnimationTimingFunction", "ease");
@@ -439,11 +451,11 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
                 if (keyframes.hasOwnProperty(key)) {
                     props = keyframes[key];
                     css += '\t' + key + ' {\n';
-                    
+
                     for (prop in props) {
                         if (props.hasOwnProperty(prop)) {
                             value = props[prop];
-                            
+
                             if (typeof value === 'function') {
                                 value = value.call(this, node);
                             }
