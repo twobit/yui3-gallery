@@ -14,15 +14,17 @@
     </head>
     <body>
         <div id="test1"></div>
+        <button id="pause" type="button">Pause</button>
+        <button id="resume" type="button">Resume</button>
 
         <script type="text/javascript">
         YUI({
             filter: (window.location.search.match(/[?&]filter=([^&]+)/) || [])[1] || 'raw',
             modules: {
-                'gallery-anim-native': '../../../../build/gallery-anim-native/gallery-anim-native.js'
+                'gallery-anim-native': '../../../../build/gallery-anim-native/gallery-anim-native-debug.js'
             }
         }).use('gallery-anim-native', function(Y) {
-            new Y.Anim({
+            var anim = new Y.Anim({
                 node: '#test1',
                 duration: 4,
                 iterations: 2,
@@ -35,7 +37,17 @@
                 to: {
                     background: 'blue'
                 }
-            }).run();
+            });
+
+            Y.one('#pause').on('click', function() {
+                anim.pause();
+            });
+
+            Y.one('#resume').on('click', function() {
+                anim.run();
+            });
+
+            anim.run();
         });
         </script>
     </body>

@@ -2,6 +2,13 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
 
 /**
 * The Animation Utility provides an API for creating advanced transitions.
+*
+* W3C CSS Animations:
+* http://www.w3.org/TR/css3-animations/
+*
+* Easing method values from AliceJS:
+* http://blackberry.github.com/Alice/
+*
 * @module anim-native
 */
 
@@ -32,6 +39,31 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
         normal: ['normal', 'reverse'],
         alternate: ['alternate', 'alternate-reverse']
     };
+    Anim.EASINGS = {
+        easeNone: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},
+        easeIn: {p1: 0.420, p2: 0.000, p3: 1.000, p4: 1.000},
+        easeOut: {p1: 0.000, p2: 0.000, p3: 0.580, p4: 1.000},
+        easeBoth: {p1: 0.420, p2: 0.000, p3: 0.580, p4: 1.000},
+        easeInStrong: {p1: 0.895, p2: 0.030, p3: 0.685, p4: 0.220},
+        easeOutStrong: {p1: 0.165, p2: 0.840, p3: 0.440, p4: 1.000},
+        easeBothStrong: {p1: 0.770, p2: 0.000, p3: 0.175, p4: 1.000},
+        backOut: {p1: 0.175, p2: 0.885, p3: 0.320, p4: 1.275},
+        backBoth: {p1: 0.680, p2: -0.550, p3: 0.265, p4: 1.550},
+
+        // FIXME: Defaulting these to linear
+        elasticIn: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},
+        elasticOut: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},
+        elasticBoth: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},
+        backIn: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},
+        bounceIn: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},
+        bounceOut: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},
+        bounceBoth: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750}
+    };
+
+    Anim._easing = function (name) {
+        e = Anim.EASINGS[name];
+        return 'cubic-bezier(' + e.p1 + ', ' + e.p2 + ', ' + e.p3 + ', ' + e.p4 + ')';
+    },
     
     Anim._toHyphen = function (property) {
         property = property.replace(/([A-Z]?)([a-z]+)([A-Z]?)/g, function(m0, m1, m2, m3) {
@@ -47,50 +79,22 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
         return property;
     };
 
-    Anim._render = function (name, keyframes) {
-        var css = '@' + PREFIX + 'keyframes ' + name + ' {\n',
-            key,
-            props,
-            prop;
+    Anim._insert = function (rule) {
+        var doc = Y.config.doc;
 
-        for (key in keyframes) {
-            if (keyframes.hasOwnProperty(key)) {
-                props = keyframes[key];
-                css += '\t' + key + ' {\n';
-                
-                for (prop in props) {
-                    if (props.hasOwnProperty(prop)) {
-                        css += '\t\t' + Anim._toHyphen(prop) + ': ' + props[prop] + ';\n';
-                    }
-                }
-
-                css += '\t}\n';
-            }
-        }
-
-        css += '}\n';
-
-        return css;
-    };
-
-    /*
-     * https://github.com/blackberry/Alice/blob/master/js/src/alice.core.js
-     */
-    Anim._insert = function(rule) {
-        if (document.styleSheets && document.styleSheets.length) {
+        if (doc.styleSheets && doc.styleSheets.length) {
             var ruleNum = 0;
             try {
-                if (document.styleSheets[0].cssRules.length > 0){
-                    ruleNum = document.styleSheets[0].cssRules.length;
+                if (doc.styleSheets[0].cssRules.length > 0){
+                    ruleNum = doc.styleSheets[0].cssRules.length;
                 }
-                document.styleSheets[0].insertRule(rule, ruleNum);
-            } catch (ex) {
-                console.warn(ex.message, rule);
+                doc.styleSheets[0].insertRule(rule, ruleNum);
+            } catch (e) {
             }
         } else {
-            var style = document.createElement("style");
+            var style = doc.createElement("style");
             style.innerHTML = rule;
-            document.head.appendChild(style);
+            doc.head.appendChild(style);
         }
     };
 
@@ -126,12 +130,15 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
 
         /**
          * The method that will provide values to the attribute(s) during the animation.
-         * Defaults to "Easing.easeNone".
+         * Defaults to "easeNone".
          * @attribute easing
          * @type Function
          */
         easing: {
-            /* FIXME */
+            value: 'easeNone',
+            setter: function (e) {
+                return Anim._easing(e);
+            }
         },
 
         /**
@@ -172,7 +179,7 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
          * Date stamp for the first frame of the animation.
          * @attribute startTime
          * @type Int
-         * @default 0 
+         * @default 0
          * @readOnly
          */
         startTime: {
@@ -184,7 +191,7 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
          * Current time the animation has been running.
          * @attribute elapsedTime
          * @type Int
-         * @default 0 
+         * @default 0
          * @readOnly
          */
         elapsedTime: {
@@ -194,13 +201,17 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
 
         /**
          * Whether or not the animation is currently running.
-         * @attribute running 
+         * @attribute running
          * @type Boolean
-         * @default false 
+         * @default false
          * @readOnly
          */
         running: {
-            /* FIXME */
+            getter: function() {
+                return this.get('node').getStyle(VENDOR + "AnimationName") !== 'none';
+            },
+            value: false,
+            readOnly: true
         },
 
         /**
@@ -214,10 +225,10 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
         },
 
         /**
-         * The number of times the animation should run 
+         * The number of times the animation should run
          * @attribute iterations
          * @type Int
-         * @default 1 
+         * @default 1
          */
         iterations: {
             value: 1
@@ -225,7 +236,7 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
 
         /**
          * The number of iterations that have occurred.
-         * Resets when an animation ends (reaches iteration count or stop() called). 
+         * Resets when an animation ends (reaches iteration count or stop() called).
          * @attribute iterationCount
          * @type Int
          * @default 0
@@ -237,7 +248,7 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
         },
 
         /**
-         * How iterations of the animation should behave. 
+         * How iterations of the animation should behave.
          * Possible values are "normal" and "alternate".
          * Normal will repeat the animation, alternate will reverse on every other pass.
          *
@@ -251,12 +262,15 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
 
         /**
          * Whether or not the animation is currently paused.
-         * @attribute paused 
+         * @attribute paused
          * @type Boolean
-         * @default false 
+         * @default false
          * @readOnly
          */
         paused: {
+            getter: function() {
+                return this.get('node').getStyle(VENDOR + "AnimationPlayState") === 'paused';
+            },
             readOnly: true,
             value: false
         },
@@ -265,10 +279,21 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
          * If true, animation begins from last frame
          * @attribute reverse
          * @type Boolean
-         * @default false 
+         * @default false
          */
         reverse: {
             value: false
+        },
+
+        /**
+         * If 'visible' the element is show when not facing the screen. If 'hidden' the
+         * element will be invisible when not facing the screen.
+         * @attribute backfaceVisibility
+         * @type String
+         * @default 'visible'
+         */
+        backfaceVisibility: {
+            value: 'visible'
         }
     };
 
@@ -289,25 +314,102 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
             this._frames['100%'] = to;
         },
 
+        /**
+         * Starts or resumes an animation.
+         * @method run
+         * @chainable
+         */
         run: function () {
-            var name = 'anim-' + Y.guid();
-                css = Anim._render(name, this._frames),
-                node = this.get('node'),
+            var node = this.get('node');
+
+            if (this.get('paused')) {
+                node.setStyle(VENDOR + "AnimationPlayState", 'running');
+            } else if (!this.get('running')) {
+                this._start();
+            }
+            return this;
+        },
+
+        /**
+         * Pauses the animation and
+         * freezes it in its current state and time.
+         * Calling run() will continue where it left off.
+         * @method pause
+         * @chainable
+         */
+        pause: function() {
+            if (this.get('running')) {
+                this.get('node').setStyle(VENDOR + "AnimationPlayState", 'paused');
+            }
+            return this;
+        },
+
+        /**
+         * Stops the animation and resets its time.
+         * @method stop
+         * @param {Boolean} finish If true, the animation will move to the last frame
+         * @chainable
+         */
+        stop: function(finish) {
+            this.get('node').setStyle(VENDOR + "AnimationName", '');
+            return this;
+        },
+
+        _start: function() {
+            var node = this.get('node'),
+                name = 'anim-' + Y.guid(),
                 direction = Anim.DIRECTIONS[this.get('direction')][+this.get('reverse')];
 
-            console.log(css);
-            Anim._insert(css);
+            Anim._insert(this._render(node, name, this._frames));
 
             node.setStyle(VENDOR + "AnimationName", name);
             node.setStyle(VENDOR + "AnimationDuration", this.get('duration') + 's');
             node.setStyle(VENDOR + "AnimationDelay", this.get('delay') + 's');
             node.setStyle(VENDOR + "AnimationIterationCount", this.get('iterations'));
             node.setStyle(VENDOR + "AnimationDirection", direction);
+            node.setStyle(VENDOR + "AnimationTimingFunction", this.get('easing'));
+            node.setStyle(VENDOR + "BackfaceVisibility", this.get('backfaceVisibility'));
+            node.setStyle(VENDOR + "AnimationPlayState", 'running');
 
-            /*
-            node.setStyle(VENDOR + "AnimationTimingFunction", '');
-            node.setStyle(VENDOR + "AnimationPlayState", playstate);
-            node.setStyle(VENDOR + "BackfaceVisibility", backfaceVisibility);*/
+            this.set('running', true);
+        },
+
+        _render: function (node, name, keyframes) {
+            var css = '@' + PREFIX + 'keyframes ' + name + ' {\n',
+                key,
+                props,
+                prop,
+                value;
+
+            for (key in keyframes) {
+                if (keyframes.hasOwnProperty(key)) {
+                    props = keyframes[key];
+                    css += '\t' + key + ' {\n';
+                    
+                    for (prop in props) {
+                        if (props.hasOwnProperty(prop)) {
+                            value = props[prop];
+                            
+                            if (typeof value === 'function') {
+                                value = value.call(this, node);
+                            }
+
+                            css += '\t\t' + Anim._toHyphen(prop) + ': ' + value + ';\n';
+                        }
+                    }
+
+                    css += '\t}\n';
+                }
+            }
+
+            css += '}\n';
+
+            return css;
+        },
+
+        destructor: function() {
+            // Not implemented
+            // Remove stylesheets
         }
     });
 
