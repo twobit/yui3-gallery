@@ -9,9 +9,6 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
 * Easing method values from AliceJS:
 * http://blackberry.github.com/Alice/
 *
-* TODO:
-* Add default units
-*
 * @module anim-native
 */
 
@@ -70,6 +67,25 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
         bounceOut: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},
         bounceBoth: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750}
     };
+
+
+    Anim.RE_UNITS = /^(-?\d*\.?\d*){1}(em|ex|px|in|cm|mm|pt|pc|%)*$/;
+
+    /**
+     * Regex of properties that should use the default unit.
+     *
+     * @property RE_DEFAULT_UNIT
+     * @static
+     */
+    Anim.RE_DEFAULT_UNIT = /^width|height|top|right|bottom|left|margin.*|padding.*|border.*$/i;
+
+    /**
+     * The default unit to use with properties that pass the RE_DEFAULT_UNIT test.
+     *
+     * @property DEFAULT_UNIT
+     * @static
+     */
+    Anim.DEFAULT_UNIT = 'px';
 
     Anim._easing = function (name) {
         e = Anim.EASINGS[name];
@@ -416,7 +432,8 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
                 key,
                 props,
                 prop,
-                value;
+                value,
+                parsed;
 
             for (key in keyframes) {
                 if (keyframes.hasOwnProperty(key)) {
@@ -429,6 +446,14 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
                             
                             if (typeof value === 'function') {
                                 value = value.call(this, node);
+                            }
+
+                            if (Anim.RE_DEFAULT_UNIT.test(prop)) {
+                                parsed = Anim.RE_UNITS.exec(value);
+
+                                if (parsed && !parsed[2]) {
+                                    value += Anim.DEFAULT_UNIT;
+                                }
                             }
 
                             css += '\t\t' + Anim._toHyphen(prop) + ': ' + value + ';\n';

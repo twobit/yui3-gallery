@@ -9,6 +9,7 @@
             width: 200px;
             height: 200px;
             background: black;
+            border: 5px solid #000;
         }
         </style>
     </head>
@@ -31,12 +32,21 @@
                 duration: 4,
                 iterations: 2,
                 from: {
+                    width: 250,
+                    height: '250',
                     background: 'red'
                 },
                 '50%': {
-                    background: 'green'
+                    background: function(node) {
+                        return 'green';
+                    },
+                    borderColor: 'red'
                 },
                 to: {
+                    width: function(node) {
+                        return 300;
+                    },
+                    height: '20em',
                     background: 'blue'
                 }
             });
