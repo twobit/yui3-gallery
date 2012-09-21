@@ -292,7 +292,7 @@
         },
 
         /**
-         * The number of times the animation should run
+         * The number of times the animation should run. 'infinite' or integer.
          * @attribute iterations
          * @type Int
          * @default 1
@@ -416,17 +416,28 @@
             var node = this.get('node'),
                 name = 'anim-' + Y.guid(),
                 direction = Anim.DIRECTIONS[this.get('direction')][+this.get('reverse')],
+                from = this.get('from'),
+                to = this.get('to'),
                 frames = this.get('frames'),
                 frame,
-                keyframes = {};
+                keyframes = {},
+                style;
 
-            keyframes['0%'] = this.get('from');
+            keyframes['0%'] = from;
             for (frame in frames) {
                 if (frames.hasOwnProperty(frame)) {
                     keyframes[frame] = frames[frame];
                 }
             }
-            keyframes['100%'] = this.get('to');
+            keyframes['100%'] = to;
+
+            /*
+            Apply style from last frame
+            for (style in to) {
+                if (to.hasOwnProperty(style)) {
+                    node.setStyle(style, to[style]);
+                }
+            }*/
 
             Anim._insert(this._render(node, name, keyframes));
 
@@ -454,6 +465,8 @@
                 this.set('iterationCount', this.get('iterations'));
 
                 Anim._delete(name);
+
+                this.fire('end', {elapsed: this.get('elapsedTime')});
             }, this);
         },
 
