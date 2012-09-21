@@ -304,6 +304,9 @@
         /**
          * The number of iterations that have occurred.
          * Resets when an animation ends (reaches iteration count or stop() called).
+         *
+         * Note: no way to update this mid animation.
+         *
          * @attribute iterationCount
          * @type Int
          * @default 0
@@ -427,6 +430,8 @@
 
             Anim._insert(this._render(node, name, keyframes));
 
+            this.set('iterationCount', 0);
+
             node.setStyle(VENDOR + "AnimationName", name);
             node.setStyle(VENDOR + "AnimationDuration", this.get('duration') + 's');
             node.setStyle(VENDOR + "AnimationTimingFunction", this.get('easing'));
@@ -446,7 +451,7 @@
                 node.setStyle(VENDOR + "AnimationPlayState", "running");
                 node.setStyle(VENDOR + "BackfaceVisibility", 'visible');
 
-                //this.set('iterationCount', this.get('iterations'));
+                this.set('iterationCount', this.get('iterations'));
 
                 Anim._delete(name);
             }, this);

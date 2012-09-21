@@ -30,18 +30,13 @@
             var anim = new Y.Anim({
                 node: '#test1',
                 duration: 4,
-                iterations: 2,
+                iterations: 'infinite',
+                reverse: true,
                 from: {
                     width: 250,
                     height: '250',
                     background: 'red'
                 },
-                frames: {'50%': {
-                    background: function(node) {
-                        return 'green';
-                    },
-                    borderColor: 'red'
-                }},
                 to: {
                     width: function(node) {
                         return 300;
@@ -50,6 +45,13 @@
                     background: 'blue'
                 }
             });
+
+            anim.set('frames', {'50%': {
+                background: function(node) {
+                    return 'green';
+                },
+                borderColor: 'red'
+            }});
 
             Y.one('#start').on('click', function() {
                 anim.run();

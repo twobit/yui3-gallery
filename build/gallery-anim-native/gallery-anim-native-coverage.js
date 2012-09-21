@@ -26,10 +26,10 @@ _yuitest_coverage["build/gallery-anim-native/gallery-anim-native.js"] = {
     path: "build/gallery-anim-native/gallery-anim-native.js",
     code: []
 };
-_yuitest_coverage["build/gallery-anim-native/gallery-anim-native.js"].code=["YUI.add('gallery-anim-native', function (Y, NAME) {","","/**","* The Animation Utility provides an API for creating advanced transitions.","*","* W3C CSS Animations:","* http://www.w3.org/TR/css3-animations/","*","* Easing method values from AliceJS:","* http://blackberry.github.com/Alice/","*","* Browser support:","* http://caniuse.com/#feat=css-animation","* IE10+, FF5+, Chrome 4+, Safari/iOS 4+, Android 2.1+","*","* @module anim-native","*/","","/**","* Provides the CSS3 Native Anim class, for animating CSS properties.","*","* @module anim","* @submodule anim-native","*/","    \"use strict\";","    /*global Y:true */","    /*jslint regexp: true*/","    var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function (prefix) {","            return Y.config.doc.body.style.hasOwnProperty(prefix + 'Animation');","        })[0],","        PREFIX = VENDOR ? '-' + VENDOR.toLowerCase() + '-' : VENDOR,","        ANIMATION_END_VENDORS = {","            webkit: 'webkitAnimationEnd',","            O: 'oAnimationEnd'","        },","        ANIMATION_END_EVENT = 'animationend',","        ANIMATION_END = ANIMATION_END_VENDORS[VENDOR] || ANIMATION_END_EVENT,","","        /**","         * A class for constructing animation instances.","         * @class Anim","         * @for Anim","         * @constructor","         * @extends Base","         */","        Anim = function () {","            Anim.superclass.constructor.apply(this, arguments);","        };","","    Y.Node.DOM_EVENTS[ANIMATION_END] = 1;","","    Anim.NAME = 'animNative';","    Anim.DIRECTIONS = {","        normal: ['normal', 'reverse'],","        alternate: ['alternate', 'alternate-reverse']","    };","    Anim.EASINGS = {","        easeNone: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},","        easeIn: {p1: 0.420, p2: 0.000, p3: 1.000, p4: 1.000},","        easeOut: {p1: 0.000, p2: 0.000, p3: 0.580, p4: 1.000},","        easeBoth: {p1: 0.420, p2: 0.000, p3: 0.580, p4: 1.000},","        easeInStrong: {p1: 0.895, p2: 0.030, p3: 0.685, p4: 0.220},","        easeOutStrong: {p1: 0.165, p2: 0.840, p3: 0.440, p4: 1.000},","        easeBothStrong: {p1: 0.770, p2: 0.000, p3: 0.175, p4: 1.000},","        backOut: {p1: 0.175, p2: 0.885, p3: 0.320, p4: 1.275},","        backBoth: {p1: 0.680, p2: -0.550, p3: 0.265, p4: 1.550},","","        // FIXME: Defaulting these to linear","        elasticIn: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},","        elasticOut: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},","        elasticBoth: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},","        backIn: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},","        bounceIn: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},","        bounceOut: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},","        bounceBoth: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750}","    };","","    Anim.RE_UNITS = /^(-?\\d*\\.?\\d*){1}(em|ex|px|in|cm|mm|pt|pc|%)*$/;","","    /**","     * Regex of properties that should use the default unit.","     *","     * @property RE_DEFAULT_UNIT","     * @static","     */","    Anim.RE_DEFAULT_UNIT = /^width|height|top|right|bottom|left|margin.*|padding.*|border.*$/i;","","    /**","     * The default unit to use with properties that pass the RE_DEFAULT_UNIT test.","     *","     * @property DEFAULT_UNIT","     * @static","     */","    Anim.DEFAULT_UNIT = 'px';","","    Anim._easing = function (name) {","        var e = Anim.EASINGS[name];","        return 'cubic-bezier(' + e.p1 + ', ' + e.p2 + ', ' + e.p3 + ', ' + e.p4 + ')';","    };","","    Anim._toHyphen = function (property) {","        property = property.replace(/([A-Z]?)([a-z]+)([A-Z]?)/g, function (m0, m1, m2, m3) {","            var str = ((m1) ? '-' + m1.toLowerCase() : '') + m2;","","            if (m3) {","                str += '-' + m3.toLowerCase();","            }","","            return str;","        });","","        return property;","    };","","    Anim._insert = function (rule) {","        var doc = Y.config.doc,","            ruleNum,","            style;","","        if (doc.styleSheets && doc.styleSheets.length) {","            ruleNum = 0;","            try {","                if (doc.styleSheets[0].cssRules.length > 0) {","                    ruleNum = doc.styleSheets[0].cssRules.length;","                }","                doc.styleSheets[0].insertRule(rule, ruleNum);","            } catch (e) {","            }","        } else {","            style = doc.createElement(\"style\");","            style.innerHTML = rule;","            doc.head.appendChild(style);","        }","    };","","    Anim._delete = function (ruleName) {","        var doc = Y.config.doc,","            cssrules = doc.all ? \"rules\" : \"cssRules\",","            i;","","        for (i = 0; i < doc.styleSheets[0][cssrules].length; i += 1) {","            if (doc.styleSheets[0][cssrules][i].name === ruleName) {","                doc.styleSheets[0].deleteRule(i);","                break;","            }","        }","    };","","    Anim.ATTRS = {","        /**","         * The object to be animated.","         * @attribute node","         * @type Node","         */","        node: {","            setter: function (node) {","                if (node) {","                    if (typeof node === 'string' || node.nodeType) {","                        node = Y.one(node);","                    }","                }","","                this._node = node;","                if (!node) {","                }","                return node;","            }","        },","","        /**","         * The length of the animation.  Defaults to \"1\" (second).","         * @attribute duration","         * @type NUM","         */","        duration: {","            value: 1","        },","","        /**","         * The method that will provide values to the attribute(s) during the animation.","         * Defaults to \"easeNone\".","         * @attribute easing","         * @type Function","         */","        easing: {","            value: 'easeNone',","            setter: function (e) {","                return Anim._easing(e);","            }","        },","","        /**","         * The starting values for the animated properties.","         *","         * Fields may be strings, numbers, or functions.","         * If a function is used, the return value becomes the from value.","         * If no from value is specified, the DEFAULT_GETTER will be used.","         * Supports any unit, provided it matches the \"to\" (or default)","         * unit (e.g. `{width: '10em', color: 'rgb(0, 0, 0)', borderColor: '#ccc'}`).","         *","         * If using the default ('px' for length-based units), the unit may be omitted","         * (e.g. `{width: 100}, borderColor: 'ccc'}`, which defaults to pixels","         * and hex, respectively).","         *","         * @attribute from","         * @type Object","         */","        from: {","            value: {}","        },","","        /**","         * The keyframes between 0 and 100%.","         *","         * Example: {'50%': {","         *   width: 200","         * }}","         *","         * @attribute to","         * @type Object","         */","        frames: {","            value: {}","        },","","        /**","         * The ending values for the animated properties.","         *","         * Fields may be strings, numbers, or functions.","         * Supports any unit, provided it matches the \"from\" (or default)","         * unit (e.g. `{width: '50%', color: 'red', borderColor: '#ccc'}`).","         *","         * If using the default ('px' for length-based units), the unit may be omitted","         * (e.g. `{width: 100, borderColor: 'ccc'}`, which defaults to pixels","         * and hex, respectively).","         *","         * @attribute to","         * @type Object","         */","        to: {","            value: {}","        },","","        /**","         * Date stamp for the first frame of the animation.","         * @attribute startTime","         * @type Int","         * @default 0","         * @readOnly","         */","        startTime: {","            value: 0,","            readOnly: true","        },","","        /**","         * Current time the animation has been running.","         * @attribute elapsedTime","         * @type Int","         * @default 0","         * @readOnly","         */","        elapsedTime: {","            value: 0,","            readOnly: true","        },","","        /**","         * Whether or not the animation is currently running.","         * @attribute running","         * @type Boolean","         * @default false","         * @readOnly","         */","        running: {","            getter: function () {","                return this.get('node').getStyle(VENDOR + \"AnimationName\") !== 'none';","            },","            value: false,","            readOnly: true","        },","","        /**","         * The number of seconds to delay the animation","         * @attribute delay","         * @type Int","         * @default 0","         */","        delay: {","            value: 0","        },","","        /**","         * The number of times the animation should run","         * @attribute iterations","         * @type Int","         * @default 1","         */","        iterations: {","            value: 1","        },","","        /**","         * The number of iterations that have occurred.","         * Resets when an animation ends (reaches iteration count or stop() called).","         * @attribute iterationCount","         * @type Int","         * @default 0","         * @readOnly","         */","        iterationCount: {","            value: 0,","            readOnly: true","        },","","        /**","         * How iterations of the animation should behave.","         * Possible values are \"normal\" and \"alternate\".","         * Normal will repeat the animation, alternate will reverse on every other pass.","         *","         * @attribute direction","         * @type String","         * @default \"normal\"","         */","        direction: {","            value: 'normal' // | alternate (fwd on odd, rev on even per spec)","        },","","        /**","         * Whether or not the animation is currently paused.","         * @attribute paused","         * @type Boolean","         * @default false","         * @readOnly","         */","        paused: {","            getter: function () {","                return this.get('node').getStyle(VENDOR + \"AnimationPlayState\") === 'paused';","            },","            readOnly: true,","            value: false","        },","","        /**","         * If true, animation begins from last frame","         * @attribute reverse","         * @type Boolean","         * @default false","         */","        reverse: {","            value: false","        },","","        /**","         * If 'visible' the element is show when not facing the screen. If 'hidden' the","         * element will be invisible when not facing the screen.","         * @attribute backfaceVisibility","         * @type String","         * @default 'visible'","         */","        backfaceVisibility: {","            value: 'visible'","        }","    };","","    Y.extend(Anim, Y.Base, {","        initializer: function (config) {","        },","","        /**","         * Starts or resumes an animation.","         * @method run","         * @chainable","         */","        run: function () {","            var node = this.get('node');","","            if (this.get('paused')) {","                node.setStyle(VENDOR + \"AnimationPlayState\", 'running');","            } else if (!this.get('running')) {","                this._start();","            }","            return this;","        },","","        /**","         * Pauses the animation and","         * freezes it in its current state and time.","         * Calling run() will continue where it left off.","         * @method pause","         * @chainable","         */","        pause: function () {","            if (this.get('running')) {","                this.get('node').setStyle(VENDOR + \"AnimationPlayState\", 'paused');","            }","            return this;","        },","","        /**","         * Stops the animation and resets its time.","         * @method stop","         * @param {Boolean} finish If true, the animation will move to the last frame","         * @chainable","         */","        stop: function (finish) {","            this.get('node').setStyle(VENDOR + \"AnimationName\", '');","            return this;","        },","","        _start: function () {","            var node = this.get('node'),","                name = 'anim-' + Y.guid(),","                direction = Anim.DIRECTIONS[this.get('direction')][+this.get('reverse')],","                frames = this.get('frames'),","                frame,","                keyframes = {};","","            keyframes['0%'] = this.get('from');","            for (frame in frames) {","                if (frames.hasOwnProperty(frame)) {","                    keyframes[frame] = frames[frame];","                }","            }","            keyframes['100%'] = this.get('to');","","            Anim._insert(this._render(node, name, keyframes));","","            node.setStyle(VENDOR + \"AnimationName\", name);","            node.setStyle(VENDOR + \"AnimationDuration\", this.get('duration') + 's');","            node.setStyle(VENDOR + \"AnimationTimingFunction\", this.get('easing'));","            node.setStyle(VENDOR + \"AnimationDelay\", this.get('delay') + 's');","            node.setStyle(VENDOR + \"AnimationIterationCount\", this.get('iterations'));","            node.setStyle(VENDOR + \"AnimationDirection\", direction);","            node.setStyle(VENDOR + \"AnimationPlayState\", 'running');","            node.setStyle(VENDOR + \"BackfaceVisibility\", this.get('backfaceVisibility'));","","            node.on(ANIMATION_END, function (e) {","                node.setStyle(VENDOR + \"AnimationName\", \"none\");","                node.setStyle(VENDOR + \"AnimationDuration\", \"0s\");","                node.setStyle(VENDOR + \"AnimationTimingFunction\", \"ease\");","                node.setStyle(VENDOR + \"AnimationDelay\", \"0s\");","                node.setStyle(VENDOR + \"AnimationIterationCount\", \"1\");","                node.setStyle(VENDOR + \"AnimationDirection\", \"normal\");","                node.setStyle(VENDOR + \"AnimationPlayState\", \"running\");","                node.setStyle(VENDOR + \"BackfaceVisibility\", 'visible');","","                //this.set('iterationCount', this.get('iterations'));","","                Anim._delete(name);","            }, this);","        },","","        _render: function (node, name, keyframes) {","            var css = '@' + PREFIX + 'keyframes ' + name + ' {\\n',","                key,","                props,","                prop,","                value,","                parsed;","","            for (key in keyframes) {","                if (keyframes.hasOwnProperty(key)) {","                    props = keyframes[key];","                    css += '\\t' + key + ' {\\n';","","                    for (prop in props) {","                        if (props.hasOwnProperty(prop)) {","                            value = props[prop];","","                            if (typeof value === 'function') {","                                value = value.call(this, node);","                            }","","                            if (Anim.RE_DEFAULT_UNIT.test(prop)) {","                                parsed = Anim.RE_UNITS.exec(value);","","                                if (parsed && !parsed[2]) {","                                    value += Anim.DEFAULT_UNIT;","                                }","                            }","","                            css += '\\t\\t' + Anim._toHyphen(prop) + ': ' + value + ';\\n';","                        }","                    }","","                    css += '\\t}\\n';","                }","            }","","            css += '}\\n';","","            return css;","        }","    });","","    Y.Anim = Anim;","    Y.AnimNative = Anim;","","}, '@VERSION@', {\"use\": [\"node\", \"base\"]});"];
-_yuitest_coverage["build/gallery-anim-native/gallery-anim-native.js"].lines = {"1":0,"25":0,"28":0,"29":0,"47":0,"50":0,"52":0,"53":0,"57":0,"78":0,"86":0,"94":0,"96":0,"97":0,"98":0,"101":0,"102":0,"103":0,"105":0,"106":0,"109":0,"112":0,"115":0,"116":0,"120":0,"121":0,"122":0,"123":0,"124":0,"126":0,"130":0,"131":0,"132":0,"136":0,"137":0,"141":0,"142":0,"143":0,"144":0,"149":0,"157":0,"158":0,"159":0,"163":0,"164":0,"166":0,"188":0,"277":0,"338":0,"366":0,"376":0,"378":0,"379":0,"380":0,"381":0,"383":0,"394":0,"395":0,"397":0,"407":0,"408":0,"412":0,"419":0,"420":0,"421":0,"422":0,"425":0,"427":0,"429":0,"430":0,"431":0,"432":0,"433":0,"434":0,"435":0,"436":0,"438":0,"439":0,"440":0,"441":0,"442":0,"443":0,"444":0,"445":0,"446":0,"450":0,"455":0,"462":0,"463":0,"464":0,"465":0,"467":0,"468":0,"469":0,"471":0,"472":0,"475":0,"476":0,"478":0,"479":0,"483":0,"487":0,"491":0,"493":0,"497":0,"498":0};
-_yuitest_coverage["build/gallery-anim-native/gallery-anim-native.js"].functions = {"(anonymous 2):28":0,"Anim:46":0,"_easing:96":0,"(anonymous 3):102":0,"_toHyphen:101":0,"_insert:115":0,"_delete:136":0,"setter:156":0,"setter:187":0,"getter:276":0,"getter:337":0,"run:375":0,"pause:393":0,"stop:406":0,"(anonymous 4):438":0,"_start:411":0,"_render:454":0,"(anonymous 1):1":0};
-_yuitest_coverage["build/gallery-anim-native/gallery-anim-native.js"].coveredLines = 106;
+_yuitest_coverage["build/gallery-anim-native/gallery-anim-native.js"].code=["YUI.add('gallery-anim-native', function (Y, NAME) {","","/**","* The Animation Utility provides an API for creating advanced transitions.","*","* W3C CSS Animations:","* http://www.w3.org/TR/css3-animations/","*","* Easing method values from AliceJS:","* http://blackberry.github.com/Alice/","*","* Browser support:","* http://caniuse.com/#feat=css-animation","* IE10+, FF5+, Chrome 4+, Safari/iOS 4+, Android 2.1+","*","* @module anim-native","*/","","/**","* Provides the CSS3 Native Anim class, for animating CSS properties.","*","* @module anim","* @submodule anim-native","*/","    \"use strict\";","    /*global Y:true */","    /*jslint regexp: true*/","    var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function (prefix) {","            return Y.config.doc.body.style.hasOwnProperty(prefix + 'Animation');","        })[0],","        PREFIX = VENDOR ? '-' + VENDOR.toLowerCase() + '-' : VENDOR,","        ANIMATION_END_VENDORS = {","            webkit: 'webkitAnimationEnd',","            O: 'oAnimationEnd'","        },","        ANIMATION_END_EVENT = 'animationend',","        ANIMATION_END = ANIMATION_END_VENDORS[VENDOR] || ANIMATION_END_EVENT,","","        /**","         * A class for constructing animation instances.","         * @class Anim","         * @for Anim","         * @constructor","         * @extends Base","         */","        Anim = function () {","            Anim.superclass.constructor.apply(this, arguments);","        };","","    Y.Node.DOM_EVENTS[ANIMATION_END] = 1;","","    Anim.NAME = 'animNative';","    Anim.DIRECTIONS = {","        normal: ['normal', 'reverse'],","        alternate: ['alternate', 'alternate-reverse']","    };","    Anim.EASINGS = {","        easeNone: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},","        easeIn: {p1: 0.420, p2: 0.000, p3: 1.000, p4: 1.000},","        easeOut: {p1: 0.000, p2: 0.000, p3: 0.580, p4: 1.000},","        easeBoth: {p1: 0.420, p2: 0.000, p3: 0.580, p4: 1.000},","        easeInStrong: {p1: 0.895, p2: 0.030, p3: 0.685, p4: 0.220},","        easeOutStrong: {p1: 0.165, p2: 0.840, p3: 0.440, p4: 1.000},","        easeBothStrong: {p1: 0.770, p2: 0.000, p3: 0.175, p4: 1.000},","        backOut: {p1: 0.175, p2: 0.885, p3: 0.320, p4: 1.275},","        backBoth: {p1: 0.680, p2: -0.550, p3: 0.265, p4: 1.550},","","        // FIXME: Defaulting these to linear","        elasticIn: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},","        elasticOut: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},","        elasticBoth: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},","        backIn: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},","        bounceIn: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},","        bounceOut: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750},","        bounceBoth: {p1: 0.250, p2: 0.250, p3: 0.750, p4: 0.750}","    };","","    Anim.RE_UNITS = /^(-?\\d*\\.?\\d*){1}(em|ex|px|in|cm|mm|pt|pc|%)*$/;","","    /**","     * Regex of properties that should use the default unit.","     *","     * @property RE_DEFAULT_UNIT","     * @static","     */","    Anim.RE_DEFAULT_UNIT = /^width|height|top|right|bottom|left|margin.*|padding.*|border.*$/i;","","    /**","     * The default unit to use with properties that pass the RE_DEFAULT_UNIT test.","     *","     * @property DEFAULT_UNIT","     * @static","     */","    Anim.DEFAULT_UNIT = 'px';","","    Anim._easing = function (name) {","        var e = Anim.EASINGS[name];","        return 'cubic-bezier(' + e.p1 + ', ' + e.p2 + ', ' + e.p3 + ', ' + e.p4 + ')';","    };","","    Anim._toHyphen = function (property) {","        property = property.replace(/([A-Z]?)([a-z]+)([A-Z]?)/g, function (m0, m1, m2, m3) {","            var str = ((m1) ? '-' + m1.toLowerCase() : '') + m2;","","            if (m3) {","                str += '-' + m3.toLowerCase();","            }","","            return str;","        });","","        return property;","    };","","    Anim._insert = function (rule) {","        var doc = Y.config.doc,","            ruleNum,","            style;","","        if (doc.styleSheets && doc.styleSheets.length) {","            ruleNum = 0;","            try {","                if (doc.styleSheets[0].cssRules.length > 0) {","                    ruleNum = doc.styleSheets[0].cssRules.length;","                }","                doc.styleSheets[0].insertRule(rule, ruleNum);","            } catch (e) {","            }","        } else {","            style = doc.createElement(\"style\");","            style.innerHTML = rule;","            doc.head.appendChild(style);","        }","    };","","    Anim._delete = function (ruleName) {","        var doc = Y.config.doc,","            cssrules = doc.all ? \"rules\" : \"cssRules\",","            i;","","        for (i = 0; i < doc.styleSheets[0][cssrules].length; i += 1) {","            if (doc.styleSheets[0][cssrules][i].name === ruleName) {","                doc.styleSheets[0].deleteRule(i);","                break;","            }","        }","    };","","    Anim.ATTRS = {","        /**","         * The object to be animated.","         * @attribute node","         * @type Node","         */","        node: {","            setter: function (node) {","                if (node) {","                    if (typeof node === 'string' || node.nodeType) {","                        node = Y.one(node);","                    }","                }","","                this._node = node;","                if (!node) {","                }","                return node;","            }","        },","","        /**","         * The length of the animation.  Defaults to \"1\" (second).","         * @attribute duration","         * @type NUM","         */","        duration: {","            value: 1","        },","","        /**","         * The method that will provide values to the attribute(s) during the animation.","         * Defaults to \"easeNone\".","         * @attribute easing","         * @type Function","         */","        easing: {","            value: 'easeNone',","            setter: function (e) {","                return Anim._easing(e);","            }","        },","","        /**","         * The starting values for the animated properties.","         *","         * Fields may be strings, numbers, or functions.","         * If a function is used, the return value becomes the from value.","         * If no from value is specified, the DEFAULT_GETTER will be used.","         * Supports any unit, provided it matches the \"to\" (or default)","         * unit (e.g. `{width: '10em', color: 'rgb(0, 0, 0)', borderColor: '#ccc'}`).","         *","         * If using the default ('px' for length-based units), the unit may be omitted","         * (e.g. `{width: 100}, borderColor: 'ccc'}`, which defaults to pixels","         * and hex, respectively).","         *","         * @attribute from","         * @type Object","         */","        from: {","            value: {}","        },","","        /**","         * The keyframes between 0 and 100%.","         *","         * Example: {'50%': {","         *   width: 200","         * }}","         *","         * @attribute to","         * @type Object","         */","        frames: {","            value: {}","        },","","        /**","         * The ending values for the animated properties.","         *","         * Fields may be strings, numbers, or functions.","         * Supports any unit, provided it matches the \"from\" (or default)","         * unit (e.g. `{width: '50%', color: 'red', borderColor: '#ccc'}`).","         *","         * If using the default ('px' for length-based units), the unit may be omitted","         * (e.g. `{width: 100, borderColor: 'ccc'}`, which defaults to pixels","         * and hex, respectively).","         *","         * @attribute to","         * @type Object","         */","        to: {","            value: {}","        },","","        /**","         * Date stamp for the first frame of the animation.","         * @attribute startTime","         * @type Int","         * @default 0","         * @readOnly","         */","        startTime: {","            value: 0,","            readOnly: true","        },","","        /**","         * Current time the animation has been running.","         * @attribute elapsedTime","         * @type Int","         * @default 0","         * @readOnly","         */","        elapsedTime: {","            value: 0,","            readOnly: true","        },","","        /**","         * Whether or not the animation is currently running.","         * @attribute running","         * @type Boolean","         * @default false","         * @readOnly","         */","        running: {","            getter: function () {","                return this.get('node').getStyle(VENDOR + \"AnimationName\") !== 'none';","            },","            value: false,","            readOnly: true","        },","","        /**","         * The number of seconds to delay the animation","         * @attribute delay","         * @type Int","         * @default 0","         */","        delay: {","            value: 0","        },","","        /**","         * The number of times the animation should run","         * @attribute iterations","         * @type Int","         * @default 1","         */","        iterations: {","            value: 1","        },","","        /**","         * The number of iterations that have occurred.","         * Resets when an animation ends (reaches iteration count or stop() called).","         *","         * Note: no way to update this mid animation.","         *","         * @attribute iterationCount","         * @type Int","         * @default 0","         * @readOnly","         */","        iterationCount: {","            value: 0,","            readOnly: true","        },","","        /**","         * How iterations of the animation should behave.","         * Possible values are \"normal\" and \"alternate\".","         * Normal will repeat the animation, alternate will reverse on every other pass.","         *","         * @attribute direction","         * @type String","         * @default \"normal\"","         */","        direction: {","            value: 'normal' // | alternate (fwd on odd, rev on even per spec)","        },","","        /**","         * Whether or not the animation is currently paused.","         * @attribute paused","         * @type Boolean","         * @default false","         * @readOnly","         */","        paused: {","            getter: function () {","                return this.get('node').getStyle(VENDOR + \"AnimationPlayState\") === 'paused';","            },","            readOnly: true,","            value: false","        },","","        /**","         * If true, animation begins from last frame","         * @attribute reverse","         * @type Boolean","         * @default false","         */","        reverse: {","            value: false","        },","","        /**","         * If 'visible' the element is show when not facing the screen. If 'hidden' the","         * element will be invisible when not facing the screen.","         * @attribute backfaceVisibility","         * @type String","         * @default 'visible'","         */","        backfaceVisibility: {","            value: 'visible'","        }","    };","","    Y.extend(Anim, Y.Base, {","        initializer: function (config) {","        },","","        /**","         * Starts or resumes an animation.","         * @method run","         * @chainable","         */","        run: function () {","            var node = this.get('node');","","            if (this.get('paused')) {","                node.setStyle(VENDOR + \"AnimationPlayState\", 'running');","            } else if (!this.get('running')) {","                this._start();","            }","            return this;","        },","","        /**","         * Pauses the animation and","         * freezes it in its current state and time.","         * Calling run() will continue where it left off.","         * @method pause","         * @chainable","         */","        pause: function () {","            if (this.get('running')) {","                this.get('node').setStyle(VENDOR + \"AnimationPlayState\", 'paused');","            }","            return this;","        },","","        /**","         * Stops the animation and resets its time.","         * @method stop","         * @param {Boolean} finish If true, the animation will move to the last frame","         * @chainable","         */","        stop: function (finish) {","            this.get('node').setStyle(VENDOR + \"AnimationName\", '');","            return this;","        },","","        _start: function () {","            var node = this.get('node'),","                name = 'anim-' + Y.guid(),","                direction = Anim.DIRECTIONS[this.get('direction')][+this.get('reverse')],","                frames = this.get('frames'),","                frame,","                keyframes = {};","","            keyframes['0%'] = this.get('from');","            for (frame in frames) {","                if (frames.hasOwnProperty(frame)) {","                    keyframes[frame] = frames[frame];","                }","            }","            keyframes['100%'] = this.get('to');","","            Anim._insert(this._render(node, name, keyframes));","","            this.set('iterationCount', 0);","","            node.setStyle(VENDOR + \"AnimationName\", name);","            node.setStyle(VENDOR + \"AnimationDuration\", this.get('duration') + 's');","            node.setStyle(VENDOR + \"AnimationTimingFunction\", this.get('easing'));","            node.setStyle(VENDOR + \"AnimationDelay\", this.get('delay') + 's');","            node.setStyle(VENDOR + \"AnimationIterationCount\", this.get('iterations'));","            node.setStyle(VENDOR + \"AnimationDirection\", direction);","            node.setStyle(VENDOR + \"AnimationPlayState\", 'running');","            node.setStyle(VENDOR + \"BackfaceVisibility\", this.get('backfaceVisibility'));","","            node.on(ANIMATION_END, function (e) {","                node.setStyle(VENDOR + \"AnimationName\", \"none\");","                node.setStyle(VENDOR + \"AnimationDuration\", \"0s\");","                node.setStyle(VENDOR + \"AnimationTimingFunction\", \"ease\");","                node.setStyle(VENDOR + \"AnimationDelay\", \"0s\");","                node.setStyle(VENDOR + \"AnimationIterationCount\", \"1\");","                node.setStyle(VENDOR + \"AnimationDirection\", \"normal\");","                node.setStyle(VENDOR + \"AnimationPlayState\", \"running\");","                node.setStyle(VENDOR + \"BackfaceVisibility\", 'visible');","","                this.set('iterationCount', this.get('iterations'));","","                Anim._delete(name);","            }, this);","        },","","        _render: function (node, name, keyframes) {","            var css = '@' + PREFIX + 'keyframes ' + name + ' {\\n',","                key,","                props,","                prop,","                value,","                parsed;","","            for (key in keyframes) {","                if (keyframes.hasOwnProperty(key)) {","                    props = keyframes[key];","                    css += '\\t' + key + ' {\\n';","","                    for (prop in props) {","                        if (props.hasOwnProperty(prop)) {","                            value = props[prop];","","                            if (typeof value === 'function') {","                                value = value.call(this, node);","                            }","","                            if (Anim.RE_DEFAULT_UNIT.test(prop)) {","                                parsed = Anim.RE_UNITS.exec(value);","","                                if (parsed && !parsed[2]) {","                                    value += Anim.DEFAULT_UNIT;","                                }","                            }","","                            css += '\\t\\t' + Anim._toHyphen(prop) + ': ' + value + ';\\n';","                        }","                    }","","                    css += '\\t}\\n';","                }","            }","","            css += '}\\n';","","            return css;","        }","    });","","    Y.Anim = Anim;","    Y.AnimNative = Anim;","","}, '@VERSION@', {\"use\": [\"node\", \"base\"]});"];
+_yuitest_coverage["build/gallery-anim-native/gallery-anim-native.js"].lines = {"1":0,"25":0,"28":0,"29":0,"47":0,"50":0,"52":0,"53":0,"57":0,"78":0,"86":0,"94":0,"96":0,"97":0,"98":0,"101":0,"102":0,"103":0,"105":0,"106":0,"109":0,"112":0,"115":0,"116":0,"120":0,"121":0,"122":0,"123":0,"124":0,"126":0,"130":0,"131":0,"132":0,"136":0,"137":0,"141":0,"142":0,"143":0,"144":0,"149":0,"157":0,"158":0,"159":0,"163":0,"164":0,"166":0,"188":0,"277":0,"341":0,"369":0,"379":0,"381":0,"382":0,"383":0,"384":0,"386":0,"397":0,"398":0,"400":0,"410":0,"411":0,"415":0,"422":0,"423":0,"424":0,"425":0,"428":0,"430":0,"432":0,"434":0,"435":0,"436":0,"437":0,"438":0,"439":0,"440":0,"441":0,"443":0,"444":0,"445":0,"446":0,"447":0,"448":0,"449":0,"450":0,"451":0,"453":0,"455":0,"460":0,"467":0,"468":0,"469":0,"470":0,"472":0,"473":0,"474":0,"476":0,"477":0,"480":0,"481":0,"483":0,"484":0,"488":0,"492":0,"496":0,"498":0,"502":0,"503":0};
+_yuitest_coverage["build/gallery-anim-native/gallery-anim-native.js"].functions = {"(anonymous 2):28":0,"Anim:46":0,"_easing:96":0,"(anonymous 3):102":0,"_toHyphen:101":0,"_insert:115":0,"_delete:136":0,"setter:156":0,"setter:187":0,"getter:276":0,"getter:340":0,"run:378":0,"pause:396":0,"stop:409":0,"(anonymous 4):443":0,"_start:414":0,"_render:459":0,"(anonymous 1):1":0};
+_yuitest_coverage["build/gallery-anim-native/gallery-anim-native.js"].coveredLines = 108;
 _yuitest_coverage["build/gallery-anim-native/gallery-anim-native.js"].coveredFunctions = 18;
 _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 1);
 YUI.add('gallery-anim-native', function (Y, NAME) {
@@ -395,6 +395,9 @@ return this.get('node').getStyle(VENDOR + "AnimationName") !== 'none';
         /**
          * The number of iterations that have occurred.
          * Resets when an animation ends (reaches iteration count or stop() called).
+         *
+         * Note: no way to update this mid animation.
+         *
          * @attribute iterationCount
          * @type Int
          * @default 0
@@ -427,8 +430,8 @@ return this.get('node').getStyle(VENDOR + "AnimationName") !== 'none';
          */
         paused: {
             getter: function () {
-                _yuitest_coverfunc("build/gallery-anim-native/gallery-anim-native.js", "getter", 337);
-_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 338);
+                _yuitest_coverfunc("build/gallery-anim-native/gallery-anim-native.js", "getter", 340);
+_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 341);
 return this.get('node').getStyle(VENDOR + "AnimationPlayState") === 'paused';
             },
             readOnly: true,
@@ -457,7 +460,7 @@ return this.get('node').getStyle(VENDOR + "AnimationPlayState") === 'paused';
         }
     };
 
-    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 366);
+    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 369);
 Y.extend(Anim, Y.Base, {
         initializer: function (config) {
         },
@@ -468,20 +471,20 @@ Y.extend(Anim, Y.Base, {
          * @chainable
          */
         run: function () {
-            _yuitest_coverfunc("build/gallery-anim-native/gallery-anim-native.js", "run", 375);
-_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 376);
+            _yuitest_coverfunc("build/gallery-anim-native/gallery-anim-native.js", "run", 378);
+_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 379);
 var node = this.get('node');
 
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 378);
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 381);
 if (this.get('paused')) {
-                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 379);
+                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 382);
 node.setStyle(VENDOR + "AnimationPlayState", 'running');
-            } else {_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 380);
+            } else {_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 383);
 if (!this.get('running')) {
-                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 381);
+                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 384);
 this._start();
             }}
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 383);
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 386);
 return this;
         },
 
@@ -493,13 +496,13 @@ return this;
          * @chainable
          */
         pause: function () {
-            _yuitest_coverfunc("build/gallery-anim-native/gallery-anim-native.js", "pause", 393);
-_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 394);
+            _yuitest_coverfunc("build/gallery-anim-native/gallery-anim-native.js", "pause", 396);
+_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 397);
 if (this.get('running')) {
-                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 395);
+                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 398);
 this.get('node').setStyle(VENDOR + "AnimationPlayState", 'paused');
             }
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 397);
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 400);
 return this;
         },
 
@@ -510,16 +513,16 @@ return this;
          * @chainable
          */
         stop: function (finish) {
-            _yuitest_coverfunc("build/gallery-anim-native/gallery-anim-native.js", "stop", 406);
-_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 407);
+            _yuitest_coverfunc("build/gallery-anim-native/gallery-anim-native.js", "stop", 409);
+_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 410);
 this.get('node').setStyle(VENDOR + "AnimationName", '');
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 408);
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 411);
 return this;
         },
 
         _start: function () {
-            _yuitest_coverfunc("build/gallery-anim-native/gallery-anim-native.js", "_start", 411);
-_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 412);
+            _yuitest_coverfunc("build/gallery-anim-native/gallery-anim-native.js", "_start", 414);
+_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 415);
 var node = this.get('node'),
                 name = 'anim-' + Y.guid(),
                 direction = Anim.DIRECTIONS[this.get('direction')][+this.get('reverse')],
@@ -527,69 +530,73 @@ var node = this.get('node'),
                 frame,
                 keyframes = {};
 
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 419);
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 422);
 keyframes['0%'] = this.get('from');
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 420);
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 423);
 for (frame in frames) {
-                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 421);
+                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 424);
 if (frames.hasOwnProperty(frame)) {
-                    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 422);
+                    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 425);
 keyframes[frame] = frames[frame];
                 }
             }
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 425);
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 428);
 keyframes['100%'] = this.get('to');
 
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 427);
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 430);
 Anim._insert(this._render(node, name, keyframes));
 
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 429);
-node.setStyle(VENDOR + "AnimationName", name);
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 430);
-node.setStyle(VENDOR + "AnimationDuration", this.get('duration') + 's');
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 431);
-node.setStyle(VENDOR + "AnimationTimingFunction", this.get('easing'));
             _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 432);
-node.setStyle(VENDOR + "AnimationDelay", this.get('delay') + 's');
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 433);
-node.setStyle(VENDOR + "AnimationIterationCount", this.get('iterations'));
+this.set('iterationCount', 0);
+
             _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 434);
-node.setStyle(VENDOR + "AnimationDirection", direction);
+node.setStyle(VENDOR + "AnimationName", name);
             _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 435);
-node.setStyle(VENDOR + "AnimationPlayState", 'running');
+node.setStyle(VENDOR + "AnimationDuration", this.get('duration') + 's');
             _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 436);
+node.setStyle(VENDOR + "AnimationTimingFunction", this.get('easing'));
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 437);
+node.setStyle(VENDOR + "AnimationDelay", this.get('delay') + 's');
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 438);
+node.setStyle(VENDOR + "AnimationIterationCount", this.get('iterations'));
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 439);
+node.setStyle(VENDOR + "AnimationDirection", direction);
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 440);
+node.setStyle(VENDOR + "AnimationPlayState", 'running');
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 441);
 node.setStyle(VENDOR + "BackfaceVisibility", this.get('backfaceVisibility'));
 
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 438);
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 443);
 node.on(ANIMATION_END, function (e) {
-                _yuitest_coverfunc("build/gallery-anim-native/gallery-anim-native.js", "(anonymous 4)", 438);
-_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 439);
+                _yuitest_coverfunc("build/gallery-anim-native/gallery-anim-native.js", "(anonymous 4)", 443);
+_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 444);
 node.setStyle(VENDOR + "AnimationName", "none");
-                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 440);
-node.setStyle(VENDOR + "AnimationDuration", "0s");
-                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 441);
-node.setStyle(VENDOR + "AnimationTimingFunction", "ease");
-                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 442);
-node.setStyle(VENDOR + "AnimationDelay", "0s");
-                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 443);
-node.setStyle(VENDOR + "AnimationIterationCount", "1");
-                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 444);
-node.setStyle(VENDOR + "AnimationDirection", "normal");
                 _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 445);
-node.setStyle(VENDOR + "AnimationPlayState", "running");
+node.setStyle(VENDOR + "AnimationDuration", "0s");
                 _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 446);
+node.setStyle(VENDOR + "AnimationTimingFunction", "ease");
+                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 447);
+node.setStyle(VENDOR + "AnimationDelay", "0s");
+                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 448);
+node.setStyle(VENDOR + "AnimationIterationCount", "1");
+                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 449);
+node.setStyle(VENDOR + "AnimationDirection", "normal");
+                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 450);
+node.setStyle(VENDOR + "AnimationPlayState", "running");
+                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 451);
 node.setStyle(VENDOR + "BackfaceVisibility", 'visible');
 
-                //this.set('iterationCount', this.get('iterations'));
+                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 453);
+this.set('iterationCount', this.get('iterations'));
 
-                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 450);
+                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 455);
 Anim._delete(name);
             }, this);
         },
 
         _render: function (node, name, keyframes) {
-            _yuitest_coverfunc("build/gallery-anim-native/gallery-anim-native.js", "_render", 454);
-_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 455);
+            _yuitest_coverfunc("build/gallery-anim-native/gallery-anim-native.js", "_render", 459);
+_yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 460);
 var css = '@' + PREFIX + 'keyframes ' + name + ' {\n',
                 key,
                 props,
@@ -597,61 +604,61 @@ var css = '@' + PREFIX + 'keyframes ' + name + ' {\n',
                 value,
                 parsed;
 
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 462);
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 467);
 for (key in keyframes) {
-                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 463);
+                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 468);
 if (keyframes.hasOwnProperty(key)) {
-                    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 464);
+                    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 469);
 props = keyframes[key];
-                    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 465);
+                    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 470);
 css += '\t' + key + ' {\n';
 
-                    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 467);
+                    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 472);
 for (prop in props) {
-                        _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 468);
+                        _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 473);
 if (props.hasOwnProperty(prop)) {
-                            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 469);
+                            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 474);
 value = props[prop];
 
-                            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 471);
+                            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 476);
 if (typeof value === 'function') {
-                                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 472);
+                                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 477);
 value = value.call(this, node);
                             }
 
-                            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 475);
+                            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 480);
 if (Anim.RE_DEFAULT_UNIT.test(prop)) {
-                                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 476);
+                                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 481);
 parsed = Anim.RE_UNITS.exec(value);
 
-                                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 478);
+                                _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 483);
 if (parsed && !parsed[2]) {
-                                    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 479);
+                                    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 484);
 value += Anim.DEFAULT_UNIT;
                                 }
                             }
 
-                            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 483);
+                            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 488);
 css += '\t\t' + Anim._toHyphen(prop) + ': ' + value + ';\n';
                         }
                     }
 
-                    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 487);
+                    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 492);
 css += '\t}\n';
                 }
             }
 
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 491);
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 496);
 css += '}\n';
 
-            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 493);
+            _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 498);
 return css;
         }
     });
 
-    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 497);
+    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 502);
 Y.Anim = Anim;
-    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 498);
+    _yuitest_coverline("build/gallery-anim-native/gallery-anim-native.js", 503);
 Y.AnimNative = Anim;
 
 }, '@VERSION@', {"use": ["node", "base"]});
