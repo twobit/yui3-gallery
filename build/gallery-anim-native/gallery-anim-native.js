@@ -210,6 +210,20 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
         },
 
         /**
+         * The keyframes between 0 and 100%.
+         *
+         * Example: {'50%': {
+         *   width: 200
+         * }}
+         *
+         * @attribute to
+         * @type Object
+         */
+        frames: {
+            value: {}
+        },
+
+        /**
          * The ending values for the animated properties.
          *
          * Fields may be strings, numbers, or functions.
@@ -351,19 +365,6 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
 
     Y.extend(Anim, Y.Base, {
         initializer: function (config) {
-            var from = this.get('from'),
-                to = this.get('to'),
-                key;
-
-            this._frames = {'0%': from};
-
-            for (key in config) {
-                if (config.hasOwnProperty(key) && key.substr(-1) === '%') {
-                    this._frames[key] = config[key];
-                }
-            }
-
-            this._frames['100%'] = to;
         },
 
         /**
@@ -410,9 +411,20 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
         _start: function () {
             var node = this.get('node'),
                 name = 'anim-' + Y.guid(),
-                direction = Anim.DIRECTIONS[this.get('direction')][+this.get('reverse')];
+                direction = Anim.DIRECTIONS[this.get('direction')][+this.get('reverse')],
+                frames = this.get('frames'),
+                frame,
+                keyframes = {};
 
-            Anim._insert(this._render(node, name, this._frames));
+            keyframes['0%'] = this.get('from');
+            for (frame in frames) {
+                if (frames.hasOwnProperty(frame)) {
+                    keyframes[frame] = frames[frame];
+                }
+            }
+            keyframes['100%'] = this.get('to');
+
+            Anim._insert(this._render(node, name, keyframes));
 
             node.setStyle(VENDOR + "AnimationName", name);
             node.setStyle(VENDOR + "AnimationDuration", this.get('duration') + 's');

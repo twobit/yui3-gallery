@@ -36,12 +36,12 @@
                     height: '250',
                     background: 'red'
                 },
-                '50%': {
+                frames: {'50%': {
                     background: function(node) {
                         return 'green';
                     },
                     borderColor: 'red'
-                },
+                }},
                 to: {
                     width: function(node) {
                         return 300;
