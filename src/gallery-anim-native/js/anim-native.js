@@ -26,6 +26,10 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
     };
 
     Anim.NAME = 'animNative';
+    Anim.DIRECTIONS = {
+        normal: ['normal', 'reverse'],
+        alternate: ['alternate', 'alternate-reverse']
+    };
     
     Anim._toHyphen = function (property) {
         property = property.replace(/([A-Z]?)([a-z]+)([A-Z]?)/g, function(m0, m1, m2, m3) {
@@ -273,8 +277,6 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
                 to = config.to || {},
                 key;
 
-            console.log(VENDOR, PREFIX);
-
             this._frames = {'0%': from};
 
             for (key in config) {
@@ -289,7 +291,8 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
         run: function () {
             var name = 'anim-' + Y.guid();
                 css = Anim._render(name, this._frames),
-                node = this.get('node');
+                node = this.get('node'),
+                direction = Anim.DIRECTIONS[this.get('direction')][+this.get('reverse')];
 
             console.log(css);
             Anim._insert(css);
@@ -298,14 +301,14 @@ var VENDOR = ['', 'webkit', 'Moz', 'O', 'ms'].filter(function(prefix) {
             node.setStyle(VENDOR + "AnimationDuration", this.get('duration') + 's');
             node.setStyle(VENDOR + "AnimationDelay", this.get('delay') + 's');
             node.setStyle(VENDOR + "AnimationIterationCount", this.get('iterations'));
+            node.setStyle(VENDOR + "AnimationDirection", direction);
 
             /*
-            elem.style[prefix + "AnimationTimingFunction"] = alice.format.easing(timing);
-            elem.style[prefix + "AnimationIterationCount"] = iteration;
-            elem.style[prefix + "AnimationDirection"] = direction;
-            elem.style[prefix + "AnimationPlayState"] = playstate;
-            elem.style[prefix + "BackfaceVisibility"] = backfaceVisibility;*/
+            node.setStyle(VENDOR + "AnimationTimingFunction", '');
+            node.setStyle(VENDOR + "AnimationPlayState", playstate);
+            node.setStyle(VENDOR + "BackfaceVisibility", backfaceVisibility);*/
         }
     });
 
+    Y.Anim = Anim;
     Y.AnimNative = Anim;
