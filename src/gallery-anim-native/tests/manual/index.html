@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />        
+        <title>Anim Native</title>
+        <script type="text/javascript" src="../../../../../yui3/build/yui/yui.js"></script>
+        <style type="text/css">
+        #test1 {
+            width: 200px;
+            height: 200px;
+            background: black;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="test1"></div>
+
+        <script type="text/javascript">
+        YUI({
+            filter: (window.location.search.match(/[?&]filter=([^&]+)/) || [])[1] || 'raw',
+            modules: {
+                'gallery-anim-native': '../../../../build/gallery-anim-native/gallery-anim-native.js'
+            }
+        }).use('gallery-anim-native', function(Y) {
+            new Y.AnimNative({
+                node: '#test1',
+                duration: 4,
+                iterations: 2,
+                from: {
+                    background: 'red'
+                },
+                '50%': {
+                    background: 'green'
+                },
+                to: {
+                    background: 'blue'
+                }
+            }).run();
+        });
+        </script>
+    </body>
+</html>
