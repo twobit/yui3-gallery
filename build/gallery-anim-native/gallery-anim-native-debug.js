@@ -445,18 +445,25 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
                 from = this.get('from'),
                 to = this.get('to'),
                 frames = this.get('frames'),
-                keyframes = {};
+                keyframes = {},
+                res,
+                frame;
 
             keyframes['0%'] = from;
             keyframes = Y.merge(keyframes, frames);
             keyframes['100%'] = to;
 
-            // Build up styles from all frames
-            Y.Object.each(Y.merge(from, to), function (value, prop) {
-                console.log(prop, value);
-            });
+            res = this._render(node, name, keyframes);
 
-            Anim._insert(this._render(node, name, keyframes));
+            // TODO: Clear animations
+
+            // Apply last animation frame styles
+            if (this.get('iterations') !== 'infinite') {
+                frame = this.get('iterations') % (2 - this.get('reverse')) * 100;
+                node.setStyles(res.styles[frame + '%']);
+            }
+
+            Anim._insert(res.css);
 
             this.set('iterationCount', 0);
 
@@ -493,10 +500,12 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
          * Generate CSS keyframes string.
          */
         _render: function (node, name, keyframes) {
-            var css = '@' + PREFIX + 'keyframes ' + name + ' {\n';
+            var css = ['@' + PREFIX + 'keyframes ' + name + ' {'],
+                styles = {};
 
             Y.Object.each(keyframes, function (props, key) {
-                css += '\t' + key + ' {\n';
+                css.push('\t' + key + ' {');
+                styles[key] = {};
 
                 Y.Object.each(props, function (value, prop) {
                     var parsed;
@@ -513,14 +522,15 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
                         }
                     }
 
-                    css += '\t\t' + Anim._toHyphen(prop) + ': ' + value + ';\n';
+                    styles[key][prop] = value;
+                    css.push('\t\t' + Anim._toHyphen(prop) + ': ' + value + ';');
                 }, this);
 
-                css += '\t}\n';
+                css.push('\t}');
             }, this);
 
-            css += '}\n';
-            return css;
+            css.push('}');
+            return {css: css.join('\n'), styles: styles};
         }
     });
 
