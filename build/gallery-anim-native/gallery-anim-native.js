@@ -355,6 +355,26 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
         },
 
         /**
+         * Perspective depth
+         * @attribute perspective
+         * @type int
+         * @default 1000
+         */
+        perspective: {
+            value: 1000
+        },
+
+        /**
+         * X/Y axis origin
+         * @attribute perspectiveOrigin
+         * @type String
+         * @default 'center center'
+         */
+        perspectiveOrigin: {
+            value: 'center center'
+        },
+
+        /**
          * If 'visible' the element is show when not facing the screen. If 'hidden' the
          * element will be invisible when not facing the screen.
          * @attribute backfaceVisibility
@@ -411,32 +431,27 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
             return this;
         },
 
+        /**
+         * Initializes animation. Inserts keyframes into DOM and updates node styles.
+         */
         _start: function () {
             var node = this.get('node'),
+                parent = node.get('parentNode'),
                 name = 'anim-' + Y.guid(),
                 direction = Anim.DIRECTIONS[this.get('direction')][+this.get('reverse')],
                 from = this.get('from'),
                 to = this.get('to'),
                 frames = this.get('frames'),
-                frame,
-                keyframes = {},
-                style;
+                keyframes = {};
 
             keyframes['0%'] = from;
-            for (frame in frames) {
-                if (frames.hasOwnProperty(frame)) {
-                    keyframes[frame] = frames[frame];
-                }
-            }
+            keyframes = Y.merge(keyframes, frames);
             keyframes['100%'] = to;
 
-            /*
-            Apply style from last frame
-            for (style in to) {
-                if (to.hasOwnProperty(style)) {
-                    node.setStyle(style, to[style]);
-                }
-            }*/
+            // Build up styles from all frames
+            Y.Object.each(Y.merge(from, to), function (value, prop) {
+                console.log(prop, value);
+            });
 
             Anim._insert(this._render(node, name, keyframes));
 
@@ -450,6 +465,8 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
             node.setStyle(VENDOR + "AnimationDirection", direction);
             node.setStyle(VENDOR + "AnimationPlayState", 'running');
             node.setStyle(VENDOR + "BackfaceVisibility", this.get('backfaceVisibility'));
+            parent.setStyle(VENDOR + "Perspective", this.get('perspective') + "px");
+            parent.setStyle(VENDOR + "PerspectiveOrigin", this.get('perspectiveOrigin'));
 
             node.on(ANIMATION_END, function (e) {
                 node.setStyle(VENDOR + "AnimationName", "none");
@@ -469,45 +486,37 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
             }, this);
         },
 
+        /**
+         * Generate CSS keyframes string.
+         */
         _render: function (node, name, keyframes) {
-            var css = '@' + PREFIX + 'keyframes ' + name + ' {\n',
-                key,
-                props,
-                prop,
-                value,
-                parsed;
+            var css = '@' + PREFIX + 'keyframes ' + name + ' {\n';
 
-            for (key in keyframes) {
-                if (keyframes.hasOwnProperty(key)) {
-                    props = keyframes[key];
-                    css += '\t' + key + ' {\n';
+            Y.Object.each(keyframes, function (props, key) {
+                css += '\t' + key + ' {\n';
 
-                    for (prop in props) {
-                        if (props.hasOwnProperty(prop)) {
-                            value = props[prop];
+                Y.Object.each(props, function (value, prop) {
+                    var parsed;
 
-                            if (typeof value === 'function') {
-                                value = value.call(this, node);
-                            }
+                    if (typeof value === 'function') {
+                        value = value.call(this, node);
+                    }
 
-                            if (Anim.RE_DEFAULT_UNIT.test(prop)) {
-                                parsed = Anim.RE_UNITS.exec(value);
+                    if (Anim.RE_DEFAULT_UNIT.test(prop)) {
+                        parsed = Anim.RE_UNITS.exec(value);
 
-                                if (parsed && !parsed[2]) {
-                                    value += Anim.DEFAULT_UNIT;
-                                }
-                            }
-
-                            css += '\t\t' + Anim._toHyphen(prop) + ': ' + value + ';\n';
+                        if (parsed && !parsed[2]) {
+                            value += Anim.DEFAULT_UNIT;
                         }
                     }
 
-                    css += '\t}\n';
-                }
-            }
+                    css += '\t\t' + Anim._toHyphen(prop) + ': ' + value + ';\n';
+                }, this);
+
+                css += '\t}\n';
+            }, this);
 
             css += '}\n';
-
             return css;
         }
     });
