@@ -54,6 +54,22 @@
                 borderColor: 'red'
             }});
 
+            anim.on('start', function(e) {
+                console.log('start');
+            });
+
+            anim.on('end', function(e) {
+                console.log('end');
+            });
+
+            anim.on('pause', function(e) {
+                console.log('pause');
+            });
+
+            anim.on('resume', function(e) {
+                console.log('resume');
+            });
+
             Y.one('#start').on('click', function() {
                 anim.run();
             });

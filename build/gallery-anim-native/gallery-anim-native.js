@@ -387,8 +387,7 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
     };
 
     Y.extend(Anim, Y.Base, {
-        initializer: function (config) {
-        },
+        initializer: function (config) {},
 
         /**
          * Starts or resumes an animation.
@@ -396,10 +395,8 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
          * @chainable
          */
         run: function () {
-            var node = this.get('node');
-
             if (this.get('paused')) {
-                node.setStyle(VENDOR + "AnimationPlayState", 'running');
+                this._resume();
             } else if (!this.get('running')) {
                 this._start();
             }
@@ -416,6 +413,7 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
         pause: function () {
             if (this.get('running')) {
                 this.get('node').setStyle(VENDOR + "AnimationPlayState", 'paused');
+                this.fire('pause');
             }
             return this;
         },
@@ -427,8 +425,13 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
          * @chainable
          */
         stop: function (finish) {
-            this.get('node').setStyle(VENDOR + "AnimationName", '');
+            this._end();
             return this;
+        },
+
+        _resume: function () {
+            this.get('node').setStyle(VENDOR + "AnimationPlayState", 'running');
+            this.fire('resume');
         },
 
         /**
@@ -452,8 +455,6 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
 
             res = this._render(node, name, keyframes);
 
-            // TODO: Clear animations
-
             // Apply last animation frame styles
             if (this.get('iterations') !== 'infinite') {
                 frame = this.get('iterations') % (2 - this.get('reverse')) * 100;
@@ -464,7 +465,8 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
 
             this.set('iterationCount', 0);
 
-            node.setStyle(VENDOR + "AnimationName", name);
+            parent.setStyle(VENDOR + "Perspective", this.get('perspective') + "px");
+            parent.setStyle(VENDOR + "PerspectiveOrigin", this.get('perspectiveOrigin'));
             node.setStyle(VENDOR + "AnimationDuration", this.get('duration') + 's');
             node.setStyle(VENDOR + "AnimationTimingFunction", this.get('easing'));
             node.setStyle(VENDOR + "AnimationDelay", this.get('delay') + 's');
@@ -472,29 +474,37 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
             node.setStyle(VENDOR + "AnimationDirection", direction);
             node.setStyle(VENDOR + "AnimationPlayState", 'running');
             node.setStyle(VENDOR + "BackfaceVisibility", this.get('backfaceVisibility'));
-            parent.setStyle(VENDOR + "Perspective", this.get('perspective') + "px");
-            parent.setStyle(VENDOR + "PerspectiveOrigin", this.get('perspectiveOrigin'));
+            node.setStyle(VENDOR + "AnimationName", name);
 
-            node.on(ANIMATION_END, function (e) {
-                node.setStyle(VENDOR + "AnimationName", "none");
-                node.setStyle(VENDOR + "AnimationDuration", "0s");
-                node.setStyle(VENDOR + "AnimationTimingFunction", "ease");
-                node.setStyle(VENDOR + "AnimationDelay", "0s");
-                node.setStyle(VENDOR + "AnimationIterationCount", "1");
-                node.setStyle(VENDOR + "AnimationDirection", "normal");
-                node.setStyle(VENDOR + "AnimationPlayState", "running");
-                node.setStyle(VENDOR + "BackfaceVisibility", 'visible');
+            this.fire('start');
+            this._sub = node.on(ANIMATION_END, this._end, this);
+        },
 
-                this.set('iterationCount', this.get('iterations'));
+        _end: function () {
+            var node = this.get('node'),
+                name = node.getStyle(VENDOR + "AnimationName");
 
-                Anim._delete(name);
+            node.detach(ANIMATION_END, this._end);
 
-                this.fire('end', {elapsed: this.get('elapsedTime')});
-            }, this);
+            node.setStyle(VENDOR + "AnimationName", "none");
+            node.setStyle(VENDOR + "AnimationDuration", "0s");
+            node.setStyle(VENDOR + "AnimationTimingFunction", "ease");
+            node.setStyle(VENDOR + "AnimationDelay", "0s");
+            node.setStyle(VENDOR + "AnimationIterationCount", "1");
+            node.setStyle(VENDOR + "AnimationDirection", "normal");
+            node.setStyle(VENDOR + "AnimationPlayState", "running");
+            node.setStyle(VENDOR + "BackfaceVisibility", 'visible');
+
+            // TODO: Restore parent node perspective?
+
+            this.set('iterationCount', this.get('iterations'));
+
+            Anim._delete(name);
+            this.fire('end', {elapsed: this.get('elapsedTime')});
         },
 
         /**
-         * Generate CSS keyframes string.
+         * Generate CSS keyframes string and meta data.
          */
         _render: function (node, name, keyframes) {
             var css = ['@' + PREFIX + 'keyframes ' + name + ' {'],
@@ -528,6 +538,10 @@ YUI.add('gallery-anim-native', function (Y, NAME) {
 
             css.push('}');
             return {css: css.join('\n'), styles: styles};
+        },
+
+        destructor: function () {
+            this.get('node').detach(ANIMATION_END, this._end);
         }
     });
 
